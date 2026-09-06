@@ -110,6 +110,16 @@ describe("config-generator", () => {
       assert.ok("configPath" in result);
     });
 
+    it("accepts the legacy kilocode id while generating the canonical kilo config", async () => {
+      const result = await generator.generateConfig("kilocode", {
+        baseUrl: "http://localhost:20128",
+        apiKey: "sk-test",
+      });
+      assert.strictEqual(result.success, true);
+      assert.ok(result.configPath.includes(".config/kilocode/settings.json"));
+      assert.ok(String(result.content).includes("http://localhost:20128/v1"));
+    });
+
     it("returns success for valid hermes config", async () => {
       const result = await generator.generateConfig("hermes", {
         baseUrl: "http://localhost:20128",
@@ -404,7 +414,7 @@ describe("config-generator", () => {
       }
     });
 
-    it("does NOT fabricate a default context when the catalog has no entry", async () => {
+    it("uses the required 128K context fallback when the catalog has no entry", async () => {
       const stub = stubFetchOnce(makeCatalogResponse(SAMPLE_CATALOG));
       try {
         const { generateOpencodeConfig } =
@@ -414,15 +424,14 @@ describe("config-generator", () => {
           apiKey: "sk-test",
         });
         const cfg = JSON.parse(out);
-        // NO_CTX_COMBO has no context_length in the catalog — generator
-        // must NOT default to 128K (or any other value). The entry is
-        // emitted without limit.context so OpenCode's own heuristic
-        // applies and the user can fix the upstream.
+        // NO_CTX_COMBO has no context_length in the catalog. OpenCode v1
+        // requires a complete limit object, so the compatibility fallback
+        // must be explicit rather than leaving the config invalid.
         const noCtx = cfg.provider.omniroute.models["NO_CTX_COMBO"];
         assert.strictEqual(
           noCtx.limit?.context,
-          undefined,
-          `NO_CTX_COMBO should not have a fabricated limit.context (got ${noCtx.limit?.context})`
+          128_000,
+          `NO_CTX_COMBO should use the 128K fallback (got ${noCtx.limit?.context})`
         );
       } finally {
         stub.restore();
@@ -593,12 +602,16 @@ describe("config-generator", () => {
           input: 100000,
           output: 32768,
         });
-        assert.strictEqual(models["no-metadata"].limit, undefined);
+        // #10940/#11035: OpenCode's v1 provider schema requires both fields,
+        // so a model with zero metadata gets the compatibility fallbacks.
+        assert.deepStrictEqual(models["no-metadata"].limit, {
+          context: 128_000,
+          output: 8192,
+        });
 
         for (const model of Object.values(models) as Array<{ limit?: { output?: number } }>) {
           assert.ok(
-            model.limit === undefined ||
-              (typeof model.limit.output === "number" && model.limit.output > 0),
+            typeof model.limit?.output === "number" && model.limit.output > 0,
             "every emitted limit must contain a positive output"
           );
         }

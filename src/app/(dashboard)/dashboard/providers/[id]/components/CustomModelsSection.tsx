@@ -11,6 +11,10 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/shared/components";
+import {
+  normalizeModelSupportedEndpoints,
+  type ModelSupportedEndpoint,
+} from "@/shared/constants/modelSupportedEndpoints";
 import { useNotificationStore } from "@/store/notificationStore";
 import {
   buildCompatMap,
@@ -38,6 +42,7 @@ export interface CustomModelsSectionProps {
   copied?: string;
   onCopy: (text: string, key: string) => void;
   onModelsChanged?: () => void;
+  syncedModelIds?: readonly string[];
 }
 
 // ---------------------------------------------------------------------------
@@ -48,6 +53,29 @@ export interface CustomModelsSectionProps {
 function targetFormatLabel(value: string, t: (key: string) => string): string {
   const key = targetFormatBadgeI18nKey(value);
   return key ? t(key) : value;
+}
+
+const MODEL_ENDPOINT_OPTIONS: ModelSupportedEndpoint[] = [
+  "chat",
+  "embeddings",
+  "rerank",
+  "images",
+  "videos",
+  "audio-speech",
+  "audio-transcriptions",
+];
+
+function endpointLabel(endpoint: ModelSupportedEndpoint, t: (key: string) => string): string {
+  const labels: Partial<Record<ModelSupportedEndpoint, string>> = {
+    chat: `💬 ${t("supportedEndpointChat")}`,
+    embeddings: `📐 ${t("supportedEndpointEmbeddings")}`,
+    rerank: providerText(t, "rerankEndpoint", "Rerank"),
+    images: `🖼️ ${t("supportedEndpointImages")}`,
+    videos: "🎬 Video",
+    "audio-speech": `🔊 ${t("audioSpeech")}`,
+    "audio-transcriptions": `🎙️ ${t("audioTranscriptions")}`,
+  };
+  return labels[endpoint] || endpoint;
 }
 
 /**
@@ -73,6 +101,7 @@ export default function CustomModelsSection({
   copied,
   onCopy,
   onModelsChanged,
+  syncedModelIds = [],
 }: CustomModelsSectionProps) {
   const t = useTranslations("providers");
   const notify = useNotificationStore();
@@ -107,6 +136,7 @@ export default function CustomModelsSection({
 
   const customMap = useMemo(() => buildCompatMap(customModels), [customModels]);
   const overrideMap = useMemo(() => buildCompatMap(modelCompatOverrides), [modelCompatOverrides]);
+  const syncedModelIdSet = useMemo(() => new Set(syncedModelIds), [syncedModelIds]);
 
   const fetchCustomModels = useCallback(async () => {
     try {
@@ -176,6 +206,32 @@ export default function CustomModelsSection({
     }
   };
 
+  const handleResetToUpstreamDefaults = async (modelId: string) => {
+    try {
+      const res = await fetch(
+        `/api/provider-models?provider=${encodeURIComponent(providerId)}&model=${encodeURIComponent(modelId)}&resetOverride=true`,
+        { method: "DELETE" }
+      );
+      if (!res.ok) {
+        throw new Error("Failed to reset model override");
+      }
+      await fetchCustomModels();
+      onModelsChanged?.();
+      notify.success(
+        providerText(t, "resetToUpstreamDefaultsSuccess", "Restored upstream model defaults")
+      );
+    } catch (error) {
+      console.error("Failed to reset model override:", error);
+      notify.error(
+        providerText(
+          t,
+          "resetToUpstreamDefaultsFailed",
+          "Failed to restore upstream model defaults"
+        )
+      );
+    }
+  };
+
   const handleToggleHidden = async (modelId: string, hidden: boolean) => {
     setTogglingModelId(modelId);
     try {
@@ -203,7 +259,7 @@ export default function CustomModelsSection({
     setEditingApiFormat(model.apiFormat || "chat-completions");
     setEditingEndpoints(
       Array.isArray(model.supportedEndpoints) && model.supportedEndpoints.length
-        ? model.supportedEndpoints
+        ? normalizeModelSupportedEndpoints(model.supportedEndpoints)
         : ["chat"]
     );
     setEditingTargetFormat(model.targetFormat || "");
@@ -399,6 +455,7 @@ export default function CustomModelsSection({
               <option value="audio-transcriptions">{t("audioTranscriptions")}</option>
               <option value="audio-speech">{t("audioSpeech")}</option>
               <option value="images-generations">{t("imagesGenerations")}</option>
+              <option value="video">Video</option>
             </select>
           </div>
           <div className="w-48">
@@ -425,7 +482,7 @@ export default function CustomModelsSection({
               {t("supportedEndpointsLabel")}
             </span>
             <div className="flex items-center gap-3">
-              {["chat", "embeddings", "rerank", "images", "audio"].map((ep) => (
+              {MODEL_ENDPOINT_OPTIONS.map((ep) => (
                 <label
                   key={ep}
                   className="flex items-center gap-1.5 text-xs text-text-main cursor-pointer"
@@ -442,15 +499,7 @@ export default function CustomModelsSection({
                     }}
                     className="rounded border-border"
                   />
-                  {ep === "chat"
-                    ? `💬 ${t("supportedEndpointChat")}`
-                    : ep === "embeddings"
-                      ? `📐 ${t("supportedEndpointEmbeddings")}`
-                      : ep === "rerank"
-                        ? providerText(t, "rerankEndpoint", "Rerank")
-                        : ep === "images"
-                          ? `🖼️ ${t("supportedEndpointImages")}`
-                          : `🔊 ${t("supportedEndpointAudio")}`}
+                  {endpointLabel(ep, t)}
                 </label>
               ))}
             </div>
@@ -483,6 +532,7 @@ export default function CustomModelsSection({
           {customModels.map((model) => {
             const fullModel = `${providerAlias}/${model.id}`;
             const copyKey = `custom-${model.id}`;
+            const hasSyncedBase = model.id ? syncedModelIdSet.has(model.id) : false;
             return (
               <div
                 key={model.id}
@@ -511,6 +561,18 @@ export default function CustomModelsSection({
                     {model.apiFormat === "responses" && (
                       <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-500/15 text-blue-400 font-medium">
                         {t("responses")}
+                      </span>
+                    )}
+                    {hasSyncedBase && (
+                      <span
+                        className="text-[10px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-medium"
+                        title={providerText(
+                          t,
+                          "overridesUpstreamModelHint",
+                          "Your settings override this upstream model"
+                        )}
+                      >
+                        {providerText(t, "overridesUpstreamModel", "Overrides upstream")}
                       </span>
                     )}
                     {model.targetFormat && (
@@ -550,6 +612,22 @@ export default function CustomModelsSection({
                     {model.supportedEndpoints?.includes("audio") && (
                       <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-green-500/15 text-green-400 font-medium">
                         {`🔊 ${t("audioShortLabel")}`}
+                      </span>
+                    )}
+                    {(model.supportedEndpoints?.includes("videos") ||
+                      model.supportedEndpoints?.includes("video")) && (
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-red-500/15 text-red-400 font-medium">
+                        🎬 Video
+                      </span>
+                    )}
+                    {model.supportedEndpoints?.includes("audio-speech") && (
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-green-500/15 text-green-400 font-medium">
+                        {`🔊 ${t("audioSpeech")}`}
+                      </span>
+                    )}
+                    {model.supportedEndpoints?.includes("audio-transcriptions") && (
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-cyan-500/15 text-cyan-400 font-medium">
+                        {`🎙️ ${t("audioTranscriptions")}`}
                       </span>
                     )}
                     {anyNormalizeCompatBadge(model.id!, customMap, overrideMap) && (
@@ -597,6 +675,7 @@ export default function CustomModelsSection({
                             <option value="audio-transcriptions">{t("audioTranscriptions")}</option>
                             <option value="audio-speech">{t("audioSpeech")}</option>
                             <option value="images-generations">{t("imagesGenerations")}</option>
+                            <option value="video">Video</option>
                           </select>
                         </div>
                         <div className="w-[11rem] shrink-0 min-w-0">
@@ -655,7 +734,7 @@ export default function CustomModelsSection({
                             {t("supportedEndpointsLabel")}
                           </span>
                           <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 min-w-0">
-                            {["chat", "embeddings", "rerank", "images", "audio"].map((ep) => (
+                            {MODEL_ENDPOINT_OPTIONS.map((ep) => (
                               <label
                                 key={ep}
                                 className="flex items-center gap-1.5 text-xs text-text-main cursor-pointer whitespace-nowrap"
@@ -674,15 +753,7 @@ export default function CustomModelsSection({
                                   }}
                                   className="rounded border-border"
                                 />
-                                {ep === "chat"
-                                  ? `💬 ${t("supportedEndpointChat")}`
-                                  : ep === "embeddings"
-                                    ? `📐 ${t("supportedEndpointEmbeddings")}`
-                                    : ep === "rerank"
-                                      ? providerText(t, "rerankEndpoint", "Rerank")
-                                      : ep === "images"
-                                        ? `🖼️ ${t("supportedEndpointImages")}`
-                                        : `🔊 ${t("supportedEndpointAudio")}`}
+                                {endpointLabel(ep, t)}
                               </label>
                             ))}
                           </div>
@@ -742,6 +813,19 @@ export default function CustomModelsSection({
                       {model.isHidden ? "visibility_off" : "visibility"}
                     </span>
                   </button>
+                  {hasSyncedBase && (
+                    <button
+                      onClick={() => handleResetToUpstreamDefaults(model.id!)}
+                      className="rounded p-1 text-amber-600 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-900/20"
+                      title={providerText(
+                        t,
+                        "resetToUpstreamDefaults",
+                        "Restore upstream defaults"
+                      )}
+                    >
+                      <span className="material-symbols-outlined text-sm">restart_alt</span>
+                    </button>
+                  )}
                   <button
                     onClick={() => handleRemove(model.id!)}
                     className="rounded p-1 text-red-500 hover:bg-red-50"

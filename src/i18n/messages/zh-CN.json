@@ -974,12 +974,20 @@
     "batchFileUsedByCount": "被 {count, plural, one {# 批次} other {# 批次}} 使用",
     "batchFilePreview": "预览",
     "batchFilePreviewTruncated": "显示前 {shown} 行（共 {total} 行）",
-    "batchFileDownloadFull": "下载完整文件"
+    "batchFileDownloadFull": "下载完整文件",
+    "batchHeaderSubtitle": "Run many requests as one job",
+    "batchStep1": "1 · Upload JSONL",
+    "batchStep1Desc": "Add requests",
+    "batchStep2": "2 · Create batch",
+    "batchStep2Desc": "Run job",
+    "batchStep3": "3 · Get results",
+    "batchStep3Desc": "Download output"
   },
   "disabled": "已禁用",
   "featureFlagOmnirouteEmergencyFallbackDescription": "将预算耗尽的请求路由到紧急免费备用提供者/模型。",
   "featureFlagArenaEloSyncEnabledDescription": "启用定期同步 Arena AI 排行榜 ELO，用于模型智能排名。",
   "featureFlagExposeCcDiscoveryAliasesDescription": "在 /v1/models 上发布 claude/&lt;provider&gt;/&lt;model&gt; 镜像 ID，让 Claude Code 网关模型发现能列出非 Claude 模型。警告：全局启用会使所有客户端的目录条目翻倍。",
+  "featureFlagChatVirtualLanesEnabledDescription": "为提供者调度启用按租户的自适应虚拟准入通道（#9654）：一个租户的突发流量不再导致另一个租户收到 503。OMNIROUTE_CHAT_VIRTUAL_LANES 环境变量优先于此仪表板设置；更改在服务器重启后生效。",
   "sidebar": {
     "home": "首页",
     "dashboard": "仪表板",
@@ -1164,6 +1172,8 @@
     "consoleLogs": "控制台日志",
     "logsTimeline": "时间线",
     "logsTimelineSubtitle": "可视化请求时间线",
+    "conversations": "Conversations",
+    "conversationsSubtitle": "Multi-turn agentic conversations",
     "globalRouting": "全局路由",
     "mitmProxy": "MITM 代理",
     "oneProxy": "1Proxy",
@@ -1256,7 +1266,7 @@
     "agentBridge": "代理桥接",
     "agentBridgeSubtitle": "拦截 IDE 代理流量",
     "trafficInspector": "流量检查器",
-    "trafficInspectorSubtitle": "监控 LLM 调用 + 调试任何 HTTPS 流量",
+    "trafficInspectorSubtitle": "__MISSING__:Inspect request and response traffic from your apps",
     "cliCode": "CLI 代码的",
     "cliCodeSubtitle": "指向 OmniRoute 的代码工具",
     "cliAgents": "CLI 代理",
@@ -1290,7 +1300,8 @@
       "open": "打开",
       "close": "关闭"
     },
-    "noResults": "没有结果"
+    "noResults": "没有结果",
+    "trafficInspectorPurpose": "See exactly what your application sends to and receives from AI providers. Works with any OpenAI-compatible client."
   },
   "webhooks": {
     "title": "Webhook",
@@ -1736,6 +1747,8 @@
     "quotaShare": "配额共享",
     "discovery": "发现",
     "freeProviderRankings": "免费服务商排行",
+    "radar": "Radar",
+    "setup": "Setup",
     "freeTiers": "免费层级",
     "gamification": "游戏化",
     "leaderboard": "排行榜",
@@ -1851,7 +1864,21 @@
     "directDownloadHint": "或直接下载相应的安装程序格式：",
     "releaseNotes": "发布说明",
     "readMore": "阅读更多",
-    "noAuthLabel": "无认证"
+    "noAuthLabel": "无认证",
+    "recentRequests": "Recent Requests",
+    "recentRequestsEmpty": "No requests yet.",
+    "recentRequestsModel": "Model",
+    "recentRequestsTokens": "In / Out",
+    "recentRequestsWhen": "When",
+    "readinessEyebrow": "Get ready to route",
+    "readinessTitle": "Send your first request",
+    "readinessSubtitle": "Four small steps. OmniRoute checks readiness as you go.",
+    "readinessStep1": "Connect a provider",
+    "readinessStep2": "Configure endpoint authentication",
+    "readinessStep3": "Copy your endpoint",
+    "readinessStep4": "Send a test request",
+    "readinessContinue": "Continue setup",
+    "readinessDismiss": "Dismiss for now"
   },
   "analytics": {
     "title": "分析",
@@ -2213,6 +2240,10 @@
     "fullAccess": "完全访问",
     "keyManagement": "API 密钥管理",
     "keyManagementDesc": "创建和管理用于访问端点的 API 密钥",
+    "requestFlowAria": "Your app sends requests through an API key to OmniRoute",
+    "requestFlowYourApp": "Your app",
+    "requestFlowApiKey": "API key",
+    "requestFlowOmniRoute": "OmniRoute",
     "totalKeys": "密钥总数",
     "restricted": "受限",
     "totalRequests": "请求总数",
@@ -2892,7 +2923,8 @@
       "omp": "Oh My Pi 终端编程智能体",
       "letta": "具备持久记忆和工具使用能力的 Letta CLI 智能体",
       "warp": "支持自定义提供者的 Warp AI 终端",
-      "agent-deck": "Agent Deck 多智能体编排器"
+      "agent-deck": "Agent Deck 多智能体编排器",
+      "prime-agent": "Prime Agent — self-improving RLM coding harness with OpenAI-compatible provider support"
     },
     "guides": {
       "cursor": {
@@ -3601,6 +3633,10 @@
     "wizardStep3Desc": "选择请求在模型之间的分发方式 — 提供 13 种策略",
     "wizardStep4Title": "审查并保存",
     "wizardStep4Desc": "审查您的配置并激活组合",
+    "usageGuideInvokeTitle": "How to call this combo",
+    "usageGuideInvokeDesc": "Send the combo's exact name as the model, e.g. model: \"my-combo\" (or combo/my-combo).",
+    "usageGuideInvokeAutoNote": "auto and auto/* are a separate zero-config router that does not use your combos (unless a combo is literally named auto).",
+    "usageGuideInvokeOpenrouterNote": "openrouter/auto is a real paid OpenRouter product (Auto Best Available), not an OmniRoute alias — exclude it via Settings → Routing → Hide paid models.",
     "emailVisibilityStateOn": "开启",
     "emailVisibilityStateOff": "关闭",
     "reorderHandle": "拖拽排序",
@@ -3713,7 +3749,12 @@
     "errorDescription": "我们现在无法加载组合数据。请检查您的连接并重试。",
     "errorId": "错误 ID: {id}",
     "errorRetry": "再试一次",
-    "comboLabel": "组合"
+    "comboLabel": "组合",
+    "duplicateAutoComboConfirm": "从\"{name}\"创建静态组合？",
+    "duplicateAutoComboSnapshotMsg": "这将把与此模板匹配的当前连接提供者/模型快照到可编辑的组合中。",
+    "duplicateAutoComboFailedPrefix": "复制自动组合失败：",
+    "duplicateAutoComboUnknownError": "未知错误",
+    "duplicateAutoComboTitle": "从{name}创建静态组合"
   },
   "costs": {
     "title": "成本",
@@ -4115,7 +4156,10 @@
     "notionIntegrationHelp": "在创建内部集成时",
     "notionIntegrationToken": "Notion 内部集成令牌",
     "notionNotConnected": "未连接",
-    "notionTokenConfigured": "令牌已配置。Notion 工具可通过 MCP 使用。"
+    "notionTokenConfigured": "令牌已配置。Notion 工具可通过 MCP 使用。",
+    "subtitle": "Use the OpenAI-compatible endpoint with most SDKs and tools.",
+    "testEndpoint": "Test endpoint →",
+    "advancedProtocols": "Advanced protocols"
   },
   "endpoints": {
     "tabProxy": "端点代理",
@@ -4698,7 +4742,14 @@
     "issueCount": "{count} 个问题",
     "score": "评分",
     "lastRequest": "最近请求",
-    "lastError": "最近错误"
+    "lastError": "最近错误",
+    "healthVerdictReady": "OmniRoute is ready",
+    "healthVerdictActionRequired": "Action required to restore full operation",
+    "healthVerdictCoolingDown": "Cooling down after recent changes",
+    "healthSubtitle": "System health check",
+    "advancedDiagnosticsTitle": "Advanced diagnostics",
+    "hide": "Hide",
+    "show": "Show"
   },
   "telemetry": {
     "title": "系统遥测",
@@ -4960,7 +5011,9 @@
         "skipped": "已配置",
         "failed": "失败"
       }
-    }
+    },
+    "securityDescSkipWarning": "⚠️ Without a password, you won't be able to add providers during setup. You can add them later from the dashboard after setting a password.",
+    "providerRequiresPassword": "You need to set a password first to add providers. Please go back to the security step and set a password, or add providers later from the dashboard."
   },
   "providers": {
     "title": "提供者",
@@ -5092,6 +5145,7 @@
     "deprecatedProvider": "此提供者已弃用",
     "riskNotice": {
       "title": "继续之前",
+      "detailsTitle": "Usage caveats",
       "tooltip": "该提供者有使用注意事项 —— 点击查看详情",
       "oauth": "此提供者使用你官方产品的会话 / OAuth,这并未被授权用于代理或路由用途。 不建议进行高强度的自主代理使用(OpenCloud 风格、长链路多步流程、大批量请求)—— 上游可能因此限制甚至封禁账号。 使用风险自负。",
       "webCookie": "此提供者通过你的网页会话 Cookie 进行鉴权。上游服务可能随时让会话失效,届时你需要重新登录。不建议用于长时间无人值守的操作。 使用风险自负。",
@@ -5099,6 +5153,11 @@
       "dontShowAgain": "对此提供者不再显示此提示",
       "understand": "我已了解,继续",
       "cancel": "取消"
+    },
+    "warningNotice": {
+      "tooltip": "{count} connection(s) flagged — up to {maxFailures} recent failures{lastFailureSuffix}. Click to view connection health.",
+      "lastFailureSuffix": " (last failure {time})",
+      "ariaLabel": "View connection health details, {count} warning(s)"
     },
     "disabled": "已禁用",
     "enableProvider": "启用提供者",
@@ -5222,6 +5281,17 @@
     "skippingExistingModels": "跳过 {count} 个已有模型",
     "autoSync": "自动同步",
     "autoSyncShort": "同步",
+    "autoFetchModels": "自动获取上游模型",
+    "autoFetchModelsTooltip": "需要模型目录时向上游请求 /models 并更新本地缓存",
+    "autoFetchModelsEnabled": "已开启自动获取上游模型",
+    "autoFetchModelsDisabled": "已关闭自动获取上游模型",
+    "autoFetchModelsToggleFailed": "切换自动获取上游模型失败",
+    "autoFetchModelsPartialFailure": "部分连接已更新，但并非全部成功",
+    "overridesUpstreamModel": "覆盖上游模型",
+    "overridesUpstreamModelHint": "当前手动设置会优先于同 ID 的上游模型",
+    "resetToUpstreamDefaults": "恢复上游默认值",
+    "resetToUpstreamDefaultsSuccess": "已恢复上游模型默认设置",
+    "resetToUpstreamDefaultsFailed": "恢复上游模型默认设置失败",
     "autoSyncTooltip": "每 24 小时自动刷新模型列表（可通过 MODEL_SYNC_INTERVAL_HOURS 配置）",
     "autoSyncEnabled": "自动同步已启用 — 模型将定期刷新",
     "autoSyncDisabled": "自动同步已禁用",
@@ -5427,18 +5497,18 @@
     "interceptFetchHint": "将原生的 web_fetch 工具调用重写为 OmniRoute 的 /v1/web/fetch。",
     "interceptionLoadError": "加载拦截设置失败：{error}",
     "interceptionSaveError": "保存拦截设置失败：{error}",
-    "ccAliasSectionTitle": "在 Claude Code 中暴露 (claude/…)",
-    "ccAliasSectionHint": "将该提供者的模型以 claude/&lt;provider&gt;/&lt;model&gt; 镜像 ID 发布，让 Claude Code 的网关模型可以发现它们。默认关闭 — 启用会使所有客户端的目录条目翻倍。",
-    "ccAliasProviderLevelLabel": "提供者默认值",
-    "ccAliasModelOverridesLabel": "按模型覆盖",
-    "ccAliasModelOverrideAriaLabel": "覆盖 {modelId}",
-    "ccAliasStateInherit": "继承",
-    "ccAliasStateOn": "开启",
-    "ccAliasStateOff": "关闭",
-    "ccAliasAddModelPlaceholder": "模型 ID (例如 gpt-4o)",
-    "ccAliasAddModelButton": "添加覆盖",
-    "ccAliasLoadError": "加载发现别名设置失败: {error}",
-    "ccAliasSaveError": "保存发现别名设置失败: {error}",
+    "ccAliasSectionTitle": "Expose in Claude Code (claude/…)",
+    "ccAliasSectionHint": "Advertise this provider's models under claude/&lt;provider&gt;/&lt;model&gt; mirror ids so Claude Code's gateway model discovery can list them. Off by default — enabling this doubles catalog entries for all clients.",
+    "ccAliasProviderLevelLabel": "Provider default",
+    "ccAliasModelOverridesLabel": "Per-model overrides",
+    "ccAliasModelOverrideAriaLabel": "Override for {modelId}",
+    "ccAliasStateInherit": "Inherit",
+    "ccAliasStateOn": "On",
+    "ccAliasStateOff": "Off",
+    "ccAliasAddModelPlaceholder": "Model id (e.g. gpt-4o)",
+    "ccAliasAddModelButton": "Add override",
+    "ccAliasLoadError": "Failed to load discovery-alias settings: {error}",
+    "ccAliasSaveError": "Failed to save discovery-alias setting: {error}",
     "compatUpstreamHeadersLabel": "上游额外请求头",
     "compatUpstreamHeadersHint": "与修改厂商连接/API 配置同属高权限能力，仅可信管理员应使用。这些头会在 OmniRoute 按厂商 API Key 自动加好鉴权头之后再合并。若「名称」与系统已加的头相同（例如都叫 Authorization），则以你填的值为准，会整段替换自动那条（含 Bearer 令牌），上游请求里不再使用面板里保存的密钥来生成 Authorization。填错可能导致 401，请谨慎。每个请求头单独一行；部分网关需要额外 Authentication 等可在此加。鼠标移入或聚焦「值」可暂时看明文。点空白处、关闭本面板或切走焦点即保存。",
     "compatUpstreamHeaderName": "请求头名称",
@@ -5797,6 +5867,8 @@
     "rateLimitOverridesSection": "速率限制覆盖",
     "rateLimitOverridesMaxConcurrentHint": "此连接的最大并发请求覆盖。覆盖账户级别的上限。",
     "rateLimitOverridesMaxConcurrentLabel": "最大并发（速率限制）",
+    "rateLimitOverridesMaxWaitMsHint": "__MISSING__:Maximum time (ms) a request may wait for a rate-limit slot before failing. Overrides the global Resilience setting for this connection only.",
+    "rateLimitOverridesMaxWaitMsLabel": "__MISSING__:Max Queue Wait (ms)",
     "rateLimitOverridesMinTimeHint": "请求之间的最小时间（毫秒）。覆盖默认速率限制器延迟。",
     "rateLimitOverridesMinTimeLabel": "最小间隔（毫秒）",
     "rateLimitOverridesRpmHint": "此连接的每分钟最大请求数。覆盖提供者默认值。",
@@ -6074,7 +6146,6 @@
       "glmt": "预设 GLM 配置文件，具有更高的 Token 预算、启用思考功能以及更长的超时时间。",
       "getgoapi": "使用 API 密钥连接 GoAPI。",
       "groq": "免费层：30 RPM / 14.4K RPD — 无需信用卡",
-      "hackclub": "在 ai.hackclub.com 使用您的 Hack Club 账户登录。",
       "haiper": "在 haiper.ai/haiper-api 获取 API 密钥",
       "heroku": "使用 API 密钥连接 Heroku AI。",
       "hcnsec": "在 api.hcnsec.cn 获取 API 密钥",
@@ -6183,7 +6254,7 @@
       "galadriel": "使用 API 密钥连接 Galadriel。",
       "predibase": "$25 免费试用额度（30 天有效期）",
       "chenzk": "兼容 OpenAI 的网关，在 chenzk.top 提供实时模型目录。",
-      "freepik": "使用 Freepik 的 Mystic API 生成图像。",
+      "magnific": "使用 Freepik 的 Mystic API 生成图像。",
       "freetheai": "免费的 OpenAI 兼容网关，支持直通模型。",
       "g4f-gemini": "免费免密钥的 g4f.space Gemini 反向代理，限制为每分钟 5 次请求。",
       "g4f-groq": "免费免密钥的 g4f.space Groq 反向代理，限制为每分钟 5 次请求。",
@@ -6198,6 +6269,7 @@
       "claude": "使用现有的 OAuth 流程连接 Claude Code。",
       "cline": "使用现有的 OAuth 流程连接 Cline。",
       "cursor": "使用现有的 OAuth 流程连接 Cursor IDE。",
+      "cursor-api": "Connect Cursor with a user API key (crsr_...) from cursor.com/dashboard/api; no IDE session needed.",
       "github": "使用现有的 OAuth 流程连接 GitHub Copilot。",
       "gitlab-duo": "具有 ai_features + read_user 作用域的 OAuth 应用程序。在此 OmniRoute 实例上配置 GITLAB_DUO_OAUTH_CLIENT_ID 以及可选的 GITLAB_DUO_OAUTH_CLIENT_SECRET。",
       "kilocode": "使用现有的 OAuth 流程连接 Kilo Code。",
@@ -6260,6 +6332,15 @@
     "cheaperInferenceSupporterBadge": "开源好友",
     "cheaperInferenceSupporterTooltip": "Cheaper Inference 作为开源好友支持 OmniRoute",
     "kimiPartnerLinkNote": "合作伙伴链接 — 支持 OmniRoute，您无需承担额外费用",
+    "codexQuotaPools": "Codex 配额池",
+    "codexPoolAvailable": "可用",
+    "codexPoolPartiallyLimited": "部分受限",
+    "codexPoolFullyLimited": "全部受限",
+    "codexPoolLimited": "{count} 个受限",
+    "codexPoolQuotaExhausted": "配额已用尽",
+    "codexPoolCoolingDown": "冷却中",
+    "codexPoolUsed": "已使用",
+    "codexPoolUntil": "截至 {value}",
     "anonymousFallbackTitle": "匿名回退",
     "anonymousFallbackDesc": "当所有配置的连接耗尽（配额、积分或到期）时，临时使用此提供者的无密钥层。关闭以跳过此提供者，而不是发送匿名请求 — 当无密钥层拒绝它们时（401）建议使用。",
     "anonymousFallbackEnabled": "为 {provider} 启用匿名回退",
@@ -6335,7 +6416,21 @@
     "savedModelEndpointSettings": "已保存的模型端点设置",
     "searchByModelAria": "按型号搜索",
     "selectSupportedEndpoint": "请选择至少一个支持的端点",
-    "antigravityClientProfileHarness": "Harness / CLI"
+    "antigravityClientProfileHarness": "Harness / CLI",
+    "harImportButtonLabel": "Import .har file",
+    "harImportButtonBusy": "Importing…",
+    "harImportButtonHint": "Export from DevTools Network tab after sending at least one chat message.",
+    "harImportStatusValid": "Imported — valid for ~{minutes}m.",
+    "harImportStatusExpiringSoon": "Imported — valid for only ~{minutes}m more.",
+    "harImportStatusExpired": "Imported, but this token already expired ({minutes}m ago) — export a fresh HAR.",
+    "harImportStatusUnknownExpiry": "Imported. Couldn't read its expiry.",
+    "harImportErrorNotJson": "That file isn't valid JSON — is it really a .har export?",
+    "harImportErrorNoEntries": "This HAR has no network entries recorded.",
+    "harImportErrorNoChathubUrl": "No Copilot chat connection found in this HAR. Send at least one chat message in m365.cloud.microsoft before exporting.",
+    "harImportErrorUnparsableUrl": "Found the chat connection, but couldn't read its URL.",
+    "harImportErrorMissingFields": "Found the chat connection, but the token was missing from it.",
+    "harImportErrorReadFailed": "Couldn't read that file.",
+    "harImportErrorUnknown": "Couldn't extract a credential from that HAR file."
   },
   "settings": {
     "title": "设置",
@@ -6554,6 +6649,12 @@
     "autoDisableDescription": "若提供者连接返回特定的永久封禁信号（如 HTTP 403\"请验证您的账户\"），则将其永久标记为停用。这会将其从组合轮换中移除。",
     "autoDisableThreshold": "封禁阈值",
     "autoDisableThresholdDesc": "触发永久停用所需的连续封禁信号次数。",
+    "autoDisableBannedScope": "Apply auto-disable to",
+    "autoDisableBannedScopeDesc": "Login seats (paid subscriptions and free accounts) can be locked by the upstream if OmniRoute keeps retrying after a ban. Paid prepaid API keys do not have that risk — leave them in the pool so fill-first can use the next key.",
+    "autoDisableBannedScopeAll": "All connections",
+    "autoDisableBannedScopeAllDesc": "Deactivate every connection that returns a permanent ban signal, including prepaid API keys.",
+    "autoDisableBannedScopeSubscription": "Login / subscription accounts only",
+    "autoDisableBannedScopeSubscriptionDesc": "Deactivate OAuth, cookie, session, and web-login seats (paid or free). Prepaid API keys stay active so routing can fail over.",
     "customBannedSignals": "封禁关键词",
     "customBannedSignalsDesc": "触发永久封号检测的附加关键词。内置关键词始终生效。",
     "customBannedSignalsPlaceholder": "例如 api key revoked",
@@ -7161,6 +7262,7 @@
     "configured": "已配置",
     "none": "无",
     "modelOverrideValuePlaceholder": "数字值",
+    "modelOverrideReasoningEffortsPlaceholder": "English comma-separated, e.g. low, medium, high",
     "addKeyValue": "添加键值",
     "noModelOverrides": "该模型尚未配置覆盖。",
     "modelOverrideLoadFailed": "加载模型覆盖失败",
@@ -7388,7 +7490,7 @@
     "qdrantDesc": "可选。在外部向量数据库中索引语义记忆以加快检索速度。",
     "qdrantStatusActive": "活跃",
     "qdrantStatusError": "错误",
-    "qdrantStatusDisabled": "残疾人",
+    "qdrantStatusDisabled": "已禁用",
     "qdrantEnable": "启用 Qdrant",
     "qdrantEnableDesc": "启用后，语义/混合策略可以使用 Qdrant 来检索记忆。",
     "qdrantTesting": "测试...",
@@ -7732,6 +7834,10 @@
         "label": "马尾辫（懒人高级开发）",
         "description": "懒人高级开发原则：遵循 YAGNI 阶梯，修复根因，最小可行差异。"
       },
+      "i-have-adhd": {
+        "label": "我有 ADHD（行动优先）",
+        "description": "行动优先输出：先给出下一步操作，步骤编号，只提供一个具体的后续步骤，不加开场白。"
+      },
       "terse-cjk": {
         "label": "精简 CJK (文言)",
         "description": "文言文极简风格 (仅适用于中文)。"
@@ -7891,7 +7997,7 @@
     "triggerLabel": "触发",
     "effectLabel": "效果",
     "statusEnabled": "启用",
-    "statusDisabled": "残疾人",
+    "statusDisabled": "已禁用",
     "resilienceRequestQueueScope": "每个请求队列",
     "resilienceRequestQueueTrigger": "发送到上游之前",
     "resilienceRequestQueueEffect": "对请求进行排队、限制并发并间隔调用",
@@ -8012,6 +8118,10 @@
     "disableSessionStickinessDesc": "轮询和随机组合在每次请求时都会轮换到不同的连接，而不是通过首条消息的哈希将整个对话固定在单个连接上。保持关闭以保留多轮对话的提示词缓存命中率。每个组合的覆盖设置优先。",
     "promptCacheAffinity": "提示缓存局部性路由",
     "promptCacheAffinityDesc": "在保持健康检查和配额故障转移的同时，优先使用同一提供者账户匹配提示缓存键。",
+    "reasoningTokenBuffer": "推理令牌缓冲",
+    "reasoningTokenBufferDesc": "仅当完整缓冲空间不超过已知输出上限时，才允许组合路由为已知推理模型增加 max_tokens 余量。",
+    "zeroLatencyOptimizations": "零延迟优化",
+    "zeroLatencyOptimizationsDesc": "选择启用对冲、预测性 TTFT 跳过和主动压缩回退请求。保持关闭可避免这些延迟优化功能竞速多个目标或压缩回退请求。",
     "credentialRedaction": "凭据脱敏",
     "credentialRedactionDesc": "对发送给提供者的上下文以及响应中的 API 密钥、令牌和机密信息进行脱敏。",
     "enableCredentialRedaction": "启用凭据脱敏",
@@ -8167,7 +8277,19 @@
     "cliproxyapiHealth": "健康",
     "cliproxyapiPort": "端口",
     "qdrantHost": "主机",
-    "qdrantCollection": "集合"
+    "qdrantCollection": "集合",
+    "presetAll": "All",
+    "presetAllDesc": "Show everything",
+    "presetEssentials": "Essentials",
+    "presetEssentialsDesc": "Beginner path - Advanced tools stay searchable",
+    "presetMinimal": "Minimal",
+    "presetMinimalDesc": "Core pages only",
+    "presetDeveloper": "Developer",
+    "presetDeveloperDesc": "Dev & proxy tools",
+    "presetAdmin": "Admin",
+    "presetAdminDesc": "Monitoring & audit",
+    "settingsSidebarTitle": "Sidebar Customization",
+    "settingsSidebarDesc": "Choose which sidebar items to show. Essentials keeps Advanced tools searchable."
   },
   "contextRtk": {
     "title": "命令输出过滤引擎",
@@ -8572,6 +8694,27 @@
     },
     "enableTitle": "启用引擎",
     "enableDescription": "在堆栈中最后运行（在 RTK/Caveman 清理文本、OmniGlyph 将剩余部分转换为图像之后），也可以通过 <code>omniglyph</code> 模式独立运行。此功能为预览版，在端到端验证完成前默认保持关闭。",
+    "profileTitle": "Compression profile",
+    "profileDescription": "The profile is a ceiling, not a floor: a stricter profile cannot be reopened by a per-step override. Measured on this codebase: with coding-safe or balanced, a session that has not accumulated history yet compresses nothing, because both raise the minimum-characters threshold and keep the system prompt, tool schemas and tool results native.",
+    "profiles": {
+      "aggressive": {
+        "label": "Aggressive (default)",
+        "description": "The policy the published receipts measured. Images the system prompt, tool documentation and dense history."
+      },
+      "balanced": {
+        "label": "Balanced",
+        "description": "Keeps live state native and protects the last 8 turns; only collapses older closed history."
+      },
+      "codingSafe": {
+        "label": "Coding-safe",
+        "description": "Keeps authority, tool schemas and live tool output native, protecting the last 12 turns. Compresses nothing until the session accumulates history."
+      },
+      "passthrough": {
+        "label": "Passthrough",
+        "description": "Routes without transforming. The engine is skipped and the request is forwarded untouched."
+      }
+    },
+    "profileAria": "Select the OmniGlyph compression profile",
     "saved": "已保存。",
     "saveFailed": "无法保存。",
     "enableAria": "启用 OmniGlyph 引擎",
@@ -9041,6 +9184,16 @@
     "grokAutoTopUpMax": "最大",
     "grokAutoTopUpMonth": "月",
     "grokAdditionalCredits": "额外的致谢",
+    "kimiExtraUsageCredits": "加油包余额",
+    "kimiExtraUsage": "额度加油包",
+    "kimiExtraUsageEnabled": "已开启",
+    "kimiExtraUsageDisabled": "已关闭",
+    "kimiExtraUsageFrozen": "已冻结",
+    "kimiExtraUsageUnavailable": "不可用",
+    "kimiMonthlyUsed": "本月已用",
+    "kimiMonthlyLimit": "每月限额",
+    "kimiMonthlyLimitUnlimited": "无限制",
+    "kimiAdditionalCredits": "充值加油包",
     "loggerTab": "记录器",
     "proxyTab": "代理",
     "budgetManagement": "预算管理",
@@ -10539,11 +10692,23 @@
   },
   "cursorAuthModal": {
     "title": "连接 Cursor IDE",
+    "tabLogin": "Login with Cursor",
+    "tabImport": "Import token",
+    "loginDescription": "Opens Cursor's browser login. Works in Docker — approve in your host browser, then return here.",
+    "loginWithCursor": "Login with Cursor",
+    "startingLogin": "Starting…",
+    "waitingApproval": "Waiting for Cursor login approval…",
+    "openUrlHint": "If the browser did not open:",
+    "openLoginLink": "Open login page",
+    "cancelLogin": "Cancel login",
     "autoDetecting": "自动检测令牌中...",
     "readingFromCursor": "正在从 Cursor IDE 或 cursor-agent 读取",
     "tokensAutoDetected": "已成功从 Cursor IDE 自动检测到令牌！",
     "cursorNotDetected": "未检测到 Cursor IDE。请手动粘贴您的令牌。",
+    "dockerImportHint": "Running in Docker? Prefer Login with Cursor. IDE auto-import and cursor-agent are usually unavailable inside the container. See docs/providers/CURSOR-DOCKER.md.",
     "accessToken": "访问令牌",
+    "refreshToken": "Refresh Token",
+    "refreshTokenPlaceholder": "Optional — enables automatic token refresh",
     "required": "*",
     "accessTokenPlaceholder": "访问令牌将自动填充...",
     "machineId": "机器 ID",
@@ -10555,7 +10720,10 @@
     "errorAutoDetect": "无法自动检测令牌",
     "errorAutoDetectFailed": "自动检测令牌失败",
     "errorEnterToken": "请输入访问令牌",
-    "errorImportFailed": "导入失败"
+    "errorImportFailed": "导入失败",
+    "errorLoginStart": "Failed to start Cursor login",
+    "errorLoginPoll": "Cursor login failed",
+    "errorLoginTimeout": "Cursor login timed out — try again"
   },
   "pricingModal": {
     "title": "定价配置",
@@ -11045,7 +11213,8 @@
       "compressed": "压缩",
       "tps": "TPS",
       "duration": "时长",
-      "time": "时间"
+      "time": "时间",
+      "conversation": "Conversation"
     },
     "loadingLogs": "正在加载日志...",
     "noLogs": "暂无日志记录。进行一些API调用以在此处查看它们。",
@@ -11907,7 +12076,8 @@
         "title": "ACP 代理",
         "phrase": "OmniRoute 作为执行后端（反向流）生成的 CLI",
         "flow": "客户端 → OmniRoute → 生成 CLI (stdio/ACP) → 响应",
-        "seeOther": "查看 →"
+        "seeOther": "查看 →",
+        "warning": "Most users can ignore this — use only when an integration requires it."
       }
     },
     "comparison": {
@@ -12097,7 +12267,7 @@
       },
       "omni-webhooks": {
         "name": "Webhooks",
-        "description": "注册、列出、测试和移除 Webhook 端点。配置事件订阅（request.completed、provider.error、budget.exceeded 等）并管理投递重试。"
+        "description": "__MISSING__:Register, list, test, and remove webhook endpoints. Configure event subscriptions (request.completed, request.failed, quota.exceeded, etc.) and manage delivery retries."
       },
       "omni-mcp": {
         "name": "MCP 服务器",
@@ -12437,6 +12607,11 @@
       "rare": "稀有成就"
     },
     "badges": {
+      "radar-supporter": {
+        "name": "Radar Supporter",
+        "description": "Verified a live OmniRoute Radar supporter feed",
+        "criteria": "Verify a signed live Radar supporter feed."
+      },
       "first-token": {
         "name": "首个 Token",
         "description": "完成了您的首次 API 请求",
@@ -12726,6 +12901,10 @@
       },
       "SKILLS_SANDBOX_NETWORK_ENABLED": {
         "description": "在技能沙箱中启用网络访问。"
+      },
+      "DISABLE_CONTEXT_WINDOW_CHECKS": {
+        "label": "Disable Context Window Checks",
+        "description": "Skip OmniRoute's local context-window and max-input-token check for direct single-model requests. Upstream providers still enforce their actual limits. Prompt compression and output-token caps remain active."
       }
     }
   },
@@ -13081,6 +13260,13 @@
     "partnerLinkNote": "合作伙伴链接",
     "dismissAriaLabel": "关闭"
   },
+  "vscodeCopilotBanner": {
+    "title": "OmniRoute 现已可在 VS Code Copilot Chat 中运行",
+    "description": "安装免费的 OmniCopilot 扩展，每个 OmniRoute 模型都会直接出现在你已经在用的 Copilot Chat 模型选择器中。",
+    "cta": "获取扩展",
+    "secondaryNote": "同样支持 Open VSX（Cursor、Windsurf、VSCodium…）",
+    "dismissAriaLabel": "关闭"
+  },
   "featureFlagExposeFunctionalGatewayMirrorsDescription": "在/v1/models上为那些规范所有者没有活动凭证但通过一个具有活动凭证的通道网关路由的模型宣传<gateway-alias>/<model>镜像ID。警告：当全局启用时，会为所有客户端添加目录条目。",
   "radarPage": {
     "title": "雷达目录",
@@ -13150,7 +13336,25 @@
     "modelEnabled": "Enabled locally",
     "localStateSaveFailed": "Failed to save local Radar settings",
     "guidedCombos": "Guided combos",
-    "offers": "Offers"
+    "offers": "Offers",
+    "intel": "Intel"
+  },
+  "radarCombosPage": {
+    "title": "Radar guided combos",
+    "subtitle": "Create priority fallbacks from equivalent free models curated by Radar.",
+    "backToRadar": "Back to Radar",
+    "loading": "Loading combo suggestions...",
+    "familyLabel": "Model family",
+    "modelsLabel": "Priority order",
+    "strategyReason": "Priority uses the largest recurring free budget first, then falls back across active providers.",
+    "generateButton": "Generate combo",
+    "generating": "Generating...",
+    "alreadyCreated": "Already created",
+    "created": "Combo created",
+    "noSuggestions": "No eligible model family currently has active connections to at least two providers.",
+    "catalogRequired": "Sync the Radar catalog first to load curated model families.",
+    "loadFailed": "Failed to load Radar combo suggestions.",
+    "createFailed": "Failed to create the combo. Review your provider connections and try again."
   },
   "radarSetupPage": {
     "title": "提供者设置",
@@ -13273,6 +13477,13 @@
         "modelLockouts": "模型锁定",
         "count": "连接数"
       }
+    },
+    "reassuranceTitle": "Your connections recover automatically",
+    "reassuranceDetail": "Usually no action is needed. OmniRoute temporarily rests a connection after failures, then safely tries it again.",
+    "plainStates": {
+      "healthy": "Requests can be sent",
+      "coolingDown": "Trying again soon",
+      "lockedOut": "Needs your attention"
     }
   },
   "featureFlagCapabilityFilterEnabledDescription": "在目标模型缺少所需能力（视觉、工具、结构化输出、上下文窗口）时，拒绝调度前的请求。保护绕过组合层兼容性过滤器的直接单一提供者请求。",
@@ -13651,23 +13862,6 @@
     "updateFailed": "更新失败 (HTTP {status})",
     "networkError": "网络错误 — 无法更新提供者曝光设置"
   },
-  "radarCombosPage": {
-    "title": "Radar guided combos",
-    "subtitle": "Create priority fallbacks from equivalent free models curated by Radar.",
-    "backToRadar": "Back to Radar",
-    "loading": "Loading combo suggestions...",
-    "familyLabel": "Model family",
-    "modelsLabel": "Priority order",
-    "strategyReason": "Priority uses the largest recurring free budget first, then falls back across active providers.",
-    "generateButton": "Generate combo",
-    "generating": "Generating...",
-    "alreadyCreated": "Already created",
-    "created": "Combo created",
-    "noSuggestions": "No eligible model family currently has active connections to at least two providers.",
-    "catalogRequired": "Sync the Radar catalog first to load curated model families.",
-    "loadFailed": "Failed to load Radar combo suggestions.",
-    "createFailed": "Failed to create the combo. Review your provider connections and try again."
-  },
   "radarOffersPage": {
     "title": "Supporter offers",
     "subtitle": "Official discounts, credits, trials, and reviewed partner benefits from Radar.",
@@ -13689,10 +13883,51 @@
     "openOffer": "View offer",
     "trialDays": "{days, plural, one {# day} other {# days}}"
   },
+  "radarIntelPage": {
+    "title": "Radar Intel",
+    "subtitle": "Radar-owned ELO rankings and factual catalog movement.",
+    "backToRadar": "Back to Radar",
+    "loading": "Loading Intel...",
+    "refresh": "Refresh Intel",
+    "syncing": "Refreshing...",
+    "loadFailed": "We could not refresh Intel. The last verified local cache is kept.",
+    "empty": "No verified Intel snapshot is available yet.",
+    "supporterBadge": "Radar Supporter",
+    "methodology": "Methodology",
+    "eloMethod": "ELO, initial {initial}, K={factor}",
+    "freshness": "Catalog freshness",
+    "ageDays": "{days, plural, one {# day old} other {# days old}}",
+    "trend": "Catalog trend",
+    "modelDelta": "{current} models, +{added} / -{removed}",
+    "ranking": "Model ranking",
+    "noRankings": "No confirmed comparisons are available yet.",
+    "model": "Model",
+    "category": "Category",
+    "rating": "Rating",
+    "matches": "Matches",
+    "freshnessValues": {
+      "fresh": "Fresh",
+      "aging": "Aging",
+      "stale": "Stale"
+    },
+    "trendValues": {
+      "growing": "Growing",
+      "stable": "Stable",
+      "shrinking": "Shrinking"
+    }
+  },
   "capabilityFilter": {
     "visionMismatch": "提供者不支持此图像请求的视觉效果",
     "toolsMismatch": "提供者不支持工具调用",
     "structuredOutputMismatch": "提供者不支持结构化输出",
     "contextWindowMismatch": "请求超出提供者上下文窗口"
+  },
+  "featureFlagDisableContextWindowChecksDescription": "Skip OmniRoute's local context-window and max-input-token check for direct single-model requests. Upstream providers still enforce their actual limits. Prompt compression and output-token caps remain active.",
+  "cheaperInferenceSponsorBanner": {
+    "title": "Cheaper Inference is an OmniRoute Open Source Friend",
+    "description": "A cost-ranked gateway reselling dozens of frontier models behind one OpenAI-compatible endpoint — routing each request to the cheapest eligible provider, never above list price.",
+    "cta": "Get an API Key",
+    "partnerLinkNote": "Partner link",
+    "dismissAriaLabel": "Dismiss"
   }
 }

@@ -10,14 +10,18 @@ import {
   VIDEO_BRIDGE_TIMEOUT_MAX_MS,
   VIDEO_BRIDGE_TIMEOUT_MIN_MS,
   resolveVideoBridgeRuntimeSettings,
+  type VideoAnalysisMode,
+  type VideoSamplingPolicy,
 } from "@/shared/constants/modalityBridgeDefaults";
 
 import ModalityBridgeStatsRow from "./ModalityBridgeStatsRow";
 
 interface VideoState {
   modalityBridgeVideoEnabled: boolean;
+  modalityBridgeVideoAnalysisMode: VideoAnalysisMode;
   modalityBridgeVideoModel: string;
   modalityBridgeVideoFrameCount: number;
+  modalityBridgeVideoSamplingPolicy: VideoSamplingPolicy;
   modalityBridgeVideoMaxVideos: number;
   modalityBridgeVideoTimeout: number;
 }
@@ -42,8 +46,10 @@ function fromApi(value: unknown): VideoState {
   const runtime = resolveVideoBridgeRuntimeSettings(asRecord(value));
   return {
     modalityBridgeVideoEnabled: runtime.enabled,
+    modalityBridgeVideoAnalysisMode: runtime.analysisMode,
     modalityBridgeVideoModel: runtime.model,
     modalityBridgeVideoFrameCount: runtime.frameCount,
+    modalityBridgeVideoSamplingPolicy: runtime.samplingPolicy,
     modalityBridgeVideoMaxVideos: runtime.maxVideos,
     modalityBridgeVideoTimeout: runtime.timeoutMs,
   };
@@ -220,6 +226,32 @@ export default function ModalityBridgeVideoTab({
           description={t("modalityBridgeVideoEnabledDesc")}
         />
 
+        <label className="block text-sm font-medium">
+          {t("modalityBridgeMode")}
+          <select
+            data-testid="modality-bridge-video-analysis-mode"
+            aria-describedby="modality-bridge-video-analysis-mode-description"
+            value={settings.modalityBridgeVideoAnalysisMode}
+            onChange={(event) =>
+              void update({
+                modalityBridgeVideoAnalysisMode: event.currentTarget.value as VideoAnalysisMode,
+              })
+            }
+            className="mt-1 w-full rounded-control border border-border bg-surface px-3 py-2 text-sm"
+          >
+            <option value="full">{tRoot("health.degradationFull")}</option>
+            <option value="focused">{t("modalityBridgeTaskAware")}</option>
+          </select>
+          <span
+            id="modality-bridge-video-analysis-mode-description"
+            className="mt-1 block text-xs font-normal text-text-muted"
+          >
+            {settings.modalityBridgeVideoAnalysisMode === "focused"
+              ? t("modalityBridgeTaskAwareDesc")
+              : t("modalityBridgeVideoDesc")}
+          </span>
+        </label>
+
         <ModelSelectField
           label={t("modalityBridgeVideoModel")}
           value={settings.modalityBridgeVideoModel}
@@ -286,6 +318,24 @@ export default function ModalityBridgeVideoTab({
                 )
               }
             />
+            <label className="block text-sm font-medium">
+              {t("modalityBridgeAdvanced")}
+              <select
+                aria-label={t("modalityBridgeAdvanced")}
+                value={settings.modalityBridgeVideoSamplingPolicy}
+                onChange={(event) =>
+                  void update({
+                    modalityBridgeVideoSamplingPolicy: event.currentTarget
+                      .value as VideoSamplingPolicy,
+                  })
+                }
+                className="mt-1 w-full rounded-control border border-border bg-surface px-3 py-2 text-sm"
+              >
+                <option value="uniform">uniform</option>
+                <option value="scene_aware">scene_aware</option>
+                <option value="segment_aware">segment_aware</option>
+              </select>
+            </label>
           </div>
         </details>
 

@@ -263,12 +263,18 @@ Cost: currently listed as $0; terms and availability may change
 
 ### Cursor IDE
 
+**Using Cursor as an OmniRoute client** (route Cursor chat through OmniRoute):
+
 ```
 Settings → Models → Advanced:
   OpenAI API Base URL: http://localhost:20128/v1
   OpenAI API Key: [from omniroute dashboard]
   Model: cc/claude-opus-4-7
 ```
+
+**Using OmniRoute as a Cursor provider** (OmniRoute calls Cursor upstream): prefer
+**Dashboard → Providers → Cursor → Login with Cursor**. In Docker, see
+[`docs/providers/CURSOR-DOCKER.md`](../providers/CURSOR-DOCKER.md).
 
 ### Claude Code
 
@@ -350,6 +356,49 @@ omniroute --port 3000
 ```
 
 The CLI automatically loads `.env` from `~/.omniroute/.env` or `./.env`.
+
+### Tray mode
+
+Start OmniRoute in the system tray:
+
+```bash
+omniroute serve --tray
+```
+
+The command returns after the server and tray are ready.
+
+The server continues without the terminal.
+
+Tray mode supports macOS, Windows, and graphical Linux sessions. Tray mode does not open the dashboard automatically.
+
+Use the tray menu for these actions:
+
+- Open the dashboard.
+- Open `/dashboard/logs`.
+- Change auto-start.
+- Stop OmniRoute.
+
+Do not combine `--tray` with these options:
+
+- `--daemon`
+- `--log`
+- `--no-recovery`
+
+These modes require different process ownership.
+
+Enable startup at the next machine login:
+
+```bash
+omniroute autostart enable
+```
+
+Auto-start uses tray mode on macOS, Windows, and graphical Linux sessions. Headless Linux uses the existing systemd user service.
+
+Disable startup at login:
+
+```bash
+omniroute autostart disable
+```
 
 ### Uninstalling
 
@@ -948,8 +997,11 @@ Content-Type: multipart/form-data
 curl -X POST http://localhost:20128/v1/audio/transcriptions \
   -H "Authorization: Bearer your-api-key" \
   -F "file=@audio.mp3" \
-  -F "model=deepgram/nova-3"
+  -F "model=openai/whisper-1"
 ```
+
+`deepgram/nova-3` is the native Deepgram route and needs a Deepgram API key.
+If only OpenRouter is configured, use `openrouter/deepgram/nova-3`.
 
 **Speech-to-Text (transcription)** providers:
 

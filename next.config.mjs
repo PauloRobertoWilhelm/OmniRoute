@@ -2,6 +2,7 @@ import createNextIntlPlugin from "next-intl/plugin";
 import { createMDX } from "fumadocs-mdx/next";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { betterSqlite3AliasFor } from "./scripts/build/better-sqlite3-stub-flag.mjs";
 import { mitmManagerAliasFor } from "./scripts/build/mitm-stub-flag.mjs";
 import { normalizeBasePath } from "./scripts/build/normalizeBasePath.mjs";
 import {
@@ -113,6 +114,12 @@ const nextConfig = {
   // keeps operating on un-prefixed paths — see src/server/authz/pipeline.ts for
   // the two redirect call sites that re-add it via `request.nextUrl.basePath`.
   basePath: normalizeBasePath(process.env.OMNIROUTE_BASE_PATH),
+  // Next 16 (both webpack and Turbopack) app-router renders SSR asset URLs from
+  // `assetPrefix` ALONE — basePath only affects routing/links. Without mirroring
+  // it here, a subpath build emits /_next/static shell references that 404
+  // behind a reverse proxy. The Docker runtime patcher (ensure-docker-base-path)
+  // rewrites the same knob for prebuilt root-path images.
+  assetPrefix: normalizeBasePath(process.env.OMNIROUTE_BASE_PATH) || undefined,
   // Client-visible mirror of basePath for fetch/EventSource rewriting under reverse
   // proxies (installBasePathFetch), and for client display helpers (useDisplayBaseUrl)
   // that append the subpath to window.location.origin when building curl/endpoint
@@ -132,6 +139,14 @@ const nextConfig = {
       // the stub to every npm/Electron/VPS artifact and broke Agent Bridge
       // start for all non-Docker users (#6344). See scripts/build/mitm-stub-flag.mjs.
       ...mitmManagerAliasFor(process.env),
+      // better-sqlite3 → build-time stub ONLY where the build worker actually
+      // aborts while tracing the native addon (SIGABRT at worker teardown,
+      // #10060); opt in with OMNIROUTE_BETTER_SQLITE3_STUB=1. The alias used to
+      // be unconditional on the premise that serverExternalPackages still won
+      // at runtime — it does not: resolveAlias rewrites the request before the
+      // externals check, so the stub was bundled and EVERY route answered 500
+      // (#11343). See scripts/build/better-sqlite3-stub-flag.mjs.
+      ...betterSqlite3AliasFor(process.env),
       ...minimalBuildAliases,
     },
     // src/lib/agentSkills/generator.ts builds its fs base path from a runtime
@@ -430,6 +445,11 @@ const nextConfig = {
       {
         source: "/dashboard/skills",
         destination: "/dashboard/omni-skills",
+        permanent: true,
+      },
+      {
+        source: "/dashboard/providers/freepik",
+        destination: "/dashboard/providers/magnific",
         permanent: true,
       },
       // Architecture

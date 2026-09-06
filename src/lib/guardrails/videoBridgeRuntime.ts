@@ -29,6 +29,29 @@ export interface VideoFrameFile {
   timestampSeconds: number;
 }
 
+export type VideoSamplingPolicy = "uniform" | "scene_aware" | "segment_aware";
+
+export interface VideoSamplingMetadata {
+  candidateCount: number;
+  focusWindow?: VideoFocusWindow;
+  policyEffective: VideoSamplingPolicy;
+  policyRequested: VideoSamplingPolicy;
+}
+
+export interface VideoFocusBounds {
+  endSeconds?: number;
+  startSeconds?: number;
+}
+
+export interface VideoFocusWindow {
+  endSeconds: number;
+  startSeconds: number;
+}
+
+export interface VideoFrameFileList extends Array<VideoFrameFile> {
+  sampling: VideoSamplingMetadata;
+}
+
 export interface VideoProbeMetadata {
   durationSeconds: number;
   formatName: string;
@@ -42,10 +65,58 @@ export interface ExtractedVideoFrame {
   timestampSeconds: number;
 }
 
+export interface VideoSamplingDecision extends VideoSamplingMetadata {
+  timestamps: number[];
+}
+
+export interface VideoStructuralInterval {
+  endSeconds: number;
+  startSeconds: number;
+}
+export interface VideoStructuralSample {
+  blur?: number | null;
+  brightness?: number | null;
+  sceneScore?: number | null;
+  spatialInformation?: number | null;
+  temporalInformation?: number | null;
+  timestampSeconds: number;
+}
+export interface VideoStructuralAnalysis {
+  freezeIntervals: VideoStructuralInterval[];
+  samples: VideoStructuralSample[];
+  sceneCandidates: number[];
+}
+
+export function resolveVideoFocusWindow(
+  durationSeconds: number,
+  bounds: VideoFocusBounds
+): VideoFocusWindow | null {
+  if (!Number.isFinite(durationSeconds) || durationSeconds <= 0) {
+    throw new Error("Video focus window requires a positive duration");
+  }
+  if (bounds.startSeconds === undefined && bounds.endSeconds === undefined) return null;
+  if (
+    (bounds.startSeconds !== undefined && !Number.isFinite(bounds.startSeconds)) ||
+    (bounds.endSeconds !== undefined && !Number.isFinite(bounds.endSeconds))
+  ) {
+    throw new Error("Video focus window bounds must be finite");
+  }
+  const startSeconds = Math.max(0, Math.min(durationSeconds, bounds.startSeconds ?? 0));
+  const endSeconds = Math.max(0, Math.min(durationSeconds, bounds.endSeconds ?? durationSeconds));
+  if (endSeconds <= startSeconds) {
+    throw new Error("Video focus window must have a positive duration");
+  }
+  return { endSeconds, startSeconds };
+}
+
 export const VIDEO_FRAME_MAX_BYTES = 4 * 1024 * 1024;
 export const VIDEO_FRAMES_TOTAL_MAX_BYTES = 23 * 1024 * 1024;
 export const VIDEO_MAX_DIMENSION = 8_192;
 export const VIDEO_MAX_PIXELS = 33_554_432;
+const VIDEO_STRUCTURAL_ANALYSIS_FPS = 1;
+const VIDEO_STRUCTURAL_ANALYSIS_MAX_SAMPLES = 600;
+const VIDEO_STRUCTURAL_ANALYSIS_MAX_WIDTH = 320;
+const VIDEO_STRUCTURAL_SCENE_THRESHOLD = 10;
 
 const SAFE_FORMATS = new Set([
   "3g2",
@@ -62,7 +133,6 @@ const SAFE_FORMATS = new Set([
   "webm",
 ]);
 const SAFE_FORMAT_WHITELIST = [...SAFE_FORMATS].join(",");
-
 const defaultRunner: VideoCommandRunner = async (executable, args, options) => {
   const result = await execFileAsync(executable, [...args], {
     encoding: "utf8",
@@ -73,7 +143,6 @@ const defaultRunner: VideoCommandRunner = async (executable, args, options) => {
   });
   return { stdout: String(result.stdout), stderr: String(result.stderr) };
 };
-
 function assertLocalPath(filePath: string): void {
   if (!isAbsolute(filePath) || filePath.includes("\0") || filePath.includes("://")) {
     throw new Error("Video runtime requires a local path");
@@ -163,6 +232,473 @@ export function calculateFrameTimestamps(
   );
 }
 
+function normalizeSceneCandidates(
+  durationSeconds: number,
+  candidates: readonly number[]
+): number[] {
+  const unique = new Set<number>();
+  for (const candidate of candidates) {
+    if (!Number.isFinite(candidate) || candidate <= 0 || candidate >= durationSeconds) continue;
+    unique.add(Number(candidate.toFixed(3)));
+  }
+  return [...unique].sort((left, right) => left - right);
+}
+export function parseSceneChangeTimestamps(output: string, durationSeconds: number): number[] {
+  const candidates: number[] = [];
+  const timestampPattern = /\bpts_time:([+-]?(?:\d+(?:\.\d*)?|\.\d+))\b/g;
+  for (const match of output.matchAll(timestampPattern)) {
+    const timestamp = Number(match[1]);
+    if (Number.isFinite(timestamp)) candidates.push(timestamp);
+  }
+  return normalizeSceneCandidates(durationSeconds, candidates);
+}
+const STRUCTURAL_METRIC_FIELDS = {
+  "lavfi.blur": "blur",
+  "lavfi.scd.score": "sceneScore",
+  "lavfi.signalstats.YAVG": "brightness",
+  "lavfi.siti.si": "spatialInformation",
+  "lavfi.siti.ti": "temporalInformation",
+} as const;
+function parseStructuralSamples(output: string, durationSeconds: number): VideoStructuralSample[] {
+  const samples = new Map<number, VideoStructuralSample>();
+  const pattern = /\bpts_time:([+-]?(?:\d+(?:\.\d*)?|\.\d+))[^\n]*\r?\n([A-Za-z0-9_.]+)=([^\s]+)/g;
+  for (const match of output.matchAll(pattern)) {
+    const timestamp = Number(Number(match[1]).toFixed(3));
+    const field = STRUCTURAL_METRIC_FIELDS[match[2] as keyof typeof STRUCTURAL_METRIC_FIELDS];
+    const metric = Number(match[3]);
+    const unusable = !field || timestamp < 0 || timestamp >= durationSeconds;
+    if (unusable || (!Number.isFinite(metric) && !samples.has(timestamp))) continue;
+    if (!samples.has(timestamp)) {
+      if (samples.size >= VIDEO_STRUCTURAL_ANALYSIS_MAX_SAMPLES) continue;
+      samples.set(timestamp, {
+        timestampSeconds: timestamp,
+      });
+    }
+    const sample = samples.get(timestamp);
+    if (sample) sample[field] = Number.isFinite(metric) ? metric : null;
+  }
+  return [...samples.values()].sort(
+    (left, right) => left.timestampSeconds - right.timestampSeconds
+  );
+}
+function parseStructuralMetricEvents(output: string, metric: string): number[] {
+  const pattern = new RegExp(`${metric}:\\s*([+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+))`, "g");
+  return [...output.matchAll(pattern)].map((match) => Number(match[1])).filter(Number.isFinite);
+}
+function parseFreezeIntervals(output: string, durationSeconds: number): VideoStructuralInterval[] {
+  const starts = parseStructuralMetricEvents(output, "freeze_start");
+  const ends = parseStructuralMetricEvents(output, "freeze_end");
+  const durations = parseStructuralMetricEvents(output, "freeze_duration");
+  return starts
+    .map((start, index) => {
+      const startSeconds = Math.max(0, Math.min(durationSeconds, start));
+      const inferredEnd = start + (durations[index] ?? durationSeconds - start);
+      const endSeconds = Math.max(
+        startSeconds,
+        Math.min(durationSeconds, ends[index] ?? inferredEnd)
+      );
+      return { endSeconds, startSeconds };
+    })
+    .filter((interval) => interval.endSeconds - interval.startSeconds >= 1);
+}
+export function parseVideoStructuralAnalysis(
+  metadataOutput: string,
+  diagnosticOutput: string,
+  durationSeconds: number
+): VideoStructuralAnalysis {
+  if (!Number.isFinite(durationSeconds) || durationSeconds <= 0) {
+    throw new Error("Video structural analysis requires a positive duration");
+  }
+  const samples = parseStructuralSamples(metadataOutput, durationSeconds);
+  const diagnosticScenes = [
+    ...diagnosticOutput.matchAll(/lavfi\.scd\.score:\s*[\d.]+,\s*lavfi\.scd\.time:\s*([\d.]+)/g),
+  ].map((match) => Number(match[1]));
+  return {
+    freezeIntervals: parseFreezeIntervals(diagnosticOutput, durationSeconds),
+    samples,
+    sceneCandidates: normalizeSceneCandidates(durationSeconds, [
+      ...samples
+        .filter((sample) => (sample.sceneScore ?? 0) >= VIDEO_STRUCTURAL_SCENE_THRESHOLD)
+        .map((sample) => sample.timestampSeconds),
+      ...diagnosticScenes,
+    ]),
+  };
+}
+interface StructuralSamplingSegment {
+  endSeconds: number;
+  frozen: boolean;
+  priority: number;
+  startSeconds: number;
+}
+function averageStructuralMetric(values: Array<number | null | undefined>): number | null {
+  const finite = values.filter(
+    (value): value is number => value !== null && value !== undefined && Number.isFinite(value)
+  );
+  return finite.length > 0 ? finite.reduce((sum, value) => sum + value, 0) / finite.length : null;
+}
+function normalizedStructuralMetric(
+  samples: readonly VideoStructuralSample[],
+  field: Exclude<keyof VideoStructuralSample, "timestampSeconds">,
+  fallback: number,
+  scale: number
+): number {
+  return Math.min(
+    1,
+    Math.max(
+      0,
+      (averageStructuralMetric(samples.map((sample) => sample[field])) ?? fallback) / scale
+    )
+  );
+}
+function structuralSegmentPriority(
+  startSeconds: number,
+  endSeconds: number,
+  analysis: VideoStructuralAnalysis
+): StructuralSamplingSegment {
+  const length = endSeconds - startSeconds;
+  const samples = analysis.samples.filter(
+    (sample) => sample.timestampSeconds >= startSeconds && sample.timestampSeconds < endSeconds
+  );
+  const freezeCoverage = Math.min(
+    1,
+    analysis.freezeIntervals.reduce(
+      (sum, interval) =>
+        sum +
+        Math.max(
+          0,
+          Math.min(endSeconds, interval.endSeconds) - Math.max(startSeconds, interval.startSeconds)
+        ),
+      0
+    ) / length
+  );
+  const spatial = normalizedStructuralMetric(samples, "spatialInformation", 40, 100);
+  const temporal = normalizedStructuralMetric(samples, "temporalInformation", 10, 30);
+  const sharpness = 1 - normalizedStructuralMetric(samples, "blur", 10, 20);
+  const brightness = averageStructuralMetric(samples.map((sample) => sample.brightness));
+  const exposure = brightness === null || (brightness >= 24 && brightness <= 232) ? 1 : 0.25;
+  const interest = exposure * (0.2 + spatial * 0.3 + temporal * 0.4 + sharpness * 0.1);
+  const maxTemporal = Math.max(0, ...samples.map((sample) => sample.temporalInformation ?? 0));
+  return {
+    endSeconds,
+    frozen: freezeCoverage >= 0.8 && maxTemporal <= 1,
+    priority: length * Math.max(0.05, interest) * (1 - freezeCoverage * 0.75),
+    startSeconds,
+  };
+}
+function allocateStructuralFrames(
+  segments: readonly StructuralSamplingSegment[],
+  frameCount: number
+): number[] {
+  if (segments.length > frameCount) return segments.map(() => 0);
+  const allocation = segments.map(() => 1);
+  let remaining = frameCount - segments.length;
+  const totalPriority = segments.reduce(
+    (sum, segment) => sum + (segment.frozen ? 0 : segment.priority),
+    0
+  );
+  if (totalPriority <= 0) return allocation;
+  const idealExtras = segments.map((segment) =>
+    segment.frozen ? 0 : (segment.priority / totalPriority) * remaining
+  );
+  const extras = idealExtras.map((value) => Math.floor(value));
+  remaining -= extras.reduce((sum, value) => sum + value, 0);
+  const remainderOrder = idealExtras
+    .map((value, index) => ({ index, remainder: value - Math.floor(value) }))
+    .sort((left, right) => right.remainder - left.remainder || left.index - right.index);
+  for (let index = 0; index < remaining; index++) extras[remainderOrder[index].index] += 1;
+  return allocation.map((value, index) => value + extras[index]);
+}
+function timestampsFromSegmentAllocation(
+  segments: readonly Pick<StructuralSamplingSegment, "endSeconds" | "startSeconds">[],
+  allocation: readonly number[]
+): number[] {
+  return segments.flatMap((segment, segmentIndex) =>
+    Array.from(
+      { length: allocation[segmentIndex] },
+      (_unused, index) =>
+        segment.startSeconds +
+        ((index + 0.5) * (segment.endSeconds - segment.startSeconds)) / allocation[segmentIndex]
+    )
+  );
+}
+function calculateLengthWeightedSegmentTimestamps(
+  startSeconds: number,
+  endSeconds: number,
+  frameCount: number,
+  boundaries: readonly number[]
+): number[] {
+  const uniform = calculateFrameTimestamps(endSeconds - startSeconds, frameCount).map(
+    (timestamp) => timestamp + startSeconds
+  );
+  const starts = [startSeconds, ...boundaries];
+  const ends = [...boundaries, endSeconds];
+  const segments = starts.map((start, index) => ({
+    endSeconds: ends[index],
+    frozen: false,
+    priority: ends[index] - start,
+    startSeconds: start,
+  }));
+  return segments.length > frameCount
+    ? uniform
+    : timestampsFromSegmentAllocation(segments, allocateStructuralFrames(segments, frameCount));
+}
+/** Allocate a bounded caption budget across validated structural segments. */
+export function calculateSegmentAwareTimestamps(
+  durationSeconds: number,
+  requestedFrameCount: number,
+  sceneCandidates: readonly number[],
+  focusWindow: VideoFocusWindow | null = null,
+  structuralAnalysis: VideoStructuralAnalysis | null = null
+): number[] {
+  const startSeconds = focusWindow?.startSeconds ?? 0;
+  const endSeconds = focusWindow?.endSeconds ?? durationSeconds;
+  const uniform = calculateFrameTimestamps(endSeconds - startSeconds, requestedFrameCount).map(
+    (timestamp) => timestamp + startSeconds
+  );
+  const structuralBoundaries = structuralAnalysis?.freezeIntervals.flatMap((interval) => [
+    interval.startSeconds,
+    interval.endSeconds,
+  ]);
+  const sceneBoundaries = sceneCandidates.filter(
+    (candidate) =>
+      !structuralBoundaries?.some(
+        (boundary) => Math.abs(candidate - boundary) <= 1 / VIDEO_STRUCTURAL_ANALYSIS_FPS
+      )
+  );
+  const boundaries = normalizeSceneCandidates(durationSeconds, [
+    ...sceneBoundaries,
+    ...(structuralBoundaries ?? []),
+  ]).filter((timestamp) => timestamp > startSeconds && timestamp < endSeconds);
+  if (!structuralAnalysis) {
+    return boundaries.length === 0
+      ? uniform
+      : calculateLengthWeightedSegmentTimestamps(
+          startSeconds,
+          endSeconds,
+          uniform.length,
+          boundaries
+        );
+  }
+  const starts = [startSeconds, ...boundaries];
+  const ends = [...boundaries, endSeconds];
+  const segments = starts.map((start, index) =>
+    structuralSegmentPriority(start, ends[index], structuralAnalysis)
+  );
+  const allocation = allocateStructuralFrames(segments, uniform.length);
+  if (segments.length > uniform.length) {
+    return calculateLengthWeightedSegmentTimestamps(
+      startSeconds,
+      endSeconds,
+      uniform.length,
+      boundaries
+    );
+  }
+  return timestampsFromSegmentAllocation(segments, allocation);
+}
+export function calculateSamplingDecision(
+  durationSeconds: number,
+  requestedFrameCount: number,
+  policy: VideoSamplingPolicy,
+  sceneCandidates: readonly number[] = [],
+  focusWindow: VideoFocusWindow | null = null,
+  structuralAnalysis: VideoStructuralAnalysis | null = null
+): VideoSamplingDecision {
+  const startSeconds = focusWindow?.startSeconds ?? 0;
+  const endSeconds = focusWindow?.endSeconds ?? durationSeconds;
+  const uniform = calculateFrameTimestamps(endSeconds - startSeconds, requestedFrameCount).map(
+    (timestamp) => timestamp + startSeconds
+  );
+  if (policy === "uniform") {
+    return {
+      candidateCount: 0,
+      ...(focusWindow ? { focusWindow } : {}),
+      policyEffective: "uniform",
+      policyRequested: "uniform",
+      timestamps: uniform,
+    };
+  }
+  const candidates = normalizeSceneCandidates(durationSeconds, sceneCandidates).filter(
+    (timestamp) => timestamp > startSeconds && timestamp < endSeconds
+  );
+  const focusHasSample = structuralAnalysis?.samples.some(
+    (sample) => sample.timestampSeconds >= startSeconds && sample.timestampSeconds < endSeconds
+  );
+  const focusHasFreeze = structuralAnalysis?.freezeIntervals.some(
+    (interval) => interval.startSeconds < endSeconds && interval.endSeconds > startSeconds
+  );
+  const hasStructuralEvidence = Boolean(focusHasSample || focusHasFreeze);
+  if (policy === "segment_aware" && (candidates.length > 0 || hasStructuralEvidence)) {
+    return {
+      candidateCount: candidates.length,
+      ...(focusWindow ? { focusWindow } : {}),
+      policyEffective: "segment_aware",
+      policyRequested: "segment_aware",
+      timestamps: calculateSegmentAwareTimestamps(
+        durationSeconds,
+        requestedFrameCount,
+        candidates,
+        focusWindow,
+        structuralAnalysis
+      ),
+    };
+  }
+  if (candidates.length === 0) {
+    return {
+      candidateCount: 0,
+      ...(focusWindow ? { focusWindow } : {}),
+      policyEffective: "uniform",
+      policyRequested: policy,
+      timestamps: uniform,
+    };
+  }
+  const frameCount = uniform.length;
+  if (frameCount === 1) {
+    return {
+      candidateCount: candidates.length,
+      ...(focusWindow ? { focusWindow } : {}),
+      policyEffective: "uniform",
+      policyRequested: "scene_aware",
+      timestamps: uniform,
+    };
+  }
+  const selected =
+    candidates.length <= frameCount
+      ? [...candidates]
+      : candidates.filter(
+          (_candidate, index) =>
+            index === 0 ||
+            index === candidates.length - 1 ||
+            index % Math.max(1, Math.ceil((candidates.length - 1) / (frameCount - 1))) === 0
+        );
+  for (const timestamp of uniform) {
+    if (selected.length >= frameCount) break;
+    if (!selected.some((candidate) => Math.abs(candidate - timestamp) < 0.001)) {
+      selected.push(timestamp);
+    }
+  }
+  selected.sort((left, right) => left - right);
+  while (selected.length > frameCount) {
+    const removableIndex = selected.findIndex(
+      (timestamp) => !candidates.some((candidate) => Math.abs(candidate - timestamp) < 0.001)
+    );
+    selected.splice(removableIndex >= 0 ? removableIndex : selected.length - 2, 1);
+  }
+  return {
+    candidateCount: candidates.length,
+    ...(focusWindow ? { focusWindow } : {}),
+    policyEffective: "scene_aware",
+    policyRequested: "scene_aware",
+    timestamps: selected,
+  };
+}
+export async function detectSceneChangeTimestamps(
+  inputPath: string,
+  options: {
+    durationSeconds: number;
+    runner?: VideoCommandRunner;
+    signal?: AbortSignal;
+    streamIndex: number;
+    timeoutMs?: number;
+  }
+): Promise<number[]> {
+  assertLocalPath(inputPath);
+  if (!Number.isInteger(options.streamIndex) || options.streamIndex < 0) {
+    throw new Error("Video stream index is invalid");
+  }
+  const result = await (options.runner ?? defaultRunner)(
+    "ffmpeg",
+    [
+      "-nostdin",
+      "-hide_banner",
+      "-loglevel",
+      "info",
+      "-protocol_whitelist",
+      "file",
+      "-format_whitelist",
+      SAFE_FORMAT_WHITELIST,
+      "-threads",
+      "1",
+      "-i",
+      inputPath,
+      "-map",
+      `0:${options.streamIndex}`,
+      "-vf",
+      "select='gt(scene,0.30)',showinfo",
+      "-an",
+      "-f",
+      "null",
+      "-",
+    ],
+    { signal: options.signal, timeoutMs: options.timeoutMs ?? 30_000 }
+  );
+  return parseSceneChangeTimestamps(`${result.stdout}\n${result.stderr}`, options.durationSeconds);
+}
+const STRUCTURAL_ANALYSIS_FILTER = [
+  `scale=w='min(${VIDEO_STRUCTURAL_ANALYSIS_MAX_WIDTH},iw)':h=-2:flags=fast_bilinear`,
+  `scdet=threshold=${VIDEO_STRUCTURAL_SCENE_THRESHOLD}`,
+  "freezedetect=n=-60dB:d=1",
+  `fps=${VIDEO_STRUCTURAL_ANALYSIS_FPS}`,
+  "siti",
+  "blurdetect=radius=10:block_width=32:block_height=32",
+  "signalstats",
+  ...[
+    "lavfi.scd.score",
+    "lavfi.siti.si",
+    "lavfi.siti.ti",
+    "lavfi.blur",
+    "lavfi.signalstats.YAVG",
+  ].map((key) => `metadata=mode=print:key=${key}:file=-`),
+].join(",");
+export async function analyzeVideoStructure(
+  inputPath: string,
+  options: {
+    durationSeconds: number;
+    runner?: VideoCommandRunner;
+    signal?: AbortSignal;
+    streamIndex: number;
+    timeoutMs?: number;
+  }
+): Promise<VideoStructuralAnalysis> {
+  assertLocalPath(inputPath);
+  if (!Number.isFinite(options.durationSeconds) || options.durationSeconds <= 0) {
+    throw new Error("Video structural analysis requires a positive duration");
+  }
+  if (!Number.isInteger(options.streamIndex) || options.streamIndex < 0) {
+    throw new Error("Video stream index is invalid");
+  }
+  const result = await (options.runner ?? defaultRunner)(
+    "ffmpeg",
+    [
+      "-nostdin",
+      "-hide_banner",
+      "-loglevel",
+      "info",
+      "-nostats",
+      "-protocol_whitelist",
+      "file",
+      "-format_whitelist",
+      SAFE_FORMAT_WHITELIST,
+      "-threads",
+      "1",
+      "-filter_threads",
+      "1",
+      "-i",
+      inputPath,
+      "-map",
+      `0:${options.streamIndex}`,
+      "-vf",
+      STRUCTURAL_ANALYSIS_FILTER,
+      "-an",
+      "-frames:v",
+      String(VIDEO_STRUCTURAL_ANALYSIS_MAX_SAMPLES),
+      "-f",
+      "null",
+      "-",
+    ],
+    { signal: options.signal, timeoutMs: Math.min(options.timeoutMs ?? 30_000, 30_000) }
+  );
+  return parseVideoStructuralAnalysis(result.stdout, result.stderr, options.durationSeconds);
+}
 export async function probeLocalVideo(
   inputPath: string,
   options: {
@@ -285,23 +821,70 @@ export async function extractFramesFromLocalVideo(
   options: {
     durationSeconds: number;
     frameCount: number;
+    focusWindow?: VideoFocusBounds | null;
     runner?: VideoCommandRunner;
+    samplingPolicy?: VideoSamplingPolicy;
     signal?: AbortSignal;
     streamIndex: number;
     timeoutMs?: number;
   }
-): Promise<VideoFrameFile[]> {
+): Promise<VideoFrameFileList> {
   assertLocalPath(inputPath);
   assertLocalPath(outputDirectory);
-  const timestamps = calculateFrameTimestamps(options.durationSeconds, options.frameCount);
+  const policy = options.samplingPolicy ?? "uniform";
+  let sceneCandidates: number[] = [];
+  let structuralAnalysis: VideoStructuralAnalysis | null = null;
+  if (policy !== "uniform") {
+    try {
+      if (policy === "segment_aware") {
+        structuralAnalysis = await analyzeVideoStructure(inputPath, {
+          durationSeconds: options.durationSeconds,
+          runner: options.runner,
+          signal: options.signal,
+          streamIndex: options.streamIndex,
+          timeoutMs: Math.min(options.timeoutMs ?? 30_000, 30_000),
+        });
+        sceneCandidates = structuralAnalysis.sceneCandidates;
+      } else {
+        sceneCandidates = await detectSceneChangeTimestamps(inputPath, {
+          durationSeconds: options.durationSeconds,
+          runner: options.runner,
+          signal: options.signal,
+          streamIndex: options.streamIndex,
+          timeoutMs: Math.min(options.timeoutMs ?? 30_000, 30_000),
+        });
+      }
+    } catch {
+      if (options.signal?.aborted) throw new Error("Video extraction request aborted");
+      sceneCandidates = [];
+      structuralAnalysis = null;
+    }
+  }
+  const focusWindow = options.focusWindow
+    ? resolveVideoFocusWindow(options.durationSeconds, options.focusWindow)
+    : null;
+  const sampling = calculateSamplingDecision(
+    options.durationSeconds,
+    options.frameCount,
+    policy,
+    sceneCandidates,
+    focusWindow,
+    structuralAnalysis
+  );
   if (!Number.isInteger(options.streamIndex) || options.streamIndex < 0) {
     throw new Error("Video stream index is invalid");
   }
   const runner = options.runner ?? defaultRunner;
-  const frames: VideoFrameFile[] = [];
+  const frames = [] as VideoFrameFileList;
+  frames.sampling = {
+    candidateCount: sampling.candidateCount,
+    ...(sampling.focusWindow ? { focusWindow: sampling.focusWindow } : {}),
+    policyEffective: sampling.policyEffective,
+    policyRequested: sampling.policyRequested,
+  };
 
-  for (let index = 0; index < timestamps.length; index++) {
-    const timestampSeconds = timestamps[index];
+  for (let index = 0; index < sampling.timestamps.length; index++) {
+    const timestampSeconds = sampling.timestamps[index];
     const outputPath = join(outputDirectory, `frame-${String(index + 1).padStart(2, "0")}.jpg`);
     await runner(
       "ffmpeg",
@@ -375,12 +958,18 @@ export async function extractVideoFramesFromBytes(
   bytes: Uint8Array,
   options: {
     frameCount: number;
+    focusWindow?: VideoFocusBounds | null;
     maxDurationSeconds: number;
     runner?: VideoCommandRunner;
+    samplingPolicy?: VideoSamplingPolicy;
     signal?: AbortSignal;
     timeoutMs: number;
   }
-): Promise<{ durationSeconds: number; frames: ExtractedVideoFrame[] }> {
+): Promise<{
+  durationSeconds: number;
+  frames: ExtractedVideoFrame[];
+  sampling: VideoSamplingMetadata;
+}> {
   const temporaryDirectory = await mkdtemp(join(tmpdir(), "omniroute-video-broker-"));
   try {
     if (options.signal?.aborted) throw new Error("Video extraction request aborted");
@@ -397,7 +986,9 @@ export async function extractVideoFramesFromBytes(
     const frameFiles = await extractFramesFromLocalVideo(inputPath, framesDirectory, {
       durationSeconds: metadata.durationSeconds,
       frameCount: options.frameCount,
+      focusWindow: options.focusWindow,
       runner: options.runner,
+      samplingPolicy: options.samplingPolicy,
       signal: options.signal,
       streamIndex: metadata.streamIndex,
       timeoutMs: options.timeoutMs,
@@ -409,6 +1000,7 @@ export async function extractVideoFramesFromBytes(
         dataUri: `data:image/jpeg;base64,${frameBytes[index].toString("base64")}`,
         timestampSeconds: frame.timestampSeconds,
       })),
+      sampling: frameFiles.sampling,
     };
   } finally {
     await rm(temporaryDirectory, { force: true, recursive: true });
