@@ -5,7 +5,7 @@
  * Each provider has its own request format and endpoint.
  */
 
-import { isFeatureFlagEnabled } from "@/shared/utils/featureFlags.ts";
+import { resolveRegisteredFeatureFlag } from "@/shared/utils/featureFlagResolverBridge.ts";
 import { hasUnsafeModelIdSyntax } from "../utils/modelIdSafety.ts";
 import { LMARENA_DIRECT_IMAGE_MODELS } from "./providers/registry/lmarena/directModels.ts";
 import { SEGMIND_IMAGE_PROVIDER } from "./providers/registry/segmind/imageModels.ts";
@@ -106,7 +106,7 @@ const XAI_SUBSCRIPTION_IMAGE_PROVIDERS: Record<string, ImageProviderConfig> = {
 
 export function isGrokSubscriptionImagesEnabled(): boolean {
   try {
-    return isFeatureFlagEnabled("GROK_SUBSCRIPTION_IMAGES_ENABLED");
+    return resolveRegisteredFeatureFlag("GROK_SUBSCRIPTION_IMAGES_ENABLED");
   } catch (error) {
     console.error(
       "[imageRegistry] Failed to resolve GROK_SUBSCRIPTION_IMAGES_ENABLED, defaulting to disabled:",
