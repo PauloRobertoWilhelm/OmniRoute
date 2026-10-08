@@ -3083,7 +3083,7 @@ export async function markAccountUnavailable(
       provider &&
       provider !== "codex" &&
       model &&
-      isModelScopedFailure(status, isNvidiaModelGone, fallbackResult)
+      isModelScopedFailure(status, isNvidiaModelGone, fallbackResult, errorText, model)
     ) {
       const reason =
         status === 404 || isNvidiaModelGone
