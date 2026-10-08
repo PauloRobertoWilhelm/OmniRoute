@@ -44,7 +44,6 @@ import { isVerifiedNativeCodexRequest } from "@omniroute/open-sse/config/codexId
 import { resolveCompressionSettings } from "@omniroute/open-sse/handlers/chatCore/compressionSettings.ts";
 import type { CompressionExclusions } from "@omniroute/open-sse/services/compression/exclusions.ts";
 import { resolveComboConfig } from "@omniroute/open-sse/services/comboConfig.ts";
-import { comboPinAllowlist } from "@/lib/combos/steps.ts";
 import { injectHandoffIntoBody } from "@omniroute/open-sse/services/contextHandoff.ts";
 import { runWithTransientBackendRetry } from "@omniroute/open-sse/services/transientBackendRetry.ts";
 import {
@@ -221,6 +220,7 @@ import {
   validateExclusiveLeaseKeyConfiguration,
   type ManagedLeaseDispatchContext,
 } from "../services/leaseContext";
+import { resolveConnectionRestrictions } from "../services/connectionRestrictions.ts";
 
 registerCodexQuotaFetcher();
 registerQuotaTrackersBatch();
@@ -326,25 +326,6 @@ async function getCombosCachedForChat(): Promise<ComboLike[]> {
   combosCacheVersionSnapshot = getCombosCacheVersion();
   combosCachePromise = getCombos().catch(() => []) as Promise<ComboLike[]>;
   return combosCachePromise;
-}
-
-function normalizeAllowedConnectionIds(value: unknown): string[] | null {
-  if (!Array.isArray(value)) return null;
-  const ids = value.filter(
-    (entry): entry is string => typeof entry === "string" && entry.trim().length > 0
-  );
-  return ids.length > 0 ? ids : null;
-}
-
-function intersectAllowedConnectionIds(primary: unknown, secondary: unknown): string[] | null {
-  const first = normalizeAllowedConnectionIds(primary);
-  const second = normalizeAllowedConnectionIds(secondary);
-
-  if (first && second) {
-    return first.filter((id) => second.includes(id));
-  }
-
-  return first || second || null;
 }
 
 /** Shape of the videoBridgeLog param threaded to executeChatWithBreaker -> handleChatCore (#12150 P1b). */
@@ -1182,10 +1163,8 @@ async function handleChatImplementation(
       const resolvedModel = modelInfo.model || modelString;
       const githubGate = await ghComboGate(comboPreselectedCredentials, provider, resolvedModel);
       if (githubGate !== null) return githubGate;
-      let allowedConnections = intersectAllowedConnectionIds(
-        apiKeyInfo?.allowedConnections ?? null,
-        comboPinAllowlist(true, target?.connectionId ?? null, target?.allowedConnectionIds ?? null)
-      );
+      const restrictions = resolveConnectionRestrictions(apiKeyInfo, target, true);
+      let allowedConnections = restrictions.allowedConnections;
 
       // A4: quota-exclusive keys must only use the pool's connection(s).
       if (apiKeyInfo?.allowedQuotas && apiKeyInfo.allowedQuotas.length > 0) {
@@ -1206,6 +1185,7 @@ async function handleChatImplementation(
         allowedConnections,
         resolvedModel,
         {
+          connectionRestrictionSources: restrictions.sources,
           sessionKey: sessionAffinityKey,
           ...(target?.allowRateLimitedConnection ? { allowRateLimitedConnections: true } : {}),
           ...(target?.connectionId ? { forcedConnectionId: target.connectionId } : {}),
@@ -1685,10 +1665,15 @@ async function handleSingleModelChat(
       ? runtimeOptions.forcedConnectionId.trim()
       : "";
   const hasForcedConnection = forcedConnectionId.length > 0;
-  let effectiveAllowedConnections = intersectAllowedConnectionIds(
-    apiKeyInfo?.allowedConnections ?? null,
-    comboPinAllowlist(isCombo, forcedConnectionId || null, runtimeOptions.allowedConnectionIds)
+  const restrictions = resolveConnectionRestrictions(
+    apiKeyInfo,
+    {
+      connectionId: forcedConnectionId,
+      allowedConnectionIds: runtimeOptions.allowedConnectionIds,
+    },
+    isCombo
   );
+  let effectiveAllowedConnections = restrictions.allowedConnections;
 
   // A4: quota-exclusive keys must only use the pool's connection(s).
   if (apiKeyInfo?.allowedQuotas && apiKeyInfo.allowedQuotas.length > 0) {
@@ -1817,6 +1802,7 @@ async function handleSingleModelChat(
               effectiveAllowedConnections,
               model,
               {
+                connectionRestrictionSources: restrictions.sources,
                 sessionKey: occupancySessionKey,
                 reserveOAuthSession: true,
                 excludeConnectionIds: Array.from(excludedConnectionIds),
