@@ -989,6 +989,7 @@
   "featureFlagOmnirouteEmergencyFallbackDescription": "Բյուջեն սպառած հարցումներն ուղղորդել արտակարգ անվճար պահուստային մատակարարին/մոդելին։",
   "featureFlagArenaEloSyncEnabledDescription": "Միացնել Arena AI առաջատարների աղյուսակի ELO-ի պարբերական համաժամացումը՝ մոդելների ինտելեկտի վարկանիշների համար։",
   "featureFlagUniversalContextHandoffEnabledDescription": "Ստեղծել և ներարկել զրույցների ամփոփումներ, երբ համակցված երթուղավորումը փոխում է մոդելները։ Անջատեք՝ մոդելների փոխարկումներն անկախ մշակելու և բոլոր առկա ու ապագա համակցությունների համար ֆոնային փոխանցման հարցումները կանխելու նպատակով։",
+  "featureFlagReasoningReplayEnabledDescription": "Cache and replay model reasoning across multi-turn conversations. Disable to stop storing and re-injecting reasoning.",
   "featureFlagExposeCcDiscoveryAliasesDescription": "Հրապարակել claude/&lt;provider&gt;/&lt;model&gt; հայելային նույնացուցիչները /v1/models-ում, որպեսզի Claude Code դարպասի մոդելների հայտնաբերման ցանկում ցուցադրվեն ոչ Claude մոդելները։ Զգուշացում․ գլոբալ միացնելու դեպքում կրկնապատկում է կատալոգի գրառումները բոլոր հաճախորդների համար։",
   "featureFlagNoThinkingAliasEnabledDescription": "no-think/&lt;provider&gt;/&lt;model&gt; դարպասային այլանունների գլխավոր անջատիչը։ Միացված (լռելյայն)․ /v1/models-ը յուրաքանչյուր համապատասխան, մտածելու ունակ Claude մոդելի համար հրապարակում է առանց մտածողության տարբերակ, իսկ հարցման մեջ ուղարկված no-think/ նույնացուցիչը համապատասխանեցվում է իրական մոդելին՝ դատողությունն անջատելով։ Անջատված․ տարբերակներ չեն հրապարակվում, իսկ no-think/ նույնացուցիչը դիտարկվում է ինչպես ցանկացած այլ անհայտ մոդելի նույնացուցիչ։ Քանի դեռ սա միացված է, յուրաքանչյուր մոդելի ModelSpec.noThinkingAlias ընտրովի միացման/անջատման կարգավորումը շարունակում է գործել։",
   "featureFlagChatVirtualLanesEnabledDescription": "Միացնել ըստ վարձակալի հարմարվողական վիրտուալ ընդունման ուղիները մատակարարին ուղարկելու համար (#9654)․ մեկ վարձակալի հարցումների կտրուկ աճն այլևս չի առաջացնում 503 մեկ այլ վարձակալի համար։ OMNIROUTE_CHAT_VIRTUAL_LANES միջավայրի փոփոխականը գերակայում է կառավարման վահանակի այս վերասահմանմանը․ փոփոխություններն ուժի մեջ են մտնում սերվերը վերագործարկելիս։",
@@ -1314,6 +1315,8 @@
     "orchestrationSubtitle": "Իրական ժամանակում դիտել գործարկված ամեն ինչ",
     "resilienceConnections": "Կապի կայունություն",
     "resilienceConnectionsSubtitle": "Սպասման ժամանակի, անջատիչի և արգելափակման վիճակները",
+    "resilienceCooldowns": "Սառեցման կառավարիչ",
+    "resilienceCooldownsSubtitle": "Մաքրել սառեցումները խմբաքանակով",
     "settingsModalityBridge": "Մոդալությունների կամուրջ",
     "settingsModalityBridgeSubtitle": "Պատկեր/ձայն → տեքստային պահուստային տարբերակ՝ միայն տեքստային մոդելների համար",
     "commandPalette": {
@@ -3370,6 +3373,15 @@
     "autoCatalogDescription": "Ներկառուցված auto/* կոմբինացիաները դինամիկորեն որոշվում են միացված պրովայդերների հիման վրա։ Այս նույնացուցիչներից ցանկացածն օգտագործեք որպես model դաշտի արժեք․ կարգավորում չի պահանջվում։",
     "autoCatalogExpand": "Ընդարձակել ավտոմատ երթուղավորման կատալոգը",
     "autoCatalogCollapse": "Ծալել ավտոմատ երթուղավորման կատալոգը",
+    "autoCatalogComboCount": "{count} կոմբոներ",
+    "autoCatalogCandidates": "{count} թեկնածուներ",
+    "autoCatalogNoCandidates": "Համապատասխան մատակարարներ չկան",
+    "autoCatalogKindVariant": "տարբերակ",
+    "autoCatalogKindTemplate": "տպագիր",
+    "autoCatalogKindCategory": "կատեգորիա",
+    "autoCatalogKindFamily": "ընտանիք",
+    "autoComboTestTruncated": "Թեստավորվել է {tested} {total} կենդանի թեկնածուներից (բարձրագույն քաշերով առաջին)։",
+    "controlCenter": "Կառավարման կենտրոն",
     "createCombo": "Ստեղծել կոմբինացիա",
     "editCombo": "Խմբագրել կոմբինացիան",
     "deleteCombo": "Ջնջել կոմբինացիան",
@@ -6694,7 +6706,11 @@
     "savedModelEndpointSettings": "Մոդելի վերջնակետի կարգավորումները պահպանվել են",
     "searchByModelAria": "Որոնել ըստ մոդելի",
     "selectSupportedEndpoint": "Ընտրեք առնվազն մեկ աջակցվող վերջնակետ",
-    "antigravityClientProfileHarness": "Harness / CLI"
+    "antigravityClientProfileHarness": "Harness / CLI",
+    "rateLimitOverridesModelConcurrencyLabel": "Per-model concurrency caps",
+    "rateLimitOverridesModelConcurrencyPlaceholder": "glm-5=1\nglm-4.7=3",
+    "rateLimitOverridesModelConcurrencyHint": "Optional: one model=cap per line, matched against the exact upstream model id. Queues excess requests locally; blank means no per-model cap.",
+    "rateLimitOverridesModelConcurrencyInvalid": "Invalid per-model concurrency entry \"{entry}\" — use model=cap with a whole number from 1 to {max}."
   },
   "settings": {
     "title": "Կարգավորումներ",
@@ -14212,6 +14228,59 @@
         "modelLockouts": "Մոդելների արգելափակումներ",
         "count": "Կապերի քանակ"
       }
+    }
+  },
+  "resilienceCooldowns": {
+    "title": "Սառեցման կառավարիչ",
+    "description": "Տեսեք յուրաքանչյուր միացում, որը դադարի մեջ է խափանումներից հետո, միանգամից հանեք սառեցումները և կարգավորեք դրանց տևողությունը:",
+    "loading": "Սառեցումների բեռնում…",
+    "loadFailed": "Չհաջողվեց բեռնել սառեցումները",
+    "loadFailedDetail": "Ստուգեք Ձեր կապը և թարմացրեք էջը:",
+    "rules": {
+      "title": "Սառեցման կանոններ",
+      "subtitle": "Կիրառել յուրաքանչյուր միացման նկատմամբ հաջորդ խափանումից սկսած:",
+      "stallLabel": "Սառեցնել հաշիվը, երբ հոսքը կանգ է առնում",
+      "stallDescription": "Լռելյայն անջատված է. կանգառը սովորաբար նշանակում է մեկ երկար դատողության փուլ, ոչ թե խափանված հաշիվ:",
+      "oauth": "OAuth հաշիվներ",
+      "apikey": "API բանալիներ",
+      "baseCooldown": "Հիմնական սառեցում (վայրկյան)",
+      "baseCooldownHint": "Առաջին սառեցումը խափանումից հետո: Կրկնվող խափանումները կրկնապատկում են այն:",
+      "maxBackoffSteps": "Հետաձգման առավելագույն քայլեր",
+      "maxBackoffStepsHint": "Քանի անգամ կարող է կրկնապատկվել սառեցումը:",
+      "save": "Պահպանել կանոնները",
+      "saved": "Սառեցման կանոնները պահպանվեցին",
+      "saveFailed": "Չհաջողվեց պահպանել սառեցման կանոնները"
+    },
+    "list": {
+      "title": "Երթուղավորումից դուրս մնացած միացումներ",
+      "subtitle": "Սառեցումներն ու մոդելի արգելափակումներն ավարտվում են ինքնուրույն: Մաքրեք դրանք՝ միացումը հենց հիմա երթուղավորման մեջ վերադարձնելու համար:",
+      "provider": "Մատակարար",
+      "allProviders": "Բոլոր մատակարարները",
+      "showHealthy": "Ցուցադրել առողջ միացումները",
+      "refresh": "Թարմացնել",
+      "clearSelected": "Մաքրել ընտրվածները ({count})",
+      "clearAll": "Մաքրել բոլորը",
+      "clear": "Մաքրել",
+      "select": "Ընտրել միացումը",
+      "none": "Չկա",
+      "empty": "Երթուղավորումից դուրս մնացած ոչ մի միացում չկա:",
+      "cleared": "Մաքրվեց {cleared} միացում և {lockouts} մոդելի արգելափակում: Բաց թողնվեց {skipped} արգելված կամ ժամկետանց:",
+      "clearFailed": "Չհաջողվեց մաքրել սառեցումները",
+      "columns": {
+        "connection": "Միացում",
+        "provider": "Մատակարար",
+        "status": "Կարգավիճակ",
+        "remaining": "Մնացած ժամանակը",
+        "lockouts": "Մոդելի արգելափակումներ",
+        "lastError": "Վերջին սխալը"
+      }
+    },
+    "status": {
+      "cooling_down": "Սառեցման փուլում",
+      "model_locked": "Մոդելը կողպված է",
+      "unavailable": "Անհասանելի",
+      "terminal": "Ուշադրության կարիք ունի",
+      "healthy": "Առողջ"
     }
   },
   "featureFlagCapabilityFilterEnabledDescription": "Մերժել հարցումները նախքան ուղարկումը, երբ թիրախային մոդելը չունի պահանջվող հնարավորությունները (տեսողություն, գործիքներ, կառուցվածքային ելք, համատեքստի պատուհան)։ Պաշտպանում է մեկ մատակարարին ուղղակիորեն ուղարկվող հարցումները, որոնք շրջանցում են համակցման շերտի համատեղելիության զտիչը։",

@@ -989,6 +989,7 @@
   "featureFlagOmnirouteEmergencyFallbackDescription": "Bütçesi tükenmiş istekleri acil durum ücretsiz yedek sağlayıcıya/modele yönlendirin.",
   "featureFlagArenaEloSyncEnabledDescription": "Model zekası sıralamaları için periyodik Arena AI liderlik tablosu ELO senkronizasyonunu etkinleştirin.",
   "featureFlagUniversalContextHandoffEnabledDescription": "Kombinasyon yönlendirmesi model değiştirdiğinde konuşma özetleri oluşturup ekleyin. Model değişikliklerini birbirinden bağımsız ele almak ve mevcut ve gelecekteki tüm kombinasyonlar için arka plandaki devir isteklerini önlemek üzere devre dışı bırakın.",
+  "featureFlagReasoningReplayEnabledDescription": "Çok turlu konuşmalarda model muhakemesini önbelleğe alın ve yeniden oynatın. Muhakemeyi saklamayı ve yeniden enjekte etmeyi durdurmak için devre dışı bırakın.",
   "featureFlagExposeCcDiscoveryAliasesDescription": "/v1/models üzerinde claude/&lt;provider&gt;/&lt;model&gt; ayna kimliklerini tanıtın, böylece Claude Code geçidi model keşfi, Claude olmayan modelleri listeler. Uyarı: Küresel olarak etkinleştirildiğinde tüm istemciler için katalog girişlerini iki katına çıkarır.",
   "featureFlagNoThinkingAliasEnabledDescription": "no-think/&lt;provider&gt;/&lt;model&gt; ağ geçidi takma adları için ana anahtar. Açık (varsayılan): /v1/models, uygun olan ve düşünme yeteneğine sahip her Claude modeli için düşünmeyen bir varyant sunar ve istekte gönderilen bir no-think/ kimliği, muhakeme devre dışı bırakılarak gerçek modele çözümlenir. Kapalı: hiçbir varyant sunulmaz ve bir no-think/ kimliği, diğer bilinmeyen model kimlikleri gibi değerlendirilir. Bu seçenek açıkken model bazındaki ModelSpec.noThinkingAlias katılım/ayrılma ayarı geçerliliğini korur.",
   "featureFlagChatVirtualLanesEnabledDescription": "Sağlayıcı gönderimi için kiracı başına uyarlanabilir sanal kabul şeritlerini etkinleştirin (#9654): bir kiracının ani yükü artık diğerinde 503 hatasına neden olmaz. OMNIROUTE_CHAT_VIRTUAL_LANES ortam değişkeni bu panel ayarına göre önceliklidir; değişiklikler sunucu yeniden başlatıldığında geçerli olur.",
@@ -1314,6 +1315,8 @@
     "orchestrationSubtitle": "Çalışan her şeyin canlı görünümü",
     "resilienceConnections": "Bağlantı Dayanıklılığı",
     "resilienceConnectionsSubtitle": "Soğuma, devre kesici, kilit durumu",
+    "resilienceCooldowns": "Bekleme Süresi Yöneticisi",
+    "resilienceCooldownsSubtitle": "Bekleme sürelerini toplu temizle",
     "settingsModalityBridge": "Modality Köprüsü",
     "settingsModalityBridgeSubtitle": "Görüntü/ses → yalnızca metin modelleri için metin yedeği",
     "commandPalette": {
@@ -3370,6 +3373,15 @@
     "autoCatalogDescription": "Yerleşik otomatik/* kombinasyonları, bağlı sağlayıcılardan dinamik olarak çözümlenir. Bu kimliklerden herhangi birini model alanı olarak kullanın; kurulum gerekmez.",
     "autoCatalogExpand": "Otomatik yönlendirme kataloğunu genişletin",
     "autoCatalogCollapse": "Otomatik yönlendirme kataloğunu daralt",
+    "autoCatalogComboCount": "{count} kombinasyon",
+    "autoCatalogCandidates": "{count} aday",
+    "autoCatalogNoCandidates": "Eşleşen sağlayıcı yok",
+    "autoCatalogKindVariant": "varyant",
+    "autoCatalogKindTemplate": "şablon",
+    "autoCatalogKindCategory": "kategori",
+    "autoCatalogKindFamily": "aile",
+    "autoComboTestTruncated": "En yüksek ağırlıklar önce olmak üzere {total} canlı adaydan {tested} test edildi.",
+    "controlCenter": "Kontrol Merkezi",
     "createCombo": "Kombo Oluştur",
     "editCombo": "Komboyu Düzenle",
     "deleteCombo": "Komboyu Sil",
@@ -6694,7 +6706,11 @@
     "savedModelEndpointSettings": "Kaydedilmiş model uç noktası ayarları",
     "searchByModelAria": "Model ile ara",
     "selectSupportedEndpoint": "En az bir desteklenen uç noktayı seçin",
-    "antigravityClientProfileHarness": "Harness / CLI"
+    "antigravityClientProfileHarness": "Harness / CLI",
+    "rateLimitOverridesModelConcurrencyLabel": "Per-model concurrency caps",
+    "rateLimitOverridesModelConcurrencyPlaceholder": "glm-5=1\nglm-4.7=3",
+    "rateLimitOverridesModelConcurrencyHint": "Optional: one model=cap per line, matched against the exact upstream model id. Queues excess requests locally; blank means no per-model cap.",
+    "rateLimitOverridesModelConcurrencyInvalid": "Invalid per-model concurrency entry \"{entry}\" — use model=cap with a whole number from 1 to {max}."
   },
   "settings": {
     "title": "Ayarlar",
@@ -14212,6 +14228,59 @@
         "modelLockouts": "Model Kilitleri",
         "count": "Bağlantı Sayısı"
       }
+    }
+  },
+  "resilienceCooldowns": {
+    "title": "Bekleme Süresi Yöneticisi",
+    "description": "Hatalardan sonra dinlenmeye alınan tüm bağlantıları görün, bekleme sürelerini toplu kaldırın ve sürelerini ayarlayın.",
+    "loading": "Bekleme süreleri yükleniyor…",
+    "loadFailed": "Bekleme süreleri yüklenemedi",
+    "loadFailedDetail": "Bağlantınızı kontrol edin ve sayfayı yenileyin.",
+    "rules": {
+      "title": "Bekleme süresi kuralları",
+      "subtitle": "Bir sonraki hatasından itibaren her bağlantıya uygulayın.",
+      "stallLabel": "Bir akış durakladığında hesabı bekleme süresine al",
+      "stallDescription": "Varsayılan olarak kapalıdır: bir duraklama genellikle bozuk bir hesabı değil, uzun bir akıl yürütme adımını gösterir.",
+      "oauth": "OAuth hesapları",
+      "apikey": "API anahtarları",
+      "baseCooldown": "Temel bekleme süresi (saniye)",
+      "baseCooldownHint": "Bir hatadan sonraki ilk bekleme süresi. Tekrarlanan hatalar bunu ikiye katlar.",
+      "maxBackoffSteps": "Maksimum geri çekilme adımı",
+      "maxBackoffStepsHint": "Bekleme süresinin kaç kez ikiye katlanabileceği.",
+      "save": "Kuralları kaydet",
+      "saved": "Bekleme süresi kuralları kaydedildi",
+      "saveFailed": "Bekleme süresi kuralları kaydedilemedi"
+    },
+    "list": {
+      "title": "Yönlendirme dışı bağlantılar",
+      "subtitle": "Bekleme süreleri ve model kilitlemeleri kendiliğinden sona erer. Bir bağlantıyı hemen yeniden yönlendirmeye almak için bunları temizleyin.",
+      "provider": "Sağlayıcı",
+      "allProviders": "Tüm sağlayıcılar",
+      "showHealthy": "Sağlıklı bağlantıları göster",
+      "refresh": "Yenile",
+      "clearSelected": "Seçilenleri temizle ({count})",
+      "clearAll": "Tümünü temizle",
+      "clear": "Temizle",
+      "select": "Bağlantı seç",
+      "none": "Yok",
+      "empty": "Yönlendirme dışı bağlantı yok.",
+      "cleared": "{cleared} bağlantı ve {lockouts} model kilitlemesi temizlendi. Yasaklanmış veya süresi dolmuş {skipped} öğe atlandı.",
+      "clearFailed": "Bekleme süreleri temizlenemedi",
+      "columns": {
+        "connection": "Bağlantı",
+        "provider": "Sağlayıcı",
+        "status": "Durum",
+        "remaining": "Kalan süre",
+        "lockouts": "Model kilitlemeleri",
+        "lastError": "Son hata"
+      }
+    },
+    "status": {
+      "cooling_down": "Soğuma sürecinde",
+      "model_locked": "Model kilitli",
+      "unavailable": "Kullanılamıyor",
+      "terminal": "Dikkat gerektiriyor",
+      "healthy": "Sağlıklı"
     }
   },
   "featureFlagCapabilityFilterEnabledDescription": "Hedef model gerekli yeteneklere (görüş, araçlar, yapılandırılmış çıktı, bağlam penceresi) sahip olmadığında, gönderimden önce istekleri reddedin. Kombinasyon katmanı uyumluluk filtresini atlayan doğrudan tek sağlayıcı isteklerini korur.",

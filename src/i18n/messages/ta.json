@@ -989,6 +989,7 @@
   "featureFlagOmnirouteEmergencyFallbackDescription": "பட்ஜெட் தீர்ந்த கோரிக்கைகளை அவசரகால இலவச ஃபால்பேக் வழங்குநர்/மாடலுக்கு வழிசெலுத்துங்கள்.",
   "featureFlagArenaEloSyncEnabledDescription": "மாடல் நுண்ணறிவு தரவரிசைகளுக்காக அவ்வப்போதான Arena AI லீடர்போர்டு ELO ஒத்திசைவை இயக்குங்கள்.",
   "featureFlagUniversalContextHandoffEnabledDescription": "காம்போ வழித்தடம் மாடல்களை மாற்றும்போது உரையாடல் சுருக்கங்களை உருவாக்கி உட்செலுத்தவும். மாடல் மாற்றங்களைத் தனித்தனியாகக் கையாளவும், ஏற்கனவே உள்ள மற்றும் எதிர்கால காம்போக்கள் அனைத்திற்குமான பின்னணி ஒப்படைப்புக் கோரிக்கைகளைத் தடுக்கவும் இதை முடக்கவும்.",
+  "featureFlagReasoningReplayEnabledDescription": "பல முறை பேசும் உரையாடல்களில் மாதிரியின் பகுத்தறிவை தற்காலிகமாக சேமித்து மீண்டும் இயக்குங்கள். பகுத்தறிவை சேமிப்பதையும் மீண்டும் செலுத்துவதையும் நிறுத்த முடக்கவும்.",
   "featureFlagExposeCcDiscoveryAliasesDescription": "/v1/models இல் Claude Code gateway மாதிரி கண்டுபிடிப்பு பட்டியலில் non-Claude மாதிரிகளை காட்ட Claude/&lt;provider&gt;/&lt;model&gt; மின்னூல் அடையாளங்களை விளம்பரம் செய்யவும். எச்சரிக்கை: உலகளாவியமாக செயல்படுத்தப்பட்டால் அனைத்து கிளையன்டுகளுக்கும் பட்டியல் பதிவுகளை இரட்டைப்படுத்துகிறது.",
   "featureFlagNoThinkingAliasEnabledDescription": "no-think/&lt;provider&gt;/&lt;model&gt; நுழைவாயில் மாற்றுப்பெயர்களுக்கான முதன்மை நிலைமாற்றி. இயக்கம் (இயல்புநிலை): தகுதியுள்ள, சிந்திக்கும் திறன்கொண்ட ஒவ்வொரு Claude மாடலுக்கும் /v1/models ஒரு சிந்தனையற்ற மாறுபாட்டைக் காட்டும்; மேலும், ஒரு கோரிக்கையில் அனுப்பப்படும் no-think/ ஐடி, பகுத்தறிதல் ஒடுக்கப்பட்ட நிலையில் உண்மையான மாடலுக்குத் திரும்பத் தீர்மானிக்கப்படும். முடக்கம்: எந்த மாறுபாடுகளும் காட்டப்படாது; மேலும் no-think/ ஐடி, மற்ற அறியப்படாத மாடல் ஐடியைப் போலவே கருதப்படும். இது இயக்கத்தில் இருக்கும்போது, ஒவ்வொரு மாடலுக்குமான ModelSpec.noThinkingAlias இணைதல்/விலகல் அமைப்பு தொடர்ந்து பொருந்தும்.",
   "featureFlagChatVirtualLanesEnabledDescription": "வழங்குநர் அனுப்பீட்டிற்கு ஒவ்வொரு குத்தகைதாரருக்கும் (tenant) தகவமைப்பு மெய்நிகர் சேர்க்கைப் பாதைகளை இயக்கு (#9654): ஒரு குத்தகைதாரரின் அதிகரிப்பு இனி மற்றொருவருக்கு 503 ஐ அளிக்காது. OMNIROUTE_CHAT_VIRTUAL_LANES சூழல் மாறி இந்த டாஷ்போர்டு அமைப்பை விட முன்னுரிமை பெறுகிறது; மாற்றங்கள் சேவையகம் மறுதொடக்கத்தில் நடைமுறைக்கு வரும்.",
@@ -1314,6 +1315,8 @@
     "orchestrationSubtitle": "இயங்கிக் கொண்டிருக்கும் அனைத்தின் நேரடிக் காட்சி",
     "resilienceConnections": "இணைப்பு நெகிழ்திறன்",
     "resilienceConnectionsSubtitle": "குளிரூட்டல், பிரேக்கர், பூட்டு நிலை",
+    "resilienceCooldowns": "கூல்டவுன் மேலாளர்",
+    "resilienceCooldownsSubtitle": "கூல்டவுன்களை மொத்தமாக நீக்குங்கள்",
     "settingsModalityBridge": "மோடாலிட்டி பாலம்",
     "settingsModalityBridgeSubtitle": "படம்/ஒலி → உரை மட்டும் மாதிரிகளுக்கான உரை மாற்று",
     "commandPalette": {
@@ -3370,6 +3373,15 @@
     "autoCatalogDescription": "இணைக்கப்பட்ட வழங்குநர்களிடமிருந்து உள்ளமைந்த தானியங்கு/* சேர்க்கைகள் மாறும் வகையில் தீர்க்கப்படுகின்றன. இந்த ஐடிகளில் ஏதேனும் ஒன்றை மாதிரி புலமாகப் பயன்படுத்தவும் - அமைப்பு தேவையில்லை.",
     "autoCatalogExpand": "தானாக ரூட்டிங் பட்டியலை விரிவாக்குங்கள்",
     "autoCatalogCollapse": "தானாக ரூட்டிங் பட்டியலைச் சுருக்கவும்",
+    "autoCatalogComboCount": "{count} கம்போஸ்",
+    "autoCatalogCandidates": "{count} வேட்பாளர்கள்",
+    "autoCatalogNoCandidates": "ஒத்திசைவு வழங்குநர்கள் இல்லை",
+    "autoCatalogKindVariant": "மாறுபாடு",
+    "autoCatalogKindTemplate": "மாதிரி",
+    "autoCatalogKindCategory": "வகை",
+    "autoCatalogKindFamily": "குடும்பம்",
+    "autoComboTestTruncated": "உயிருள்ள {total} வேட்பாளர்களில் {tested} ஐ சோதித்தோம் (அதிகபட்ச எடைகள் முதலில்).",
+    "controlCenter": "கட்டுப்பாட்டு மையம்",
     "createCombo": "காம்போவை உருவாக்கு",
     "editCombo": "காம்போவைத் திருத்து",
     "deleteCombo": "காம்போவை நீக்கு",
@@ -6694,7 +6706,11 @@
     "savedModelEndpointSettings": "சேமிக்கப்பட்ட மாதிரி முடிவுறுப்பு அமைப்புகள்",
     "searchByModelAria": "மாதிரியில் தேடு",
     "selectSupportedEndpoint": "குறைந்தது ஒரு ஆதரிக்கப்படும் முடிவுகளைத் தேர்ந்தெடுக்கவும்",
-    "antigravityClientProfileHarness": "ஹார்னஸ் / CLI"
+    "antigravityClientProfileHarness": "ஹார்னஸ் / CLI",
+    "rateLimitOverridesModelConcurrencyLabel": "Per-model concurrency caps",
+    "rateLimitOverridesModelConcurrencyPlaceholder": "glm-5=1\nglm-4.7=3",
+    "rateLimitOverridesModelConcurrencyHint": "Optional: one model=cap per line, matched against the exact upstream model id. Queues excess requests locally; blank means no per-model cap.",
+    "rateLimitOverridesModelConcurrencyInvalid": "Invalid per-model concurrency entry \"{entry}\" — use model=cap with a whole number from 1 to {max}."
   },
   "settings": {
     "title": "அமைப்புகள்",
@@ -14212,6 +14228,59 @@
         "modelLockouts": "மாதிரி பூட்டுகள்",
         "count": "இணைப்புகளின் எண்ணிக்கை"
       }
+    }
+  },
+  "resilienceCooldowns": {
+    "title": "கூல்டவுன் மேலாளர்",
+    "description": "தோல்விகளுக்குப் பிறகு ஓய்வில் இருக்கும் ஒவ்வொரு இணைப்பையும் பார்க்கவும், கூல்டவுன்களை மொத்தமாக நீக்கவும், அவை எவ்வளவு காலம் நீடிக்க வேண்டும் என்பதை மாற்றியமைக்கவும்.",
+    "loading": "கூல்டவுன்கள் ஏற்றப்படுகின்றன…",
+    "loadFailed": "கூல்டவுன்களை ஏற்ற முடியவில்லை",
+    "loadFailedDetail": "உங்கள் இணைப்பைச் சரிபார்த்து பக்கத்தைப் புதுப்பிக்கவும்.",
+    "rules": {
+      "title": "கூல்டவுன் விதிகள்",
+      "subtitle": "அடுத்த தோல்வியிலிருந்து ஒவ்வொரு இணைப்புக்கும் பொருந்தும்.",
+      "stallLabel": "ஸ்ட்ரீம் தடைபடும் போது கணக்கைக் கூல்டவுனில் வைக்கவும்",
+      "stallDescription": "இயல்புநிலையாக முடக்கப்பட்டுள்ளது: ஸ்ட்ரீம் தடைபடுவது பொதுவாக ஒரு நீண்ட பகுத்தறிவு முறை ஆகும், பழுதடைந்த கணக்கு அல்ல.",
+      "oauth": "OAuth கணக்குகள்",
+      "apikey": "API விசைகள்",
+      "baseCooldown": "அடிப்படை கூல்டவுன் (வினாடிகள்)",
+      "baseCooldownHint": "தோல்விக்குப் பிந்தைய முதல் கூல்டவுன். தொடர் தோல்விகள் இதை இரட்டிப்பாக்கும்.",
+      "maxBackoffSteps": "அதிகபட்ச பேக்ஆஃப் படிகள்",
+      "maxBackoffStepsHint": "கூல்டவுன் எத்தனை முறை இரட்டிப்பாகலாம்.",
+      "save": "விதிகளைச் சேமிக்கவும்",
+      "saved": "கூல்டவுன் விதிகள் சேமிக்கப்பட்டன",
+      "saveFailed": "கூல்டவுன் விதிகளைச் சேமிக்க முடியவில்லை"
+    },
+    "list": {
+      "title": "ரூட்டிங்கில் இல்லாத இணைப்புகள்",
+      "subtitle": "கூல்டவுன்களும் மாடல் லாக்அவுட்களும் தானாகவே முடிவடையும். இணைப்பை இப்போது மீண்டும் ரூட்டிங்கிற்கு கொண்டுவர அவற்றை நீக்கவும்.",
+      "provider": "வழங்குநர்",
+      "allProviders": "அனைத்து வழங்குநர்களும்",
+      "showHealthy": "ஆரோக்கியமான இணைப்புகளைக் காட்டு",
+      "refresh": "புதுப்பி",
+      "clearSelected": "தேர்ந்தெடுக்கப்பட்டவற்றை நீக்கு ({count})",
+      "clearAll": "அனைத்தையும் நீக்கு",
+      "clear": "நீக்கு",
+      "select": "இணைப்பைத் தேர்ந்தெடுக்கவும்",
+      "none": "எதுவுமில்லை",
+      "empty": "எந்த இணைப்பும் ரூட்டிங்கில் இருந்து வெளியேறவில்லை.",
+      "cleared": "{cleared} இணைப்புகள் மற்றும் {lockouts} மாடல் லாக்அவுட்கள் நீக்கப்பட்டன. தடைசெய்யப்பட்ட அல்லது காலாவதியான {skipped} தவிர்க்கப்பட்டன.",
+      "clearFailed": "கூல்டவுன்களை நீக்க முடியவில்லை",
+      "columns": {
+        "connection": "இணைப்பு",
+        "provider": "வழங்குநர்",
+        "status": "நிலை",
+        "remaining": "மீதமுள்ள நேரம்",
+        "lockouts": "மாடல் லாக்அவுட்கள்",
+        "lastError": "கடைசிப் பிழை"
+      }
+    },
+    "status": {
+      "cooling_down": "குளிர்விக்கப்படுகிறது",
+      "model_locked": "மாடல் பூட்டப்பட்டுள்ளது",
+      "unavailable": "கிடைக்கவில்லை",
+      "terminal": "கவனம் தேவை",
+      "healthy": "ஆரோக்கியமானது"
     }
   },
   "featureFlagCapabilityFilterEnabledDescription": "விருப்பமான மாதிரி தேவையான திறன்களை (காணல், கருவிகள், கட்டமைக்கப்பட்ட வெளியீடு, சூழல் ஜன்னல்) இன்றி இருந்தால், அனுப்புவதற்கு முன் கோரிக்கைகளை நிராகரிக்கவும். கம்போ-லேயர் ஒத்திசைவு வடிகட்டியை தவிர்க்கும் நேரடி ஒற்றை வழங்குநர் கோரிக்கைகளை பாதுகாக்கிறது.",

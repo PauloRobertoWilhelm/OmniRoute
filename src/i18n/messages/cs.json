@@ -989,6 +989,7 @@
   "featureFlagOmnirouteEmergencyFallbackDescription": "Směrovat požadavky s vyčerpaným rozpočtem na nouzového bezplatného záložního poskytovatele/model.",
   "featureFlagArenaEloSyncEnabledDescription": "Povolit periodickou synchronizaci ELO z žebříčku Arena AI pro hodnocení inteligence modelů.",
   "featureFlagUniversalContextHandoffEnabledDescription": "Generovat a vkládat souhrny konverzací, když kombinované směrování přepíná mezi modely. Vypnutím budou přepnutí modelu zpracována nezávisle a zabrání se požadavkům na předání na pozadí u všech stávajících i budoucích kombinací.",
+  "featureFlagReasoningReplayEnabledDescription": "Ukládejte do mezipaměti a přehrávejte uvažování modelu napříč vícekoloými konverzacemi. Vypnutím zastavíte ukládání a opětovné vkládání uvažování.",
   "featureFlagExposeCcDiscoveryAliasesDescription": "Inzerujte claude/&lt;provider&gt;/&lt;model&gt; zrcadlové ID na /v1/models, aby seznam objevování modelů brány Claude Code zahrnoval modely, které nejsou Claude. Upozornění: při globálním povolení zdvojuje katalogové položky pro všechny klienty.",
   "featureFlagNoThinkingAliasEnabledDescription": "Hlavní přepínač pro aliasy brány no-think/&lt;provider&gt;/&lt;model&gt;. Zapnuto (výchozí): /v1/models uvádí variantu bez přemýšlení pro každý způsobilý model Claude podporující přemýšlení a id no-think/ odeslané v požadavku se převede zpět na skutečný model s potlačeným uvažováním. Vypnuto: žádné varianty nejsou uváděny a id no-think/ se považuje za jakékoli jiné neznámé id modelu. Dokud je tato možnost zapnutá, nadále platí povolení či zakázání pro jednotlivé modely prostřednictvím ModelSpec.noThinkingAlias.",
   "featureFlagChatVirtualLanesEnabledDescription": "Povolte adaptivní virtuální vstupní pruhy pro každého tenanta při odesílání poskytovatelům (#9654): špička jednoho tenanta už nezpůsobí 503 u jiného. Proměnná prostředí OMNIROUTE_CHAT_VIRTUAL_LANES má přednost před tímto nastavením na řídicím panelu; změny se projeví po restartu serveru.",
@@ -1314,6 +1315,8 @@
     "orchestrationSubtitle": "Živý přehled všeho, co běží",
     "resilienceConnections": "Odolnost Připojení",
     "resilienceConnectionsSubtitle": "Cooldown, jistič, stav uzamčení",
+    "resilienceCooldowns": "Správce cooldownů",
+    "resilienceCooldownsSubtitle": "Hromadně vymazat cooldowny",
     "settingsModalityBridge": "Modální Most",
     "settingsModalityBridgeSubtitle": "Obrázek/audio → textový fallback pro modely pouze s textem",
     "commandPalette": {
@@ -3370,6 +3373,15 @@
     "autoCatalogDescription": "Vestavěná automatická/* komba řešená dynamicky od připojených poskytovatelů. Použijte kterékoli z těchto ID jako pole modelu – není potřeba žádné nastavení.",
     "autoCatalogExpand": "Rozbalte katalog automatického směrování",
     "autoCatalogCollapse": "Sbalit katalog automatického směrování",
+    "autoCatalogComboCount": "{count} kombinací",
+    "autoCatalogCandidates": "{count} kandidátů",
+    "autoCatalogNoCandidates": "Žádní odpovídající poskytovatelé",
+    "autoCatalogKindVariant": "varianta",
+    "autoCatalogKindTemplate": "šablona",
+    "autoCatalogKindCategory": "kategorie",
+    "autoCatalogKindFamily": "rodina",
+    "autoComboTestTruncated": "Otestováno {tested} z {total} živých kandidátů (nejvyšší váhy první).",
+    "controlCenter": "Ovládací centrum",
     "createCombo": "Vytvořit kombinaci",
     "editCombo": "Upravit kombinaci",
     "deleteCombo": "Smazat kombinaci",
@@ -6694,7 +6706,11 @@
     "savedModelEndpointSettings": "Nastavení koncového bodu uloženého modelu",
     "searchByModelAria": "Hledat podle modelu",
     "selectSupportedEndpoint": "Vyberte alespoň jeden podporovaný koncový bod",
-    "antigravityClientProfileHarness": "Testovací rozhraní / CLI"
+    "antigravityClientProfileHarness": "Testovací rozhraní / CLI",
+    "rateLimitOverridesModelConcurrencyLabel": "Per-model concurrency caps",
+    "rateLimitOverridesModelConcurrencyPlaceholder": "glm-5=1\nglm-4.7=3",
+    "rateLimitOverridesModelConcurrencyHint": "Optional: one model=cap per line, matched against the exact upstream model id. Queues excess requests locally; blank means no per-model cap.",
+    "rateLimitOverridesModelConcurrencyInvalid": "Invalid per-model concurrency entry \"{entry}\" — use model=cap with a whole number from 1 to {max}."
   },
   "settings": {
     "title": "Nastavení",
@@ -14212,6 +14228,59 @@
         "modelLockouts": "Uzamčení Modelu",
         "count": "Počet Připojení"
       }
+    }
+  },
+  "resilienceCooldowns": {
+    "title": "Správce cooldownů",
+    "description": "Zobrazte si všechna spojení, která po chybách odpočívají, hromadně zrušte cooldowny a upravte dobu jejich trvání.",
+    "loading": "Načítání cooldownů…",
+    "loadFailed": "Cooldowny se nepodařilo načíst",
+    "loadFailedDetail": "Zkontrolujte připojení a obnovte stránku.",
+    "rules": {
+      "title": "Pravidla cooldownů",
+      "subtitle": "Použít na každé spojení od jeho příštího selhání.",
+      "stallLabel": "Aktivovat cooldown účtu při uváznutí streamu",
+      "stallDescription": "Ve výchozím stavu vypnuto: uváznutí obvykle znamená jeden dlouhý krok uvažování, nikoli nefunkční účet.",
+      "oauth": "Účty OAuth",
+      "apikey": "Klíče API",
+      "baseCooldown": "Základní cooldown (sekundy)",
+      "baseCooldownHint": "První cooldown po selhání. Opakovaná selhání jej zdvojnásobují.",
+      "maxBackoffSteps": "Maximální počet kroků backoffu",
+      "maxBackoffStepsHint": "Kolikrát se může cooldown zdvojnásobit.",
+      "save": "Uložit pravidla",
+      "saved": "Pravidla cooldownů byla uložena",
+      "saveFailed": "Pravidla cooldownů se nepodařilo uložit"
+    },
+    "list": {
+      "title": "Spojení vyřazená ze směrování",
+      "subtitle": "Cooldowny a blokace modelů končí automaticky. Vymažte je, chcete-li spojení vrátit do směrování hned.",
+      "provider": "Poskytovatel",
+      "allProviders": "Všichni poskytovatelé",
+      "showHealthy": "Zobrazit funkční spojení",
+      "refresh": "Obnovit",
+      "clearSelected": "Vymazat vybrané ({count})",
+      "clearAll": "Vymazat vše",
+      "clear": "Vymazat",
+      "select": "Vybrat spojení",
+      "none": "Žádné",
+      "empty": "Žádné spojení není vyřazeno ze směrování.",
+      "cleared": "Vymazáno {cleared} spojení a {lockouts} blokací modelů. Přeskočeno {skipped} zablokovaných nebo vypršených.",
+      "clearFailed": "Cooldowny se nepodařilo vymazat",
+      "columns": {
+        "connection": "Spojení",
+        "provider": "Poskytovatel",
+        "status": "Stav",
+        "remaining": "Zbývající čas",
+        "lockouts": "Blokace modelů",
+        "lastError": "Poslední chyba"
+      }
+    },
+    "status": {
+      "cooling_down": "Ochlazování",
+      "model_locked": "Model uzamčen",
+      "unavailable": "Nedostupné",
+      "terminal": "Vyžaduje pozornost",
+      "healthy": "V pořádku"
     }
   },
   "featureFlagCapabilityFilterEnabledDescription": "Odmítnout požadavky před odesláním, když cílový model postrádá požadované schopnosti (vidění, nástroje, strukturovaný výstup, kontextové okno). Chrání přímé požadavky od jednotlivých poskytovatelů, které obcházejí filtr kompatibility kombinované vrstvy.",

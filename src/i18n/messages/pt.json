@@ -989,6 +989,7 @@
   "featureFlagOmnirouteEmergencyFallbackDescription": "Encaminhar pedidos com orçamento esgotado para o fornecedor/modelo de contingência gratuito de emergência.",
   "featureFlagArenaEloSyncEnabledDescription": "Ativar a sincronização periódica do ELO da tabela de classificação da Arena AI para classificações de inteligência do modelo.",
   "featureFlagUniversalContextHandoffEnabledDescription": "Gere e injete resumos das conversas quando o encaminhamento de combinações alternar entre modelos. Desative esta opção para tratar as mudanças de modelo de forma independente e impedir pedidos de transferência em segundo plano para todas as combinações existentes e futuras.",
+  "featureFlagReasoningReplayEnabledDescription": "Armazena e reproduz o raciocínio do modelo em conversas de vários turnos. Desative para deixar de guardar e reintroduzir o raciocínio.",
   "featureFlagExposeCcDiscoveryAliasesDescription": "Anuncie os ids de espelho claude/&lt;provider&gt;/&lt;model&gt; em /v1/models para que a descoberta de modelos do gateway Claude Code liste modelos não Claude. Aviso: duplica entradas de catálogo para todos os clientes quando ativado globalmente.",
   "featureFlagNoThinkingAliasEnabledDescription": "Interruptor principal para os aliases de gateway no-think/&lt;provider&gt;/&lt;model&gt;. Ativado (predefinição): /v1/models anuncia uma variante sem raciocínio para cada modelo Claude elegível com capacidade de raciocínio, e um ID no-think/ enviado num pedido é resolvido para o modelo real com o raciocínio suprimido. Desativado: não são anunciadas variantes e um ID no-think/ é tratado como qualquer outro ID de modelo desconhecido. A opção de ativação/desativação ModelSpec.noThinkingAlias por modelo continua a aplicar-se enquanto esta opção estiver ativada.",
   "featureFlagChatVirtualLanesEnabledDescription": "Ative filas de admissão virtuais adaptativas por tenant para o encaminhamento de fornecedores (#9654): um pico de tráfego de um tenant já não gera 503 noutro. A variável de ambiente OMNIROUTE_CHAT_VIRTUAL_LANES sobrepõe-se a esta definição do painel; as alterações entram em vigor ao reiniciar o servidor.",
@@ -1314,6 +1315,8 @@
     "orchestrationSubtitle": "Vista em direto de tudo o que está em execução",
     "resilienceConnections": "Resiliência de Ligação",
     "resilienceConnectionsSubtitle": "Cooldown, disjuntor, estado de bloqueio",
+    "resilienceCooldowns": "Gestor de Cooldowns",
+    "resilienceCooldownsSubtitle": "Limpar cooldowns em massa",
     "settingsModalityBridge": "Ponte de Modalidade",
     "settingsModalityBridgeSubtitle": "Fallback de imagem/áudio → texto para modelos apenas de texto",
     "commandPalette": {
@@ -3370,6 +3373,15 @@
     "autoCatalogDescription": "Combos automáticos/* integrados resolvidos dinamicamente a partir de provedores conectados. Use qualquer um desses IDs como campo de modelo — nenhuma configuração é necessária.",
     "autoCatalogExpand": "Expanda o catálogo de roteamento automático",
     "autoCatalogCollapse": "Recolher catálogo de roteamento automático",
+    "autoCatalogComboCount": "{count} combinações",
+    "autoCatalogCandidates": "{count} candidatos",
+    "autoCatalogNoCandidates": "Nenhum provedor correspondente",
+    "autoCatalogKindVariant": "variante",
+    "autoCatalogKindTemplate": "modelo",
+    "autoCatalogKindCategory": "categoria",
+    "autoCatalogKindFamily": "família",
+    "autoComboTestTruncated": "Testados {tested} de {total} candidatos ativos (maiores pesos primeiro).",
+    "controlCenter": "Central de Controle",
     "createCombo": "Criar combinação",
     "editCombo": "Editar combinação",
     "deleteCombo": "Excluir combinação",
@@ -6694,7 +6706,11 @@
     "savedModelEndpointSettings": "Definições do ponto de extremidade do modelo guardado",
     "searchByModelAria": "Pesquisar por modelo",
     "selectSupportedEndpoint": "Selecione pelo menos um endpoint suportado",
-    "antigravityClientProfileHarness": "Harness / CLI"
+    "antigravityClientProfileHarness": "Harness / CLI",
+    "rateLimitOverridesModelConcurrencyLabel": "Per-model concurrency caps",
+    "rateLimitOverridesModelConcurrencyPlaceholder": "glm-5=1\nglm-4.7=3",
+    "rateLimitOverridesModelConcurrencyHint": "Optional: one model=cap per line, matched against the exact upstream model id. Queues excess requests locally; blank means no per-model cap.",
+    "rateLimitOverridesModelConcurrencyInvalid": "Invalid per-model concurrency entry \"{entry}\" — use model=cap with a whole number from 1 to {max}."
   },
   "settings": {
     "title": "Configurações",
@@ -14212,6 +14228,59 @@
         "modelLockouts": "Bloqueios de Modelo",
         "count": "Contagem de Ligações"
       }
+    }
+  },
+  "resilienceCooldowns": {
+    "title": "Gestor de Cooldowns",
+    "description": "Veja todas as ligações em pausa após falhas, remova cooldowns em massa e ajuste a sua duração.",
+    "loading": "A carregar cooldowns…",
+    "loadFailed": "Não foi possível carregar os cooldowns",
+    "loadFailedDetail": "Verifique a sua ligação e atualize a página.",
+    "rules": {
+      "title": "Regras de cooldown",
+      "subtitle": "Aplicar a todas as ligações a partir da próxima falha.",
+      "stallLabel": "Aplicar cooldown a uma conta quando um stream bloquear",
+      "stallDescription": "Desativado por predefinição: um bloqueio geralmente significa um turno de raciocínio longo, não uma conta com problemas.",
+      "oauth": "Contas OAuth",
+      "apikey": "Chaves de API",
+      "baseCooldown": "Cooldown base (segundos)",
+      "baseCooldownHint": "Primeiro cooldown após uma falha. Falhas repetidas duplicam-no.",
+      "maxBackoffSteps": "Passos máximos de backoff",
+      "maxBackoffStepsHint": "Quantas vezes o cooldown pode duplicar.",
+      "save": "Guardar regras",
+      "saved": "Regras de cooldown guardadas",
+      "saveFailed": "Não foi possível guardar as regras de cooldown"
+    },
+    "list": {
+      "title": "Ligações fora do encaminhamento",
+      "subtitle": "Os cooldowns e os bloqueios de modelo terminam por si próprios. Limpe-os para repor uma ligação no encaminhamento agora.",
+      "provider": "Fornecedor",
+      "allProviders": "Todos os fornecedores",
+      "showHealthy": "Mostrar ligações saudáveis",
+      "refresh": "Atualizar",
+      "clearSelected": "Limpar selecionadas ({count})",
+      "clearAll": "Limpar tudo",
+      "clear": "Limpar",
+      "select": "Selecionar ligação",
+      "none": "Nenhum",
+      "empty": "Nenhuma ligação está fora do encaminhamento.",
+      "cleared": "Foram limpas {cleared} ligações e {lockouts} bloqueios de modelo. Ignoradas {skipped} banidas ou expiradas.",
+      "clearFailed": "Não foi possível limpar os cooldowns",
+      "columns": {
+        "connection": "Ligação",
+        "provider": "Fornecedor",
+        "status": "Estado",
+        "remaining": "Tempo restante",
+        "lockouts": "Bloqueios de modelo",
+        "lastError": "Último erro"
+      }
+    },
+    "status": {
+      "cooling_down": "Em arrefecimento",
+      "model_locked": "Modelo bloqueado",
+      "unavailable": "Indisponível",
+      "terminal": "Requer atenção",
+      "healthy": "Saudável"
     }
   },
   "featureFlagCapabilityFilterEnabledDescription": "Rejeitar pedidos antes do envio quando o modelo de destino não tiver as capacidades necessárias (visão, ferramentas, saída estruturada, janela de contexto). Protege pedidos diretos de um único fornecedor que contornam o filtro de compatibilidade da camada combinada.",

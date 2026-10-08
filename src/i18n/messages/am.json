@@ -989,6 +989,7 @@
   "featureFlagOmnirouteEmergencyFallbackDescription": "በጀታቸው ያለቀባቸውን ጥያቄዎች ወደ ድንገተኛው ነፃ ተተኪ አቅራቢ/ሞዴል ያዛውሩ።",
   "featureFlagArenaEloSyncEnabledDescription": "ለሞዴል ብልህነት ደረጃዎች የArena AI የደረጃ ሰንጠረዥ ELO በየጊዜው እንዲመሳሰል ያንቁ።",
   "featureFlagUniversalContextHandoffEnabledDescription": "የጥምር ማዘዋወሪያ ሞዴሎችን ሲቀይር የውይይት ማጠቃለያዎችን ያመንጩ እና ያስገቡ። የሞዴል ለውጦችን በተናጥል ለመያዝ እና ለሁሉም ነባርና ወደፊት ለሚፈጠሩ ጥምረቶች የጀርባ ርክክብ ጥያቄዎችን ለመከልከል ያሰናክሉት።",
+  "featureFlagReasoningReplayEnabledDescription": "Cache and replay model reasoning across multi-turn conversations. Disable to stop storing and re-injecting reasoning.",
   "featureFlagExposeCcDiscoveryAliasesDescription": "የClaude Code ጌትዌይ ሞዴል ፍለጋ Claude ያልሆኑ ሞዴሎችን እንዲዘረዝር፣ የclaude/&lt;provider&gt;/&lt;model&gt; መስታወት መለያዎችን በ/v1/models ላይ ያስተዋውቁ። ማስጠንቀቂያ፦ በዓለም አቀፍ ደረጃ ሲነቃ ለሁሉም ደንበኞች የካታሎግ ግቤቶችን በእጥፍ ያደርጋል።",
   "featureFlagNoThinkingAliasEnabledDescription": "ለno-think/&lt;provider&gt;/&lt;model&gt; ጌትዌይ ተለዋጭ ስሞች ዋና ማብሪያ/ማጥፊያ። ሲበራ (ነባሪ)፦ /v1/models ለእያንዳንዱ ብቁ የማሰብ ችሎታ ያለው Claude ሞዴል የማያስብ ልዩነትን ያስተዋውቃል፤ እንዲሁም በጥያቄ የተላከ no-think/ መለያ የማመዛዘን ባህሪው ታፍኖ ወደ እውነተኛው ሞዴል ይመለሳል። ሲጠፋ፦ ምንም ልዩነቶች አይተዋወቁም፣ እና no-think/ መለያ እንደ ማንኛውም ሌላ ያልታወቀ የሞዴል መለያ ይቆጠራል። ይህ ሲበራም የእያንዳንዱ ሞዴል ModelSpec.noThinkingAlias የመርጦ መግባት/መውጣት ቅንብር እንደተገበረ ይቆያል።",
   "featureFlagChatVirtualLanesEnabledDescription": "ለአቅራቢ ማሰራጨት በተከራይ ደረጃ የሚላመዱ ምናባዊ የመቀበያ መስመሮችን ያንቁ (#9654)፦ የአንድ ተከራይ ድንገተኛ ጭማሪ ከእንግዲህ በሌላው ላይ 503 ስህተት አያስከትልም። የOMNIROUTE_CHAT_VIRTUAL_LANES የአካባቢ ተለዋዋጭ ከዚህ የዳሽቦርድ ማሻሻያ ቅድሚያ ይኖረዋል፤ ለውጦች አገልጋዩ ዳግም ሲጀመር ተግባራዊ ይሆናሉ።",
@@ -1314,6 +1315,8 @@
     "orchestrationSubtitle": "በሂደት ላይ ያለውን ሁሉ የቀጥታ እይታ",
     "resilienceConnections": "የግንኙነት ጽናት",
     "resilienceConnectionsSubtitle": "የማቀዝቀዣ ጊዜ፣ የወረዳ ሰባሪ እና የመቆለፍ ሁኔታ",
+    "resilienceCooldowns": "የማቆያ ጊዜ አስተዳዳሪ",
+    "resilienceCooldownsSubtitle": "የማቆያ ጊዜዎችን በጅምላ አጽዳ",
     "settingsModalityBridge": "የሞዳሊቲ ድልድይ",
     "settingsModalityBridgeSubtitle": "ለጽሑፍ-ብቻ ሞዴሎች የምስል/ድምፅ → ጽሑፍ አማራጭ",
     "commandPalette": {
@@ -3370,6 +3373,15 @@
     "autoCatalogDescription": "አብረው የተካተቱ auto/* ጥምረቶች ከተገናኙ አቅራቢዎች በተለዋዋጭ ሁኔታ ይወሰናሉ። ከእነዚህ መታወቂያዎች ማንኛውንም እንደ ሞዴል መስክ ይጠቀሙ — ምንም ማዋቀር አያስፈልግም።",
     "autoCatalogExpand": "የራስ-ሰር ማስተላለፊያ ካታሎጉን ዘርጋ",
     "autoCatalogCollapse": "የራስ-ሰር ማስተላለፊያ ካታሎጉን ሰብስብ",
+    "autoCatalogComboCount": "{count} ኮምቦዎች",
+    "autoCatalogCandidates": "{count} ካንደይት",
+    "autoCatalogNoCandidates": "የሚስማማ አቅራቢዎች የለም",
+    "autoCatalogKindVariant": "ቫሪያንት",
+    "autoCatalogKindTemplate": "አቀራረብ",
+    "autoCatalogKindCategory": "ምድብ",
+    "autoCatalogKindFamily": "ቤተሰብ",
+    "autoComboTestTruncated": "{total} የተሞክሮ ካንደይት ውስጥ {tested} ተመን በተመለከተ ይታወቃል (ከፍተኛ ክብደቶች በመጀመሪያ).",
+    "controlCenter": "የመቆጣጠሪያ ማዕከል",
     "createCombo": "ጥምረት ፍጠር",
     "editCombo": "ጥምረት አርትዕ",
     "deleteCombo": "ጥምረት ሰርዝ",
@@ -6694,7 +6706,11 @@
     "savedModelEndpointSettings": "የተቀመጡ የሞዴል መጨረሻ ነጥብ ቅንብሮች",
     "searchByModelAria": "በሞዴል ይፈልጉ",
     "selectSupportedEndpoint": "ቢያንስ አንድ የሚደገፍ መጨረሻ ነጥብ ይምረጡ",
-    "antigravityClientProfileHarness": "Harness / CLI"
+    "antigravityClientProfileHarness": "Harness / CLI",
+    "rateLimitOverridesModelConcurrencyLabel": "Per-model concurrency caps",
+    "rateLimitOverridesModelConcurrencyPlaceholder": "glm-5=1\nglm-4.7=3",
+    "rateLimitOverridesModelConcurrencyHint": "Optional: one model=cap per line, matched against the exact upstream model id. Queues excess requests locally; blank means no per-model cap.",
+    "rateLimitOverridesModelConcurrencyInvalid": "Invalid per-model concurrency entry \"{entry}\" — use model=cap with a whole number from 1 to {max}."
   },
   "settings": {
     "title": "ቅንብሮች",
@@ -14212,6 +14228,59 @@
         "modelLockouts": "የሞዴል መቆለፎች",
         "count": "የግንኙነት ብዛት"
       }
+    }
+  },
+  "resilienceCooldowns": {
+    "title": "የማቆያ ጊዜ አስተዳዳሪ",
+    "description": "ከስህተቶች በኋላ እረፍት ላይ ያሉ ግንኙነቶችን በሙሉ ይመልከቱ፣ የማቆያ ጊዜዎችን በጅምላ ያንሱ፣ እና ምን ያህል ጊዜ እንደሚቆዩ ያስተካክሉ።",
+    "loading": "የማቆያ ጊዜዎች በመጫን ላይ ናቸው…",
+    "loadFailed": "የማቆያ ጊዜዎችን መጫን አልተቻለም",
+    "loadFailedDetail": "ግንኙነትዎን ይፈትሹ እና ገጹን ያድሱ።",
+    "rules": {
+      "title": "የማቆያ ጊዜ ደንቦች",
+      "subtitle": "ከቀጣዩ ስህተት ጀምሮ ለእያንዳንዱ ግንኙነት ተፈጻሚ ይሁን።",
+      "stallLabel": "የዥረት ስርጭት ሲቋረጥ መለያን ወደ ማቆያ ጊዜ አስገባ",
+      "stallDescription": "በነባሪነት ጠፍቷል፦ መቆራረጥ አብዛኛውን ጊዜ ረጅም የማሰብ ዙር እንጂ የተበላሸ መለያ ማለት አይደለም።",
+      "oauth": "የOAuth መለያዎች",
+      "apikey": "የAPI ቁልፎች",
+      "baseCooldown": "መሰረታዊ የማቆያ ጊዜ (በሰከንዶች)",
+      "baseCooldownHint": "ከስህተት በኋላ የመጀመሪያው የማቆያ ጊዜ። ተደጋጋሚ ስህተቶች እጥፍ ያደርጉታል።",
+      "maxBackoffSteps": "ከፍተኛው የደረጃ ማፈግፈግ (backoff) ገደብ",
+      "maxBackoffStepsHint": "የማቆያ ጊዜው ስንት ጊዜ እጥፍ ሊሆን እንደሚችል የሚያሳይ።",
+      "save": "ደንቦችን አስቀምጥ",
+      "saved": "የማቆያ ጊዜ ደንቦች ተቀምጠዋል",
+      "saveFailed": "የማቆያ ጊዜ ደንቦችን ማስቀመጥ አልተቻለም"
+    },
+    "list": {
+      "title": "ከመስመር ውጭ የሆኑ ግንኙነቶች",
+      "subtitle": "የማቆያ ጊዜዎች እና የሞዴል መቆለፎች በራሳቸው ጊዜ ያበቃሉ። ግንኙነትን አሁን ወደ መስመር ለመመለስ ያጽዷቸው።",
+      "provider": "አቅራቢ",
+      "allProviders": "ሁሉም አቅራቢዎች",
+      "showHealthy": "ጤናማ ግንኙነቶችን አሳይ",
+      "refresh": "አድስ",
+      "clearSelected": "የተመረጡትን አጽዳ ({count})",
+      "clearAll": "ሁሉንም አጽዳ",
+      "clear": "አጽዳ",
+      "select": "ግንኙነት ይምረጡ",
+      "none": "ምንም",
+      "empty": "ከመስመር ውጭ የሆነ ምንም አይነት ግንኙነት የለም።",
+      "cleared": "{cleared} ግንኙነቶች እና {lockouts} የሞዴል መቆለፎች ጸድተዋል። {skipped} የታገዱ ወይም ጊዜያቸው ያለፈባቸው ታልፈዋል።",
+      "clearFailed": "የማቆያ ጊዜዎችን ማጽዳት አልተቻለም",
+      "columns": {
+        "connection": "ግንኙነት",
+        "provider": "አቅራቢ",
+        "status": "ሁኔታ",
+        "remaining": "የቀረው ጊዜ",
+        "lockouts": "የሞዴል መቆለፎች",
+        "lastError": "የመጨረሻው ስህተት"
+      }
+    },
+    "status": {
+      "cooling_down": "በማቀዝቀዝ ላይ",
+      "model_locked": "ሞዴል ተቆልፏል",
+      "unavailable": "አይገኝም",
+      "terminal": "ትኩረት ያስፈልገዋል",
+      "healthy": "ጤናማ"
     }
   },
   "featureFlagCapabilityFilterEnabledDescription": "የታለመው ሞዴል አስፈላጊ ችሎታዎች (ምስል፣ መሣሪያዎች፣ የተዋቀረ ውጤት፣ የአውድ መስኮት) ከሌሉት፣ ጥያቄዎችን ከመላካቸው በፊት ውድቅ አድርግ። ይህ የጥምር-ንብርብር ተኳኋኝነት ማጣሪያን የሚያልፉ ቀጥተኛ የአንድ-አቅራቢ ጥያቄዎችን ይጠብቃል።",

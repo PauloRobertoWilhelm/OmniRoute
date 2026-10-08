@@ -989,6 +989,7 @@
   "featureFlagOmnirouteEmergencyFallbackDescription": "Arahkan permintaan yang kehabisan anggaran ke penyedia/model fallback gratis darurat.",
   "featureFlagArenaEloSyncEnabledDescription": "Aktifkan sinkronisasi ELO papan peringkat Arena AI berkala untuk peringkat kecerdasan model.",
   "featureFlagUniversalContextHandoffEnabledDescription": "Buat dan sisipkan ringkasan percakapan ketika perutean kombo beralih model. Nonaktifkan untuk memperlakukan peralihan model secara terpisah dan mencegah permintaan serah terima latar belakang untuk semua kombo yang ada maupun yang akan dibuat.",
+  "featureFlagReasoningReplayEnabledDescription": "Cache dan putar ulang penalaran model di percakapan multi-giliran. Nonaktifkan untuk berhenti menyimpan dan menyuntikkan ulang penalaran.",
   "featureFlagExposeCcDiscoveryAliasesDescription": "Iklankan claude/&lt;provider&gt;/&lt;model&gt; mirror ids di /v1/models sehingga daftar penemuan model gateway Claude Code mencantumkan model non-Claude. Peringatan: menggandakan entri katalog untuk semua klien saat diaktifkan secara global.",
   "featureFlagNoThinkingAliasEnabledDescription": "Sakelar utama untuk alias gateway no-think/&lt;provider&gt;/&lt;model&gt;. Aktif (bawaan): /v1/models menampilkan varian tanpa penalaran untuk setiap model Claude yang memenuhi syarat dan mendukung penalaran, serta id no-think/ yang dikirim dalam permintaan akan diarahkan kembali ke model sebenarnya dengan penalaran dinonaktifkan. Nonaktif: tidak ada varian yang ditampilkan dan id no-think/ diperlakukan seperti id model lain yang tidak dikenal. Opsi ikut serta/tidak ikut serta ModelSpec.noThinkingAlias per model tetap berlaku saat fitur ini aktif.",
   "featureFlagChatVirtualLanesEnabledDescription": "Aktifkan jalur penerimaan virtual adaptif per-tenant untuk pengiriman penyedia (#9654): lonjakan satu tenant tidak lagi mengembalikan 503 ke tenant lain. Variabel lingkungan OMNIROUTE_CHAT_VIRTUAL_LANES menang atas pengaturan dasbor ini; perubahan berlaku setelah server dimulai ulang.",
@@ -1314,6 +1315,8 @@
     "orchestrationSubtitle": "Tampilan langsung dari semua yang sedang berjalan",
     "resilienceConnections": "Resiliensi Koneksi",
     "resilienceConnectionsSubtitle": "Cooldown, breaker, status penguncian",
+    "resilienceCooldowns": "Pengelola Cooldown",
+    "resilienceCooldownsSubtitle": "Hapus cooldown secara massal",
     "settingsModalityBridge": "Jembatan Modalitas",
     "settingsModalityBridgeSubtitle": "Fallback teks untuk model hanya teks dari gambar/audio",
     "commandPalette": {
@@ -3370,6 +3373,15 @@
     "autoCatalogDescription": "Kombo otomatis/* bawaan diselesaikan secara dinamis dari penyedia yang terhubung. Gunakan salah satu ID ini sebagai bidang model — tidak perlu penyiapan.",
     "autoCatalogExpand": "Perluas katalog perutean otomatis",
     "autoCatalogCollapse": "Ciutkan katalog perutean otomatis",
+    "autoCatalogComboCount": "{count} kombinasi",
+    "autoCatalogCandidates": "{count} kandidat",
+    "autoCatalogNoCandidates": "Tidak ada penyedia yang cocok",
+    "autoCatalogKindVariant": "varian",
+    "autoCatalogKindTemplate": "template",
+    "autoCatalogKindCategory": "kategori",
+    "autoCatalogKindFamily": "keluarga",
+    "autoComboTestTruncated": "Diuji {tested} dari {total} kandidat langsung (berat tertinggi terlebih dahulu).",
+    "controlCenter": "Pusat Kontrol",
     "createCombo": "Buat Kombo",
     "editCombo": "Sunting Kombo",
     "deleteCombo": "Hapus Kombo",
@@ -6694,7 +6706,11 @@
     "savedModelEndpointSettings": "Pengaturan endpoint model yang disimpan",
     "searchByModelAria": "Cari berdasarkan model",
     "selectSupportedEndpoint": "Pilih setidaknya satu endpoint yang didukung",
-    "antigravityClientProfileHarness": "Harness / CLI"
+    "antigravityClientProfileHarness": "Harness / CLI",
+    "rateLimitOverridesModelConcurrencyLabel": "Per-model concurrency caps",
+    "rateLimitOverridesModelConcurrencyPlaceholder": "glm-5=1\nglm-4.7=3",
+    "rateLimitOverridesModelConcurrencyHint": "Optional: one model=cap per line, matched against the exact upstream model id. Queues excess requests locally; blank means no per-model cap.",
+    "rateLimitOverridesModelConcurrencyInvalid": "Invalid per-model concurrency entry \"{entry}\" — use model=cap with a whole number from 1 to {max}."
   },
   "settings": {
     "title": "Pengaturan",
@@ -14212,6 +14228,59 @@
         "modelLockouts": "Penguncian Model",
         "count": "Jumlah Koneksi"
       }
+    }
+  },
+  "resilienceCooldowns": {
+    "title": "Pengelola Cooldown",
+    "description": "Lihat setiap koneksi yang sedang beristirahat setelah mengalami kegagalan, cabut cooldown secara massal, dan atur durasinya.",
+    "loading": "Memuat cooldown…",
+    "loadFailed": "Gagal memuat cooldown",
+    "loadFailedDetail": "Periksa koneksi Anda dan segarkan halaman.",
+    "rules": {
+      "title": "Aturan cooldown",
+      "subtitle": "Terapkan ke setiap koneksi mulai dari kegagalan berikutnya.",
+      "stallLabel": "Berikan cooldown pada akun saat stream terhenti",
+      "stallDescription": "Nonaktif secara default: terhenti biasanya berarti satu putaran penalaran yang panjang, bukan akun yang bermasalah.",
+      "oauth": "Akun OAuth",
+      "apikey": "Kunci API",
+      "baseCooldown": "Cooldown dasar (detik)",
+      "baseCooldownHint": "Cooldown pertama setelah kegagalan. Kegagalan berulang akan melipatgandakannya.",
+      "maxBackoffSteps": "Langkah backoff maksimum",
+      "maxBackoffStepsHint": "Berapa kali cooldown dapat berlipat ganda.",
+      "save": "Simpan aturan",
+      "saved": "Aturan cooldown berhasil disimpan",
+      "saveFailed": "Gagal menyimpan aturan cooldown"
+    },
+    "list": {
+      "title": "Koneksi di luar routing",
+      "subtitle": "Cooldown dan penguncian model akan berakhir dengan sendirinya. Hapus untuk mengembalikan koneksi ke routing sekarang.",
+      "provider": "Penyedia",
+      "allProviders": "Semua penyedia",
+      "showHealthy": "Tampilkan koneksi yang sehat",
+      "refresh": "Segarkan",
+      "clearSelected": "Hapus yang dipilih ({count})",
+      "clearAll": "Hapus semua",
+      "clear": "Hapus",
+      "select": "Pilih koneksi",
+      "none": "Tidak ada",
+      "empty": "Tidak ada koneksi yang berada di luar routing.",
+      "cleared": "Berhasil menghapus {cleared} koneksi dan {lockouts} penguncian model. Melewati {skipped} yang diblokir atau kedaluwarsa.",
+      "clearFailed": "Gagal menghapus cooldown",
+      "columns": {
+        "connection": "Koneksi",
+        "provider": "Penyedia",
+        "status": "Status",
+        "remaining": "Sisa waktu",
+        "lockouts": "Penguncian model",
+        "lastError": "Kesalahan terakhir"
+      }
+    },
+    "status": {
+      "cooling_down": "Pendinginan",
+      "model_locked": "Model terkunci",
+      "unavailable": "Tidak tersedia",
+      "terminal": "Perlu perhatian",
+      "healthy": "Sehat"
     }
   },
   "featureFlagCapabilityFilterEnabledDescription": "Tolak permintaan sebelum pengiriman ketika model target tidak memiliki kemampuan yang diperlukan (visi, alat, output terstruktur, jendela konteks). Melindungi permintaan penyedia tunggal langsung yang melewati filter kompatibilitas lapisan kombinasi.",

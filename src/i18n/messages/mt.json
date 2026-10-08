@@ -989,6 +989,7 @@
   "featureFlagOmnirouteEmergencyFallbackDescription": "Idderieġi t-talbiet li eżawrew il-baġit lejn il-fornitur/mudell ta' riżerva bla ħlas għall-emerġenzi.",
   "featureFlagArenaEloSyncEnabledDescription": "Ippermetti s-sinkronizzazzjoni perjodika tal-ELO mil-leaderboard ta' Arena AI għall-klassifiki tal-intelliġenza tal-mudelli.",
   "featureFlagUniversalContextHandoffEnabledDescription": "Iġġenera u daħħal sommarji tal-konversazzjonijiet meta r-routing tal-kombinazzjonijiet jaqleb bejn il-mudelli. Iddiżattiva din l-għażla biex il-bidliet bejn il-mudelli jiġu ttrattati b'mod indipendenti u biex tipprevjeni talbiet ta' trasferiment fl-isfond għall-kombinazzjonijiet kollha eżistenti u futuri.",
+  "featureFlagReasoningReplayEnabledDescription": "Cache and replay model reasoning across multi-turn conversations. Disable to stop storing and re-injecting reasoning.",
   "featureFlagExposeCcDiscoveryAliasesDescription": "Uri l-IDs mera claude/&lt;provider&gt;/&lt;model&gt; fuq /v1/models sabiex l-iskoperta tal-mudelli mill-gateway ta' Claude Code telenka mudelli mhux ta' Claude. Twissija: meta din l-għażla tkun attivata globalment, tirdoppja l-entrati fil-katalgu għall-klijenti kollha.",
   "featureFlagNoThinkingAliasEnabledDescription": "Swiċċ ewlieni għall-aliases tal-gateway no-think/&lt;provider&gt;/&lt;model&gt;. Mixgħul (predefinit): /v1/models juri varjant mingħajr ħsieb għal kull mudell Claude eliġibbli li kapaċi jaħseb, u ID no-think/ mibgħut f'talba jiġi riżolt lura għall-mudell reali bir-raġunament imrażżan. Mitfi: ma jintwera l-ebda varjant u ID no-think/ jiġi ttrattat bħal kull ID ieħor ta' mudell mhux magħruf. L-għażla ta' inklużjoni/esklużjoni ModelSpec.noThinkingAlias għal kull mudell tibqa' tapplika waqt li din l-għażla tkun mixgħula.",
   "featureFlagChatVirtualLanesEnabledDescription": "Ippermetti korsiji virtwali adattivi tad-dħul għal kull tenant għad-dispaċċ tal-fornituri (#9654): żieda f'daqqa fit-traffiku ta' tenant wieħed ma tibqax tikkawża żball 503 għal ieħor. Il-varjabbli tal-ambjent OMNIROUTE_CHAT_VIRTUAL_LANES tieħu preċedenza fuq din is-sovraskrittura tad-dashboard; il-bidliet jidħlu fis-seħħ meta jerġa' jinbeda s-server.",
@@ -1314,6 +1315,8 @@
     "orchestrationSubtitle": "Dehra diretta ta’ dak kollu li qed jaħdem",
     "resilienceConnections": "Reżiljenza tal-Konnessjoni",
     "resilienceConnectionsSubtitle": "Stat tal-perjodu ta’ stennija, tal-interruttur u tal-imblukkar",
+    "resilienceCooldowns": "Maniġer tal-Cooldown",
+    "resilienceCooldownsSubtitle": "Neħħi l-cooldowns f'daqqa",
     "settingsModalityBridge": "Pont tal-Modalità",
     "settingsModalityBridgeSubtitle": "Soluzzjoni alternattiva minn immaġni/awdjo → test għal mudelli li jaċċettaw test biss",
     "commandPalette": {
@@ -3370,6 +3373,15 @@
     "autoCatalogDescription": "Kombinazzjonijiet auto/* integrati li jiġu riżolti b’mod dinamiku mill-fornituri konnessi. Uża kwalunkwe wieħed minn dawn l-IDs bħala l-qasam tal-mudell — ebda konfigurazzjoni meħtieġa.",
     "autoCatalogExpand": "Espandi l-katalgu tal-instradar awtomatiku",
     "autoCatalogCollapse": "Agħlaq il-katalgu tal-instradar awtomatiku",
+    "autoCatalogComboCount": "{count} kombinazzjonijiet",
+    "autoCatalogCandidates": "{count} kandidati",
+    "autoCatalogNoCandidates": "Ebda fornituri li jaqblu",
+    "autoCatalogKindVariant": "varjant",
+    "autoCatalogKindTemplate": "template",
+    "autoCatalogKindCategory": "kategorija",
+    "autoCatalogKindFamily": "familja",
+    "autoComboTestTruncated": "Testati {tested} minn {total} kandidati live (l-ogħla piżijiet l-ewwel).",
+    "controlCenter": "Ċentru ta' Kontroll",
     "createCombo": "Oħloq Kombinazzjoni",
     "editCombo": "Editja l-Kombinazzjoni",
     "deleteCombo": "Ħassar il-Kombinazzjoni",
@@ -6694,7 +6706,11 @@
     "savedModelEndpointSettings": "Settings issejvjati tal-endpoint tal-mudell",
     "searchByModelAria": "Fittex skont il-mudell",
     "selectSupportedEndpoint": "Agħżel mill-inqas endpoint wieħed appoġġjat",
-    "antigravityClientProfileHarness": "Harness / CLI"
+    "antigravityClientProfileHarness": "Harness / CLI",
+    "rateLimitOverridesModelConcurrencyLabel": "Per-model concurrency caps",
+    "rateLimitOverridesModelConcurrencyPlaceholder": "glm-5=1\nglm-4.7=3",
+    "rateLimitOverridesModelConcurrencyHint": "Optional: one model=cap per line, matched against the exact upstream model id. Queues excess requests locally; blank means no per-model cap.",
+    "rateLimitOverridesModelConcurrencyInvalid": "Invalid per-model concurrency entry \"{entry}\" — use model=cap with a whole number from 1 to {max}."
   },
   "settings": {
     "title": "Issettjar",
@@ -14212,6 +14228,59 @@
         "modelLockouts": "Imblukkar tal-Mudelli",
         "count": "Għadd ta' Konnessjonijiet"
       }
+    }
+  },
+  "resilienceCooldowns": {
+    "title": "Maniġer tal-Cooldown",
+    "description": "Ara kull konnessjoni li qed tistrieħ wara fallimenti, neħħi l-cooldowns f'daqqa, u aġġusta kemm idumu.",
+    "loading": "Qed jgħabbi l-cooldowns…",
+    "loadFailed": "Ma setgħux jitgħabbew il-cooldowns",
+    "loadFailedDetail": "Iċċekkja l-konnessjoni tiegħek u aġġorna l-paġna.",
+    "rules": {
+      "title": "Regoli tal-cooldown",
+      "subtitle": "Applika għal kull konnessjoni mill-falliment li jmiss tagħha.",
+      "stallLabel": "Attiva cooldown għal kont meta stream jieqaf",
+      "stallDescription": "Mitfi b'mod awtomatiku: waqfien normalment ifisser fażi twila ta' raġunament, mhux kont miksur.",
+      "oauth": "Kontijiet OAuth",
+      "apikey": "Ċwievet tal-API",
+      "baseCooldown": "Cooldown bażiku (sekondi)",
+      "baseCooldownHint": "L-ewwel cooldown wara falliment. Fallimenti ripetuti jirdoppjawh.",
+      "maxBackoffSteps": "Passi massimi ta' backoff",
+      "maxBackoffStepsHint": "Kemm-il darba l-cooldown jista' jirdoppja.",
+      "save": "Salva r-regoli",
+      "saved": "Ir-regoli tal-cooldown ġew salvati",
+      "saveFailed": "Ma setgħux jiġu salvati r-regoli tal-cooldown"
+    },
+    "list": {
+      "title": "Konnessjonijiet barra mir-routing",
+      "subtitle": "Il-cooldowns u l-lockouts tal-mudelli jispiċċaw waħedhom. Neħħihom biex terġa' tpoġġi konnessjoni fir-routing issa.",
+      "provider": "Fornitur",
+      "allProviders": "Il-fornituri kollha",
+      "showHealthy": "Uri konnessjonijiet f'saħħithom",
+      "refresh": "Aġġorna",
+      "clearSelected": "Neħħi dawk magħżula ({count})",
+      "clearAll": "Neħħi kollox",
+      "clear": "Neħħi",
+      "select": "Agħżel il-konnessjoni",
+      "none": "Xejn",
+      "empty": "L-ebda konnessjoni mhi barra mir-routing.",
+      "cleared": "Tneħħew {cleared} konnessjonijiet u {lockouts} lockouts tal-mudelli. Inqabżu {skipped} ipprojbiti jew skaduti.",
+      "clearFailed": "Ma setgħux jitneħħew il-cooldowns",
+      "columns": {
+        "connection": "Konnessjoni",
+        "provider": "Fornitur",
+        "status": "Status",
+        "remaining": "Ħin li fadal",
+        "lockouts": "Lockouts tal-mudelli",
+        "lastError": "L-aħħar żball"
+      }
+    },
+    "status": {
+      "cooling_down": "Qed jiksaħ",
+      "model_locked": "Mudell imsakkar",
+      "unavailable": "Mhux disponibbli",
+      "terminal": "Jeħtieġ attenzjoni",
+      "healthy": "B'saħħtu"
     }
   },
   "featureFlagCapabilityFilterEnabledDescription": "Irrifjuta t-talbiet qabel jintbagħtu meta l-mudell fil-mira ma jkollux il-kapaċitajiet meħtieġa (viżjoni, għodod, output strutturat, tieqa tal-kuntest). Jipproteġi t-talbiet diretti lil fornitur wieħed li jaqbżu l-filtru tal-kompatibbiltà tas-saff tal-kombinazzjonijiet.",

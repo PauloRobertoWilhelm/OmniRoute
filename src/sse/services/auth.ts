@@ -15,6 +15,7 @@ import {
 import {
   getProviderConnections,
   updateProviderConnection,
+  mergeConnectionProviderSpecificData,
   getProviderConnectionById,
   resetConnectionBackoff,
   touchConnectionLastUsed,
@@ -46,6 +47,7 @@ import {
   toProviderConnection,
   type ProviderConnectionView,
 } from "@/lib/db/providers/lazyConnectionView";
+import { buildConnectionConcurrencyFields } from "./connectionConcurrencyFields.ts"; // #13700
 import {
   DEFAULT_QUOTA_THRESHOLD_PERCENT,
   getCachedClaudeQuotaScopeDecision as readClaudeScope,
@@ -1112,8 +1114,7 @@ async function materializeConnection(
     lastErrorSource: connection.lastErrorSource,
     errorCode: connection.errorCode,
     rateLimitedUntil: connection.rateLimitedUntil,
-    maxConcurrent: connection.maxConcurrent,
-    rateLimitMaxConcurrent: connection.rateLimitMaxConcurrent,
+    ...buildConnectionConcurrencyFields(connection),
     quotaWindowThresholds: connection.quotaWindowThresholds ?? null,
     ...(releaseOAuthSession ? { releaseOAuthSession } : {}),
     ...buildAntigravityRoutingFields(extra.routingLease, connection.id, extra.requestedModel),
@@ -3204,8 +3205,8 @@ export async function markAccountUnavailable(
           connProviderSpecificData,
           model
         );
+        await mergeConnectionProviderSpecificData(connectionId, persistedProviderSpecificData);
         await updateProviderConnection(connectionId, {
-          providerSpecificData: persistedProviderSpecificData,
           lastErrorType: "free_quota_exhausted",
           lastError: `Model ${model} free quota exhausted`,
           lastErrorAt: new Date().toISOString(),
@@ -3236,7 +3237,6 @@ export async function markAccountUnavailable(
         return { shouldFallback: true, cooldownMs: 0 };
       }
     }
-
     if (provider && resolveProviderId(provider) === "grok-web" && status === 403 && model) {
       const lockout = recordModelLockoutFailure(
         provider,
