@@ -1470,6 +1470,7 @@
       "requestLogger",
       "requestTimeline",
       "resilienceConnections",
+      "resilienceCooldowns",
       "sharedComponents",
       "sidebar",
       "stats",
