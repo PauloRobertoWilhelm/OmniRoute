@@ -13,7 +13,7 @@
 
 # 🚀 OmniRoute — Ọnụ Ụzọ AI N'efu
 
-<img src="./docs/diagrams/readme-hero.svg" width="100%" alt="OmniRoute — Akwụsịla ide koodu. Ngwaọrụ AI ọ bụla → ndị na-eweta ọrụ 359 — ihe karịrị 150 bụ n'efu — site n'otu endpoint. Claude Code, Codex, Cursor, Cline, Copilot & Antigravity banye na Claude / GPT / Gemini N'EFU nwere auto-fallback. Mkpakọ agbakọtara RTK + Caveman na-echekwa 15–95% token (~89% ná nkezi) — erutela oke ma ọlị. Ndị na-eweta AI 359 · ọkwa n'efu karịrị 150 · ihe dị ka token ijeri 1.62 n'efu kwa ọnwa · atụmatụ routing 19 · $0 iji malite."/>
+<img src="./docs/diagrams/readme-hero.svg" width="100%" alt="OmniRoute — Akwụsịla ide koodu ma ọlị. Ngwa AI ọ bụla → ndị na-eweta ọrụ 367 — 150+ n'efu — site n'otu endpoint. Claude Code, Codex, Cursor, Cline, Copilot & Antigravity banye na Claude / GPT / Gemini N'EFU nwere auto-fallback. Mkpakọ agbakọtara RTK + Caveman na-echekwa token 15–95% (~89% ná nkezi) — erutela oke ma ọlị. Ndị na-eweta AI 367 · ọkwa efu 150+ · ihe dị ka token efu 1.62B kwa ọnwa · usoro routing 19 · $0 iji malite."/>
 
 </div>
 
@@ -218,43 +218,43 @@
 
 </div>
 
-<img src="./docs/diagrams/works-zero-config.svg" width="100%" alt="Ọ na-arụ ọrụ ozugbo ị wụnyere ya — enweghị nhazi. Nzọụkwụ atọ: 1. Wụnye — npm i -g omniroute, sava ga-amalite na localhost:20128. 2. Tụnye ngwaọrụ gị na http://localhost:20128/v1 — ngwaọrụ ọ bụla dakọtara na OpenAI (Claude Code, Cursor, Cline). 3. Ọ na-aza — kpọọ model auto maka nzaghachi ozugbo, na-enweghị igodo API, ndebanye aha, ma ọ bụ nhazi. E jikọtalarị onye na-eweta ọrụ na-achọghị igodo, OpenCode Free, n'ime ngwakọta auto, ya mere nrụnye ọhụrụ na-aza ozugbo n'enweghị nhazi ọzọ."/>
+<img src="./docs/diagrams/works-zero-config.svg" width="100%" alt="Ọ na-arụ ọrụ ozugbo ị wụnyere ya — enweghị nhazi. Nzọụkwụ atọ: 1. Wụnye — npm i -g omniroute, sava amalite na localhost:20128. 2. Tụnye ngwá ọrụ gị na http://localhost:20128/v1 — ngwá ọrụ ọ bụla kwekọrọ na OpenAI (Claude Code, Cursor, Cline). 3. Ọ na-aza — kpọọ model auto iji nweta nzaghachi ozugbo, na-enweghị igodo API, ndebanye aha, ma ọ bụ nhazi. Onye na-eweta ọrụ na-enweghị igodo, OpenCode Free, adịlarị njikere n'ime ngwakọta auto, ya mere nrụnye ọhụrụ na-aza ozugbo n'enweghị nhazi ọzọ."/>
 
 ```bash
-# Nrụnye ọhụrụ, enweghị ozi njirimara — `auto` arụlarị ọrụ:
+# Nrụnye ọhụrụ, enweghị ozi nzere — `auto` na-arụ ọrụ ugbua:
 curl http://localhost:20128/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{"model":"auto","messages":[{"role":"user","content":"Hello!"}]}'
 ```
 
-<sub>Ị chọrọ backend efu akọwapụtara? Kpọọ `oc/…` (OpenCode Free) ozugbo. Mgbe ahụ, gaa na `auto` ma hapụ OmniRoute ka ọ họrọ.</sub>
+<sub>Ị chọrọ backend efu akọwapụtara? Kpọọ `oc/…` (OpenCode Free) ozugbo. Mgbe ahụ, gafee na `auto` ma hapụ OmniRoute ka ọ họrọ.</sub>
 
-<sub>📦 Skript mmalite-ngwa ngwa ị nwere ike idetuo ma mado maka **Python, Node.js, PHP, na cURL** → [`examples/quickstart/`](examples/quickstart/)</sub>
+<sub>📦 Detuo ma mado skripụ mmalite-ngwa ngwa maka **Python, Node.js, PHP, na cURL** → [`examples/quickstart/`](examples/quickstart/)</sub>
 
 <br/>
 
 <div align="center">
 
-# 💥 Nkwa ahụ
+# 💥 Nkwa Ahụ
 
 </div>
 
-<img src="./docs/diagrams/promise-pillars.svg" width="100%" alt="Nkwa ahụ — Otu endpoint na ndị na-eweta ọrụ 359. Ndabere akpaka na-eme ka ntụgharị arịrịọ gaa n'ihu mgbe ebumnuche ọzọ dị mma ka dị. Ogidi isii: ndabere siri ike n'ofe ndị na-eweta ọrụ 359 · nchekwa token ruru 95% n'ọrụ ndị ruru eru · jiri $0 malite site na ọkwa efu karịrị 150 na ndị na-eweta ọrụ 54 na-enye ọrụ efu-mgbe-niile ugboro ugboro/na-achọghị igodo · njikọta CLI/agent 36 site n'otu nhazi · ndakọrịta na OpenAI, Claude, Gemini na Responses API na /v1 · njikwa mmepụta gụnyere circuit breakers, nzuzo TLS, ngwaọrụ MCP 110, A2A, ebe nchekwa, guardrails, evals na nkwupụta ule static karịrị 39,000 n'ofe faịlụ ule a na-enyocha karịrị 5,100."/>
+<img src="./docs/diagrams/promise-pillars.svg" width="100%" alt="Nkwa Ahụ — Otu endpoint na ndị na-eweta ọrụ 367. Ndaghachi-akpaghị aka na-eme ka ntụgharị gaa n'ihu ma ọ bụrụ na e nwere ebe ọzọ dị mma. Ogidi isii: ndaghachi na-eguzogide nsogbu n'ofe ndị na-eweta ọrụ 367 · nchekwa token ruru 95% maka ọrụ ndị tozuru etozu · $0 iji malite, tinyere ọkwa efu 150+ na ndị na-eweta ọrụ 54 na-enye ọrụ efu mgbe niile/na-enweghị igodo ruo mgbe ebighị ebi · njikọ CLI/agent 36 site n'otu nhazi · ndakọrịta OpenAI, Claude, Gemini na Responses API na /v1 · njikwa mmepụta gụnyere circuit breakers, nzuzo TLS, ngwá ọrụ MCP 110, A2A, ebe nchekwa, guardrails, evals na nkwupụta ule static 39,000+ n'ofe faịlụ ule 5,100+ a na-esochi."/>
 
 <br/>
 <br/>
 
 <div align="center">
 
-# 🤔 Gịnị mere ị ga-eji họrọ OmniRoute?
+# 🤔 Gịnị Mere OmniRoute?
 
 </div>
 
-<img src="./docs/diagrams/why-pain-fix.svg" width="100%" alt="Ihe mere ị ga-eji họrọ OmniRoute — kwụsị ịgbanwe n'etiti dashboard 10, igodo API ndị nwụrụ anwụ na ụgwọ ndị a na-atụghị anya ha. Nsogbu iri a na-enwe kwa ụbọchị na ngwọta ha: quota na-agwụ n'ejighị ya → jiri ndenye aha ruo oke; rate limits mgbe a na-ede koodu → ndabere akpaka ọkwa 4 (Ndenye aha → API → Dị ọnụ ala → Efu); mmepụta ngwaọrụ na-emefusị token → mkpakọ RTK + Caveman (15–95%); API dị oke ọnụ → ntụgharị arịrịọ ahaziri iji belata ọnụ ahịa; ngwaọrụ ọ bụla nwere nhazi nke ya → otu endpoint, otu dashboard; egbochiri AI → proxy ọkwa 3 + nzuzo TLS; igodo nwụrụ anwụ → nkwụsi ike oyi akwa 3 (circuit breakers, oge izu ike igodo, mkpọchi model); otu na-ekekọrịta otu ndenye aha → ọdọ igodo nwere quota e kesara n'ụzọ ziri ezi; prompt na-agafe n'ígwé ojii onye ọzọ → local-first nwere igodo e ji AES-256-GCM zoo; enweghị nghọta banyere mmefu → nyocha dị ndụ (ojiji, quota, nchekwa ego, latency p95)."/>
+<img src="./docs/diagrams/why-pain-fix.svg" width="100%" alt="Gịnị mere OmniRoute — kwụsị ịgbagharị n'etiti dashboard 10, igodo API ndị nwụrụ anwụ na ụgwọ ndị a na-atụghị anya ha. Nsogbu iri a na-enwe kwa ụbọchị na ngwọta ha: quota na-agwụ n'ejighị ya → jiri ndenye aha mee ihe n'ụzọ kacha mma; rate limits mgbe a na-ede koodu → ndaghachi-akpaghị aka nke ọkwa 4 (Subscription → API → Cheap → Free); mmepụta ngwá ọrụ na-eri token → mkpakọ RTK + Caveman (15–95%); API dị oke ọnụ → ntụgharị e mere ka ọnụ ahịa dị ala; ngwá ọrụ ọ bụla nwere nhazi nke ya → otu endpoint, otu dashboard; egbochiri AI → proxy ọkwa 3 + nzuzo TLS; igodo ndị nwụrụ anwụ → nguzogide nsogbu nke ọkwa 3 (circuit breakers, key cooldown, model lockout); otu na-ekekọrịta otu ndenye aha → ọdọ igodo nwere quota nkesa ziri ezi; prompts na-agafe n'igwe ojii onye ọzọ → local-first nwere igodo e zoro ezo site na AES-256-GCM; enweghị nghọta banyere mmefu → nyocha ozugbo (ojiji, quota, nchekwa ego, latency p95)."/>
 
 <div align="center">
 
-<img src="./docs/diagrams/tier-cascade.svg" width="100%" alt="Usoro arịrịọ OmniRoute: IDE ma ọ bụ CLI gị (Claude Code, Cursor, Cline…) na-akpọ otu endpoint mpaghara (http://localhost:20128/v1); OmniRoute Smart Router (mkpakọ RTK + Caveman, atụmatụ ntụgharị arịrịọ 19, circuit breakers, nzuzo TLS, MCP, A2A, guardrails) nwere ike ịlaghachi azụ n'ofe ọkwa ndị na-eweta ọrụ 4 ma ebumnuche ruru eru ma dị mma ka dị — Ọkwa 1 Ndenye aha, Ọkwa 2 Igodo API, Ọkwa 3 Dị ọnụ ala na Ọkwa 4 Efu."/>
+<img src="./docs/diagrams/tier-cascade.svg" width="100%" alt="Usoro arịrịọ OmniRoute: IDE ma ọ bụ CLI gị (Claude Code, Cursor, Cline…) na-akpọ otu endpoint mpaghara (http://localhost:20128/v1); OmniRoute Smart Router (mkpakọ RTK + Caveman, usoro ntụgharị 19, circuit breakers, nzuzo TLS, MCP, A2A, guardrails) nwere ike ịdaghachi n'ofe ọkwa ndị na-eweta ọrụ 4 ma ọ bụrụ na ebe tozuru etozu ma dị mma ka dị — Ọkwa 1 Subscription, Ọkwa 2 API Key, Ọkwa 3 Cheap na Ọkwa 4 Free."/>
 
 </div>
 
@@ -488,13 +488,13 @@ Atụmatụ **19** niile — gwakọta ma jikọta ha na nzọụkwụ combo ọ
 
 <div align="center">
 
-## 🏆 Ihe Ndị Na-eme Ka OmniRoute Pụọ Iche
+## 🏆 Ihe Mere OmniRoute Ji Pụọ Iche
 
 </div>
 
-<img src="./docs/diagrams/comparison-table.svg" width="100%" alt="Ihe ndị na-eme ka OmniRoute pụọ iche — ntụnyere atụmatụ e mere n’otu oge megide 9router, OpenRouter, CLIProxyAPI na LiteLLM n’ofe ikike 13. OmniRoute: ndị na-eweta ọrụ 359, ọkwa efu karịrị 150 arụnyere n’ime ya, usoro ntụgharị 19, mkpakọ token nwere injin 12, sava MCP arụnyere n’ime ya nke nwere ngwaọrụ 110, protokolụ A2A maka ndị nnọchi anya, ebe nchekwa na-adịgide adịgide, ihe mgbochi nchekwa, ndị nnọchi anya igwe ojii, izochi akara mkpịsị aka TLS, Desktop/Termux/PWA na mpaghara asụsụ UI 42. OmniRoute nwere ikike MIT ma nwee ike ịnabata ya n’onwe gị. Ikike na ọnụọgụ nke ndị asọmpi nwere ike ịgbanwe; lee usoro nyocha e jikọtara."/>
+<img src="./docs/diagrams/comparison-table.svg" width="100%" alt="Ihe mere OmniRoute ji pụọ iche — ntụnyere njirimara e mere n'otu oge megide 9router, OpenRouter, CLIProxyAPI na LiteLLM n'ofe ikike 13. OmniRoute: ndị na-eweta ọrụ 367, ọkwa efu karịrị 150 arụnyere n'ime ya, usoro ntụgharị 19, mkpakọ token nwere injin 12, sava MCP arụnyere n'ime ya nke nwere ngwaọrụ 110, protocol agent A2A, ebe nchekwa na-adịgide adịgide, ihe nchedo, agent igwe ojii, izochi akara mkpịsịaka TLS, Desktop/Termux/PWA na mpaghara asụsụ UI i18n 42. OmniRoute nwere ikikere MIT, a pụkwara ịnabata ya na sava nke onwe. Ikike na ọnụọgụ nke ndị asọmpi nwere ike ịgbanwe; lee usoro nyocha e jikọtara."/>
 
-<sub>📊 Usoro nyocha zuru ezu &amp; nkọwa atụmatụ n’otu n’otu megide 9router, OpenRouter, CLIProxyAPI &amp; LiteLLM → [`docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md`](docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md)</sub>
+<sub>📊 Usoro nyocha zuru ezu &amp; nkọwa maka njirimara ọ bụla megide 9router, OpenRouter, CLIProxyAPI &amp; LiteLLM → [`docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md`](docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md)</sub>
 
 <br/>
 
@@ -1256,28 +1256,28 @@ Metrik izizi na 2026-08-24: **vidiyo pụrụ iche 1.029** · **nlele amaara 11.
 <br/>
 <div align="center">
 
-## 🛠️ Ngwa Teknụzụ
+## 🛠️ Ngwá Teknụzụ
 
 </div>
 
 <table>
   <tr><th align="left">Ọkwa</th><th align="left">Teknụzụ</th></tr>
-  <tr><td nowrap><b>Ogeọrụ</b></td><td>Node.js 22.x / 24.x LTS — <code>&gt;=22.22.2 &lt;23 || &gt;=24.0.0 &lt;27</code></td></tr>
-  <tr><td nowrap><b>Asụsụ</b></td><td>TypeScript 6.0 — <b>100% TypeScript</b> n'ofe <code>src/</code> na <code>open-sse/</code> (enweghị <code>any</code> n'ime isi kemgbe v2.0)</td></tr>
-  <tr><td nowrap><b>Framework</b></td><td>Next.js 16 + React 19 + Tailwind CSS 4</td></tr>
-  <tr><td nowrap><b>Ebe nchekwa data</b></td><td>better-sqlite3 (SQLite, ndekọ WAL) + LowDB (JSON ochie) — modulu ngalaba 137, mbupụ 199</td></tr>
-  <tr><td nowrap><b>Ebe nchekwa</b></td><td>Ọchụchọ ederede zuru ezu nke SQLite FTS5 + vector embeddings e jiri int8 mee quantization, mbelata nwere ụdị</td></tr>
-  <tr><td nowrap><b>Atụmatụ</b></td><td>Zod 4 — nkwado izi ezi I/O nke ngwa MCP + nkwekọrịta API</td></tr>
+  <tr><td nowrap><b>Oge ọrụ</b></td><td>Node.js 22.x / 24.x LTS — <code>&gt;=22.22.2 &lt;23 || &gt;=24.0.0 &lt;27</code></td></tr>
+  <tr><td nowrap><b>Asụsụ</b></td><td>TypeScript 6.0 — <b>100% TypeScript</b> n'ime <code>src/</code> na <code>open-sse/</code> niile (enweghị <code>any</code> na isi usoro kemgbe v2.0)</td></tr>
+  <tr><td nowrap><b>Ọdịdị ọrụ</b></td><td>Next.js 16 + React 19 + Tailwind CSS 4</td></tr>
+  <tr><td nowrap><b>Ebe nchekwa data</b></td><td>better-sqlite3 (SQLite, ndekọ WAL) + LowDB (JSON ochie) — modulu ngalaba 137, mbufe 200</td></tr>
+  <tr><td nowrap><b>Ncheta</b></td><td>SQLite FTS5 ederede zuru ezu + ntinye vekta int8-quantized, mbelata nwere ụdị</td></tr>
+  <tr><td nowrap><b>Skima</b></td><td>Zod 4 — nkwado I/O nke ngwá ọrụ MCP + nkwekọrịta API</td></tr>
   <tr><td nowrap><b>Usoro nkwukọrịta</b></td><td>MCP (stdio / HTTP / SSE) + A2A v0.3 (JSON-RPC 2.0 + SSE)</td></tr>
-  <tr><td nowrap><b>Mgbasa data</b></td><td>Server-Sent Events (SSE) + àkwà mmiri WebSocket (<code>/v1/ws</code>)</td></tr>
-  <tr><td nowrap><b>Mkpakọ</b></td><td>Usoro injin 12 — RTK, Caveman, LLMLingua-2 (MobileBERT ONNX), GCF, OmniGlyph</td></tr>
-  <tr><td nowrap><b>Nyocha njirimara &amp; nchekwa</b></td><td>OAuth 2.0 (PKCE) + JWT + API Keys + nyocha njirimara MCP nwere oke · AES-256-GCM mgbe echekwara · DOMPurify</td></tr>
+  <tr><td nowrap><b>Mgbasa iyi</b></td><td>Server-Sent Events (SSE) + àkwà mmiri WebSocket (<code>/v1/ws</code>)</td></tr>
+  <tr><td nowrap><b>Mkpakọ</b></td><td>usoro injin 12 — RTK, Caveman, LLMLingua-2 (MobileBERT ONNX), GCF, OmniGlyph</td></tr>
+  <tr><td nowrap><b>Nyocha njirimara &amp; nchekwa</b></td><td>OAuth 2.0 (PKCE) + JWT + API Keys + nyocha njirimara MCP nwere oke · AES-256-GCM mgbe echekwara ya · DOMPurify</td></tr>
   <tr><td nowrap><b>Nzuzo</b></td><td>wreq-js — nṅomi akara mkpịsịaka JA3 / JA4 TLS, proxy ọkwa 3</td></tr>
-  <tr><td nowrap><b>Nkwụsi ike</b></td><td>Ihe nkwụsị sekit, exponential backoff, mgbochi thundering herd, ọgwụgwọ onwe nke auto-combo</td></tr>
+  <tr><td nowrap><b>Nkwụsi ike</b></td><td>Ihe nkwụsị sekit, ichere na-abawanye n'ụzọ eksponenshial, mgbochi ìgwè arịrịọ na-abata n'otu oge, ọgwụgwọ onwe akpaka site na ngwakọta</td></tr>
   <tr><td nowrap><b>Ndekọ</b></td><td>pino — ndekọ JSON ahaziri nke nwere ọnọdụ arịrịọ</td></tr>
-  <tr><td nowrap><b>Nnwale</b></td><td>Ngwa nnwale Node.js + Vitest — <b>nkwupụta nnwale static 39,000+</b> n'ofe faịlụ nnwale 5,100+ a na-esochi (unit, integration, E2E, nchekwa, ecosystem)</td></tr>
-  <tr><td nowrap><b>Platform</b></td><td>Desktọpụ (Electron) · Android (Termux) · PWA (ihe nchọgharị ọ bụla)</td></tr>
-  <tr><td nowrap><b>CI/CD</b></td><td>GitHub Actions — mbipụta npm akpaka + Docker Hub mgbe ewepụtara ụdị ọhụrụ</td></tr>
+  <tr><td nowrap><b>Nnwale</b></td><td>Ngwá nnwale Node.js + Vitest — <b>nkwupụta nnwale static 39,000+</b> n'ime faịlụ nnwale 5,100+ a na-esochi (unit, integration, E2E, nchekwa, ecosystem)</td></tr>
+  <tr><td nowrap><b>Ikpo okwu</b></td><td>Kọmputa desktọọpụ (Electron) · Android (Termux) · PWA (ihe nchọgharị ọ bụla)</td></tr>
+  <tr><td nowrap><b>CI/CD</b></td><td>GitHub Actions — ibipụta na npm na Docker Hub na-akpaghị aka mgbe ewepụtara ụdị ọhụrụ</td></tr>
   <tr><td nowrap><b>Njikọ</b></td><td><a href="https://omniroute.online">Weebụsaịtị</a> · <a href="https://www.npmjs.com/package/omniroute">npm</a> · <a href="https://hub.docker.com/r/diegosouzapw/omniroute">Docker Hub</a></td></tr>
 </table>
 

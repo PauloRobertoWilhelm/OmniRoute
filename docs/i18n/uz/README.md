@@ -13,7 +13,7 @@
 
 # 🚀 OmniRoute — Bepul AI shlyuzi
 
-<img src="./docs/diagrams/readme-hero.svg" width="100%" alt="OmniRoute — Kod yozishni hech qachon to‘xtatmang. Har bir AI vositasi → 359 ta provayder — 150+ tasi bepul — bitta endpoint orqali. Claude Code, Codex, Cursor, Cline, Copilot va Antigravity vositalarini avtomatik zaxira yo‘naltirish bilan BEPUL Claude / GPT / Gemini xizmatlariga ulang. RTK + Caveman birlashtirilgan siqish usuli tokenlarni 15–95% (~89% o‘rtacha) tejaydi — limitlarga boshqa duch kelmang. 359 ta AI provayderi · 150+ ta bepul tarif · oyiga ~1.62 mlrd bepul token · 19 ta yo‘naltirish strategiyasi · boshlash uchun $0."/>
+<img src="./docs/diagrams/readme-hero.svg" width="100%" alt="OmniRoute — Kod yozishni hech qachon toʻxtatmang. Har bir AI vositasi → 367 ta provayder — 150 dan ortigʻi bepul — bitta soʻnggi nuqta orqali. Claude Code, Codex, Cursor, Cline, Copilot va Antigravity vositalarini avtomatik zaxira almashinuvi bilan BEPUL Claude / GPT / Gemini bilan ishlating. RTK + Caveman ketma-ket siqish usuli tokenlarni 15–95% (~oʻrtacha 89%) tejaydi — limitlarga hech qachon yetib bormang. 367 ta AI provayderi · 150 dan ortiq bepul tarif · oyiga ~1.62 mlrd bepul token · 19 ta yoʻnaltirish strategiyasi · boshlash uchun $0."/>
 
 </div>
 
@@ -214,20 +214,20 @@
 
 <div align="center">
 
-## 🆓 Oʻrnatishingiz bilan ishlaydi — kalitlar ham, sozlash ham kerak emas
+## 🆓 Oʻrnatishingiz bilanoq ishlaydi — kalitlar ham, sozlash ham kerak emas
 
 </div>
 
-<img src="./docs/diagrams/works-zero-config.svg" width="100%" alt="Oʻrnatishingiz bilan ishlaydi — hech qanday sozlashsiz. Uch qadam: 1. Oʻrnating — npm i -g omniroute, server localhost:20128 manzilida ishga tushadi. 2. Vosita manzilini http://localhost:20128/v1 ga yoʻnaltiring — OpenAI bilan mos istalgan vosita (Claude Code, Cursor, Cline). 3. U javob beradi — API kaliti, roʻyxatdan oʻtish yoki sozlashsiz darhol javob olish uchun auto modelini chaqiring. Kalitsiz OpenCode Free provayderi auto kombinatsiyasiga oldindan ulangan, shu sababli yangi oʻrnatilgan nusxa hech qanday qoʻshimcha sozlashsiz javob beradi."/>
+<img src="./docs/diagrams/works-zero-config.svg" width="100%" alt="Oʻrnatishingiz bilanoq ishlaydi — hech qanday sozlash talab qilinmaydi. Uch qadam: 1. Oʻrnating — npm i -g omniroute, server localhost:20128 manzilida ishga tushadi. 2. Vosita manzilini http://localhost:20128/v1 ga yoʻnaltiring — OpenAI bilan mos keluvchi istalgan vosita (Claude Code, Cursor, Cline). 3. U javob beradi — API kaliti, roʻyxatdan oʻtish yoki sozlashsiz darhol javob olish uchun auto modelini chaqiring. Kalitsiz OpenCode Free provayderi auto kombinatsiyasiga oldindan ulangan, shu sababli yangi oʻrnatilgan tizim darhol javob beradi."/>
 
 ```bash
-# Yangi o‘rnatish, hisob ma’lumotlarisiz — `auto` allaqachon ishlaydi:
+# Yangi o‘rnatish, hisob maʼlumotlarisiz — `auto` allaqachon ishlaydi:
 curl http://localhost:20128/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{"model":"auto","messages":[{"role":"user","content":"Hello!"}]}'
 ```
 
-<sub>Muayyan bepul backendni afzal koʻrasizmi? Bevosita `oc/…` (OpenCode Free) ni chaqiring. Keyin `auto` ga oʻting va OmniRoute tanlashiga ruxsat bering.</sub>
+<sub>Muayyan bepul backendʼni afzal koʻrasizmi? `oc/…` (OpenCode Free) ni bevosita chaqiring. Keyin `auto` ga oʻting va tanlovni OmniRouteʼga topshiring.</sub>
 
 <sub>📦 **Python, Node.js, PHP va cURL** uchun nusxalab qoʻyishga tayyor tezkor boshlash skriptlari → [`examples/quickstart/`](examples/quickstart/)</sub>
 
@@ -239,7 +239,7 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/promise-pillars.svg" width="100%" alt="Vaʼda — bitta endpoint va 359 ta provayder. Boshqa sogʻlom nishon mavjud ekan, avtomatik zaxira yoʻnaltirishni davom ettiradi. Oltita ustun: 359 ta provayder boʻylab barqaror zaxira · mos ish yuklarida tokenlarni 95% gacha tejash · 150 dan ortiq bepul tarif va 54 ta takroriy/kalitsiz, abadiy bepul provayder bilan $0 dan boshlash · bitta konfiguratsiya orqali 36 ta CLI/agent integratsiyasi · /v1 manzilida OpenAI, Claude, Gemini va Responses API bilan moslik · avtomatik uzgichlar, TLS yashirinligi, MCP 110 vositalari, A2A, xotira, himoya cheklovlari, baholashlar hamda kuzatiladigan 5 100 dan ortiq test fayllaridagi 39 000 dan ortiq statik test deklaratsiyalarini oʻz ichiga olgan ishlab chiqarish boshqaruvlari."/>
+<img src="./docs/diagrams/promise-pillars.svg" width="100%" alt="Vaʼda — bitta endpoint va 367 ta provayder. Boshqa sogʻlom nishon mavjud ekan, avtomatik zaxira mexanizmi marshrutlashni davom ettiradi. Oltita ustun: 367 ta provayder boʻylab barqaror zaxira mexanizmi · mos ish yuklarida tokenlarni 95% gacha tejash · 150 dan ortiq bepul tarif hamda davriy/kalitsiz, doimiy bepul 54 ta provayder bilan $0 evaziga boshlash · bitta konfiguratsiya orqali 36 ta CLI/agent integratsiyasi · /v1 manzilida OpenAI, Claude, Gemini va Responses API bilan moslik · avtomatik uzgichlar, TLS maxfiyligi, MCPʼning 110 ta vositasi, A2A, xotira, himoya cheklovlari, baholashlar va kuzatiladigan 5 100 dan ortiq test faylidagi 39 000 dan ortiq statik test deklaratsiyasini oʻz ichiga olgan ishlab chiqarish muhiti boshqaruvlari."/>
 
 <br/>
 <br/>
@@ -250,11 +250,11 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/why-pain-fix.svg" width="100%" alt="Nega OmniRoute — 10 ta boshqaruv paneli, ishlamaydigan API kalitlari va kutilmagan hisob-kitoblar bilan ovora boʻlishni bas qiling. Oʻnta kundalik muammo va yechim: kvota ishlatilmay turib tugashi → obunalardan maksimal foydalanish; kod yozish oʻrtasida tezlik cheklovlari → 4 bosqichli avtomatik zaxira (Obuna → API → Arzon → Bepul); vosita natijalari tokenlarni sarflashi → RTK + Caveman siqishi (15–95%); qimmat API lar → xarajatga moslashtirilgan yoʻnaltirish; har bir vosita uchun alohida sozlash → bitta endpoint, bitta boshqaruv paneli; AI bloklanishi → 3 darajali proksi + TLS yashirinligi; ishlamaydigan kalitlar → 3 qatlamli barqarorlik (avtomatik uzgichlar, kalitni sovitish, modelni bloklash); jamoaning bitta obunani ulashishi → adolatli ulush kvotalariga ega kalit havzalari; promptlarning birovning buluti orqali oʻtishi → AES-256-GCM bilan shifrlangan kalitlarga ega mahalliylik ustuvor yondashuv; xarajatlar koʻrinmasligi → real vaqt tahlili (foydalanish, kvota, tejash, p95 kechikish)."/>
+<img src="./docs/diagrams/why-pain-fix.svg" width="100%" alt="Nega OmniRoute — 10 ta boshqaruv paneli, ishlamaydigan API kalitlari va kutilmagan hisob-kitoblar bilan ovora boʻlishni bas qiling. Kundalik oʻnta muammo va ularning yechimlari: ishlatilmay qolib muddati tugaydigan kvota → obunalardan maksimal foydalanish; kod yozish paytida tezlik cheklovlari → 4 bosqichli avtomatik zaxira (Subscription → API → Cheap → Free); vosita natijalari tokenlarni sarflashi → RTK + Caveman siqishi (15–95%); qimmat APIʼlar → xarajatlar boʻyicha optimallashtirilgan marshrutlash; har bir vosita uchun alohida sozlash → bitta endpoint, bitta boshqaruv paneli; AI bloklanishi → 3 darajali proksi + TLS maxfiyligi; ishlamaydigan kalitlar → 3 qatlamli barqarorlik (avtomatik uzgichlar, kalitni vaqtincha toʻxtatish, modelni bloklash); jamoaning bitta obunani baham koʻrishi → adolatli ulush kvotalariga ega kalitlar toʻplami; soʻrovlarning boshqa birovning buluti orqali oʻtishi → AES-256-GCM yordamida shifrlangan kalitlarga ega, avvalo mahalliy ishlash yondashuvi; xarajatlar koʻrinmasligi → real vaqt tahlili (foydalanish, kvota, tejash, p95 kechikish)."/>
 
 <div align="center">
 
-<img src="./docs/diagrams/tier-cascade.svg" width="100%" alt="OmniRoute soʻrov oqimi: IDE yoki CLI ingiz (Claude Code, Cursor, Cline…) bitta mahalliy endpointga (http://localhost:20128/v1) murojaat qiladi; OmniRoute Smart Router (RTK + Caveman siqishi, 19 ta yoʻnaltirish strategiyasi, avtomatik uzgichlar, TLS yashirinligi, MCP, A2A, himoya cheklovlari) mos va sogʻlom nishon mavjud ekan, 4 ta provayder bosqichi boʻylab zaxiraga oʻtishi mumkin — 1-bosqich: Obuna, 2-bosqich: API kaliti, 3-bosqich: Arzon va 4-bosqich: Bepul."/>
+<img src="./docs/diagrams/tier-cascade.svg" width="100%" alt="OmniRoute soʻrovlar oqimi: IDE yoki CLIʼingiz (Claude Code, Cursor, Cline…) bitta mahalliy endpointʼni (http://localhost:20128/v1) chaqiradi; OmniRoute Smart Router (RTK + Caveman siqishi, 19 ta marshrutlash strategiyasi, avtomatik uzgichlar, TLS maxfiyligi, MCP, A2A, himoya cheklovlari) mos va sogʻlom nishon mavjud ekan, 4 ta provayder bosqichi boʻylab zaxira variantiga oʻta oladi — 1-bosqich Subscription, 2-bosqich API Key, 3-bosqich Cheap va 4-bosqich Free."/>
 
 </div>
 
@@ -488,11 +488,11 @@ Barcha **19 ta** strategiya — har bir kombo bosqichida aralashtirib moslashtir
 
 <div align="center">
 
-## 🏆 OmniRoute’ning ajralib turadigan jihatlari
+## 🏆 OmniRoute nimasi bilan ajralib turadi
 
 </div>
 
-<img src="./docs/diagrams/comparison-table.svg" width="100%" alt="OmniRoute’ning ajralib turadigan jihatlari — 13 ta imkoniyat bo‘yicha 9router, OpenRouter, CLIProxyAPI va LiteLLM bilan muayyan sanadagi xususiyatlar taqqoslanishi. OmniRoute: 359 ta provayder, ichki o‘rnatilgan 150 dan ortiq bepul tarif, 19 ta marshrutlash strategiyasi, 12 dvigatelli token siqish, 110 ta vositaga ega ichki o‘rnatilgan MCP serveri, A2A agent protokoli, doimiy xotira, himoya cheklovlari, bulutli agentlar, yashirin TLS raqamli izi, Desktop/Termux/PWA hamda 42 ta mahalliylashtirilgan interfeys tili. OmniRoute MIT litsenziyasiga ega va mustaqil serverda joylashtirilishi mumkin. Raqobatchilarning imkoniyatlari va ko‘rsatkichlari o‘zgarishi mumkin; havola orqali metodologiya bilan tanishing."/>
+<img src="./docs/diagrams/comparison-table.svg" width="100%" alt="OmniRoute nimasi bilan ajralib turadi — 13 ta imkoniyat bo‘yicha 9router, OpenRouter, CLIProxyAPI va LiteLLM bilan muayyan sanadagi xususiyatlar taqqoslanishi. OmniRoute: 367 ta provayder, ichki o‘rnatilgan 150 dan ortiq bepul tarif, 19 ta marshrutlash strategiyasi, 12 mexanizmdan iborat token siqish tizimi, 110 ta vositaga ega ichki o‘rnatilgan MCP serveri, A2A agent protokoli, doimiy xotira, himoya cheklovlari, bulutli agentlar, TLS raqamli izi uchun yashirinlik, Desktop/Termux/PWA hamda interfeys uchun 42 ta i18n tili. OmniRoute MIT litsenziyasiga ega va o‘z serveringizda joylashtirilishi mumkin. Raqobatchilarning imkoniyatlari va ko‘rsatkichlari o‘zgarishi mumkin; havola qilingan metodologiyaga qarang."/>
 
 <sub>📊 To‘liq metodologiya va har bir xususiyat bo‘yicha 9router, OpenRouter, CLIProxyAPI hamda LiteLLM bilan batafsil taqqoslash → [`docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md`](docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md)</sub>
 
@@ -1262,22 +1262,22 @@ bitta jarayon xizmat koʻrsatadi, shu sababli hozircha faqat CLI uchun alohida p
 
 <table>
   <tr><th align="left">Qatlam</th><th align="left">Texnologiya</th></tr>
-  <tr><td nowrap><b>Ish muhiti</b></td><td>Node.js 22.x / 24.x LTS — <code>&gt;=22.22.2 &lt;23 || &gt;=24.0.0 &lt;27</code></td></tr>
-  <tr><td nowrap><b>Til</b></td><td>TypeScript 6.0 — <code>src/</code> va <code>open-sse/</code> boʻylab <b>100% TypeScript</b> (v2.0 dan beri yadroda <code>any</code> mavjud emas)</td></tr>
+  <tr><td nowrap><b>Ishlash muhiti</b></td><td>Node.js 22.x / 24.x LTS — <code>&gt;=22.22.2 &lt;23 || &gt;=24.0.0 &lt;27</code></td></tr>
+  <tr><td nowrap><b>Til</b></td><td>TypeScript 6.0 — <code>src/</code> va <code>open-sse/</code> boʻylab <b>100% TypeScript</b> (v2.0 dan beri yadroda birorta ham <code>any</code> yoʻq)</td></tr>
   <tr><td nowrap><b>Freymvork</b></td><td>Next.js 16 + React 19 + Tailwind CSS 4</td></tr>
-  <tr><td nowrap><b>Maʼlumotlar bazasi</b></td><td>better-sqlite3 (SQLite, WAL jurnallash) + LowDB (eski JSON formati) — 137 ta domen moduli, 199 ta migratsiya</td></tr>
-  <tr><td nowrap><b>Xotira</b></td><td>SQLite FTS5 toʻliq matnli qidiruv + int8-kvantlangan vektor embeddinglari, turlashtirilgan susayish</td></tr>
-  <tr><td nowrap><b>Sxemalar</b></td><td>Zod 4 — MCP vositalarining kiritish/chiqarishini tekshirish + API shartnomalari</td></tr>
+  <tr><td nowrap><b>Maʼlumotlar bazasi</b></td><td>better-sqlite3 (SQLite, WAL jurnallash) + LowDB (eski JSON formati) — 137 ta domen moduli, 200 ta migratsiya</td></tr>
+  <tr><td nowrap><b>Xotira</b></td><td>SQLite FTS5 toʻliq matnli qidiruvi + int8-kvantlangan vektor embeddinglari, tiplashtirilgan susayish</td></tr>
+  <tr><td nowrap><b>Sxemalar</b></td><td>Zod 4 — MCP vositalarining kirish/chiqishini tekshirish + API shartnomalari</td></tr>
   <tr><td nowrap><b>Protokollar</b></td><td>MCP (stdio / HTTP / SSE) + A2A v0.3 (JSON-RPC 2.0 + SSE)</td></tr>
   <tr><td nowrap><b>Oqimli uzatish</b></td><td>Server-Sent Events (SSE) + WebSocket koʻprigi (<code>/v1/ws</code>)</td></tr>
   <tr><td nowrap><b>Siqish</b></td><td>12 dvigatelli konveyer — RTK, Caveman, LLMLingua-2 (MobileBERT ONNX), GCF, OmniGlyph</td></tr>
-  <tr><td nowrap><b>Autentifikatsiya va xavfsizlik</b></td><td>OAuth 2.0 (PKCE) + JWT + API kalitlari + MCP doirasidagi autentifikatsiya · saqlangan holatda AES-256-GCM · DOMPurify</td></tr>
-  <tr><td nowrap><b>Yashirinlik</b></td><td>wreq-js — JA3 / JA4 TLS raqamli izi imitatsiyasi, 3 darajali proksi</td></tr>
-  <tr><td nowrap><b>Barqarorlik</b></td><td>Avtomatik uzgich, eksponensial kechiktirish, ommaviy bir vaqtda soʻrovlarning oldini olish, avtomatik kombinatsiyalarni oʻz-oʻzidan tiklash</td></tr>
+  <tr><td nowrap><b>Autentifikatsiya va xavfsizlik</b></td><td>OAuth 2.0 (PKCE) + JWT + API kalitlari + MCP doiraviy autentifikatsiyasi · saqlashda AES-256-GCM · DOMPurify</td></tr>
+  <tr><td nowrap><b>Yashirinlik</b></td><td>wreq-js — JA3 / JA4 TLS raqamli izini taqlid qilish, 3 darajali proksi</td></tr>
+  <tr><td nowrap><b>Barqarorlik</b></td><td>Oʻchirgich mexanizmi, eksponensial kutish, ommaviy bir vaqtda soʻrovlarning oldini olish, avtomatik kombinatsiya orqali oʻzini tiklash</td></tr>
   <tr><td nowrap><b>Jurnallash</b></td><td>pino — soʻrov kontekstiga ega tuzilmaviy JSON jurnallari</td></tr>
-  <tr><td nowrap><b>Sinov</b></td><td>Node.js test runner + Vitest — kuzatiladigan 5,100+ ta sinov faylida <b>39,000+ ta statik sinov deklaratsiyasi</b> (modul, integratsiya, E2E, xavfsizlik, ekotizim)</td></tr>
-  <tr><td nowrap><b>Platformalar</b></td><td>Desktop (Electron) · Android (Termux) · PWA (istalgan brauzer)</td></tr>
-  <tr><td nowrap><b>CI/CD</b></td><td>GitHub Actions — reliz chiqarilganda npm va Docker Hubʼga avtomatik nashr qilish</td></tr>
+  <tr><td nowrap><b>Sinov</b></td><td>Node.js sinov dasturi + Vitest — kuzatiladigan 5,100+ ta sinov fayli boʻylab <b>39,000+ ta statik sinov deklaratsiyasi</b> (modul, integratsiya, E2E, xavfsizlik, ekotizim)</td></tr>
+  <tr><td nowrap><b>Platformalar</b></td><td>Ish stoli (Electron) · Android (Termux) · PWA (istalgan brauzer)</td></tr>
+  <tr><td nowrap><b>CI/CD</b></td><td>GitHub Actions — reliz vaqtida npm va Docker Hubʼga avtomatik nashr qilish</td></tr>
   <tr><td nowrap><b>Havolalar</b></td><td><a href="https://omniroute.online">Veb-sayt</a> · <a href="https://www.npmjs.com/package/omniroute">npm</a> · <a href="https://hub.docker.com/r/diegosouzapw/omniroute">Docker Hub</a></td></tr>
 </table>
 

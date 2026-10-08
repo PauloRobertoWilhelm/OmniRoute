@@ -13,7 +13,7 @@
 
 # 🚀 OmniRoute — שער ה-AI החינמי
 
-<img src="./docs/diagrams/readme-hero.svg" width="100%" alt="OmniRoute — לעולם אל תפסיקו לכתוב קוד. כל כלי AI ← 359 ספקים — יותר מ-150 בחינם — דרך נקודת קצה אחת. Claude Code, Codex, Cursor, Cline, Copilot ו-Antigravity מתחברים אל Claude / GPT / Gemini בחינם, עם מעבר אוטומטי לגיבוי. דחיסה משולבת של RTK ו-Caveman חוסכת 15–95% מהטוקנים (כ-89% בממוצע) — בלי להגיע לעולם למגבלות. 359 ספקי AI · יותר מ-150 מסלולים חינמיים · כ-1.62 מיליארד טוקנים בחינם בחודש · 19 אסטרטגיות ניתוב · $0 להתחלה."/>
+<img src="./docs/diagrams/readme-hero.svg" width="100%" alt="OmniRoute — לעולם אל תפסיקו לתכנת. כל כלי AI ← 367 ספקים — יותר מ-150 בחינם — דרך נקודת קצה אחת. חברו את Claude Code, Codex, Cursor, Cline, Copilot ו-Antigravity אל Claude / GPT / Gemini בחינם, עם מעבר אוטומטי בעת כשל. דחיסה משולבת של RTK + Caveman חוסכת 15–95% מהטוקנים (כ-89% בממוצע) — ולעולם לא מגיעים למגבלות. 367 ספקי AI · יותר מ-150 מסלולים חינמיים · כ-1.62 מיליארד טוקנים חינמיים בחודש · 19 אסטרטגיות ניתוב · $0 להתחלה."/>
 
 </div>
 
@@ -214,11 +214,11 @@
 
 <div align="center">
 
-## 🆓 עובד מהרגע שמתקינים אותו — ללא מפתחות, ללא הגדרות
+## 🆓 עובד מיד עם ההתקנה — בלי מפתחות, בלי הגדרות
 
 </div>
 
-<img src="./docs/diagrams/works-zero-config.svg" width="100%" alt="עובד מהרגע שמתקינים אותו — ללא הגדרות. שלושה שלבים: 1. התקנה — npm i -g omniroute, השרת עולה ב-localhost:20128. 2. הפנו את הכלי שלכם אל http://localhost:20128/v1 — כל כלי תואם OpenAI‏ (Claude Code, Cursor, Cline). 3. הוא עונה — השתמשו במודל auto לקבלת תשובה מיידית, ללא מפתח API, ללא הרשמה וללא הגדרות. הספק נטול המפתחות OpenCode Free מוגדר מראש בשילוב של auto, כך שהתקנה חדשה מגיבה מיד, ללא צורך בהגדרה נוספת."/>
+<img src="./docs/diagrams/works-zero-config.svg" width="100%" alt="עובד מיד עם ההתקנה — ללא הגדרות. שלושה שלבים: 1. התקנה — npm i -g omniroute, השרת עולה ב-localhost:20128. 2. הפנו את הכלי שלכם אל http://localhost:20128/v1 — כל כלי תואם OpenAI ‏(Claude Code, Cursor, Cline). 3. מתקבלת תשובה — קראו למודל auto לקבלת תשובה מיידית, ללא מפתח API, ללא הרשמה וללא הגדרה. הספק ללא מפתחות OpenCode Free מחובר מראש לצירוף auto, כך שהתקנה חדשה מגיבה מיד ללא צורך בהגדרות נוספות."/>
 
 ```bash
 # התקנה חדשה, ללא פרטי גישה — `auto` כבר עובד:
@@ -227,9 +227,9 @@ curl http://localhost:20128/v1/chat/completions \
   -d '{"model":"auto","messages":[{"role":"user","content":"Hello!"}]}'
 ```
 
-<sub>מעדיפים שירות חינמי מסוים? השתמשו ישירות ב-`oc/…`‏ (OpenCode Free). לאחר מכן עברו ל-`auto` ותנו ל-OmniRoute לבחור.</sub>
+<sub>מעדיפים שירות חינמי מסוים? קראו ישירות אל `oc/…` ‏(OpenCode Free). לאחר מכן עברו אל `auto` ותנו ל-OmniRoute לבחור.</sub>
 
-<sub>📦 סקריפטים להפעלה מהירה בהעתקה והדבקה עבור **Python, Node.js, PHP ו-cURL**‏ → [`examples/quickstart/`](examples/quickstart/)</sub>
+<sub>📦 סקריפטים להתחלה מהירה בהעתקה והדבקה עבור **Python, Node.js, PHP ו-cURL** ‏→ [`examples/quickstart/`](examples/quickstart/)</sub>
 
 <br/>
 
@@ -239,7 +239,7 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/promise-pillars.svg" width="100%" alt="ההבטחה — נקודת קצה אחת ו-359 ספקים. גיבוי אוטומטי ממשיך לנתב כל עוד יש יעד תקין אחר. שישה עקרונות: גיבוי עמיד בין 359 ספקים · חיסכון של עד 95% בטוקנים בעומסי עבודה מתאימים · התחלה ב-$0 עם יותר מ-150 מסלולים חינמיים ו-54 ספקים חינמיים לתמיד, חוזרים או ללא מפתחות · 36 שילובי CLI/סוכנים באמצעות הגדרה אחת · תאימות ל-OpenAI,‏ Claude,‏ Gemini ול-Responses API ב-/v1 · בקרות לייצור, כולל מפסקי מעגל, הסוואת TLS,‏ MCP עם 110 כלים, A2A, זיכרון, מעקות בטיחות, הערכות ויותר מ-39,000 הצהרות בדיקה סטטיות ביותר מ-5,100 קובצי בדיקה במעקב."/>
+<img src="./docs/diagrams/promise-pillars.svg" width="100%" alt="ההבטחה — נקודת קצה אחת ו-367 ספקים. מעבר אוטומטי לחלופה ממשיך את הניתוב כל עוד יעד תקין אחר זמין. שישה עמודי תווך: מעבר עמיד בין 367 ספקים · חיסכון של עד 95% בטוקנים בעומסי עבודה מתאימים · התחלה ב-$0 עם יותר מ-150 מסלולים חינמיים ו-54 ספקים מתחדשים/ללא מפתחות שנשארים חינמיים לתמיד · 36 שילובי CLI/סוכנים באמצעות הגדרה אחת · תאימות ל-OpenAI, ל-Claude, ל-Gemini ול-Responses API ב-/v1 · בקרות לייצור, לרבות מפסקי זרם, הסוואת TLS, ‏110 כלי MCP, ‏A2A, זיכרון, מנגנוני הגנה, הערכות ויותר מ-39,000 הצהרות בדיקה סטטיות ביותר מ-5,100 קובצי בדיקה במעקב."/>
 
 <br/>
 <br/>
@@ -250,11 +250,11 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/why-pain-fix.svg" width="100%" alt="למה OmniRoute — הפסיקו לתמרן בין 10 לוחות מחוונים, מפתחות API לא פעילים וחשבונות מפתיעים. עשרה קשיים יומיומיים מול פתרונות: מכסה שפגה ללא שימוש → מיצוי מרבי של מינויים; מגבלות קצב באמצע כתיבת קוד → גיבוי אוטומטי ב-4 רמות (מינוי → API → זול → חינמי); פלטי כלים שורפים טוקנים → דחיסת RTK + Caveman‏ (15–95%); ממשקי API יקרים → ניתוב ממוטב עלויות; לכל כלי הגדרה משלו → נקודת קצה אחת, לוח מחוונים אחד; AI חסום → Proxy ב-3 רמות + הסוואת TLS; מפתחות לא פעילים → עמידות ב-3 שכבות (מפסקי מעגל, צינון מפתחות, נעילת מודלים); צוות שחולק מינוי אחד → מאגרי מפתחות עם מכסות בחלוקה הוגנת; הנחיות שעוברות דרך הענן של מישהו אחר → גישה מקומית תחילה עם מפתחות מוצפנים ב-AES-256-GCM; אין נראות להוצאות → ניתוח נתונים בזמן אמת (שימוש, מכסה, חיסכון, השהיית p95)."/>
+<img src="./docs/diagrams/why-pain-fix.svg" width="100%" alt="למה OmniRoute — הפסיקו לתמרן בין 10 לוחות מחוונים, מפתחות API מושבתים וחשבונות מפתיעים. עשרה קשיים יומיומיים מול פתרונות: מכסה שפג תוקפה בלי שנוצלה → מיצוי מרבי של מינויים; מגבלות קצב באמצע כתיבת קוד → מעבר אוטומטי בין 4 רמות (מינוי → API → זול → חינם); פלטי כלים שמבזבזים טוקנים → דחיסת RTK + Caveman ‏(15–95%); ממשקי API יקרים → ניתוב ממוטב לעלות; הגדרה נפרדת לכל כלי → נקודת קצה אחת, לוח מחוונים אחד; AI חסום → פרוקסי ב-3 רמות + הסוואת TLS; מפתחות מושבתים → עמידות ב-3 שכבות (מפסקי זרם, זמן צינון למפתחות, נעילת מודלים); צוות שחולק מינוי אחד → מאגרי מפתחות עם מכסות בחלוקה הוגנת; פרומפטים שעוברים דרך הענן של מישהו אחר → גישה מקומית תחילה עם מפתחות מוצפנים ב-AES-256-GCM; אין נראות להוצאות → ניתוח נתונים בזמן אמת (שימוש, מכסה, חיסכון, השהיית p95)."/>
 
 <div align="center">
 
-<img src="./docs/diagrams/tier-cascade.svg" width="100%" alt="זרימת בקשה ב-OmniRoute: סביבת הפיתוח או ה-CLI שלכם (Claude Code, Cursor, Cline…) פונים לנקודת קצה מקומית אחת (http://localhost:20128/v1); הנתב החכם של OmniRoute‏ (דחיסת RTK + Caveman,‏ 19 אסטרטגיות ניתוב, מפסקי מעגל, הסוואת TLS,‏ MCP,‏ A2A ומעקות בטיחות) יכול לעבור ליעד גיבוי בין 4 רמות ספקים כל עוד נותר יעד תקין ומתאים — רמה 1: מינוי, רמה 2: מפתח API, רמה 3: זול ורמה 4: חינמי."/>
+<img src="./docs/diagrams/tier-cascade.svg" width="100%" alt="זרימת הבקשות של OmniRoute: סביבת הפיתוח או ה-CLI שלכם (Claude Code, Cursor, Cline…) פונים לנקודת קצה מקומית אחת (http://localhost:20128/v1); הנתב החכם של OmniRoute ‏(דחיסת RTK + Caveman, ‏19 אסטרטגיות ניתוב, מפסקי זרם, הסוואת TLS, ‏MCP, ‏A2A, מנגנוני הגנה) יכול לעבור בין 4 רמות ספקים כל עוד נותר יעד תקין ומתאים — רמה 1 מינוי, רמה 2 מפתח API, רמה 3 זול ורמה 4 חינם."/>
 
 </div>
 
@@ -492,9 +492,9 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/comparison-table.svg" width="100%" alt="מה מייחד את OmniRoute — תמונת מצב מתוארכת של תכונות בהשוואה ל-9router, ל-OpenRouter, ל-CLIProxyAPI ול-LiteLLM על פני 13 יכולות. OmniRoute:‏ 359 ספקים, יותר מ-150 מסלולים חינמיים מובנים, 19 אסטרטגיות ניתוב, דחיסת טוקנים באמצעות 12 מנועים, שרת MCP מובנה עם 110 כלים, פרוטוקול סוכנים A2A, זיכרון מתמשך, מנגנוני הגנה, סוכני ענן, הסוואת טביעת אצבע של TLS,‏ Desktop/Termux/PWA ו-42 אזורי ממשק משתמש בינלאומיים. OmniRoute מופץ ברישיון MIT וניתן לאירוח עצמי. היכולות והכמויות של המתחרים עשויות להשתנות; ראו את המתודולוגיה המקושרת."/>
+<img src="./docs/diagrams/comparison-table.svg" width="100%" alt="מה מייחד את OmniRoute — תמונת מצב מתוארכת של תכונות בהשוואה ל-9router, OpenRouter, CLIProxyAPI ו-LiteLLM על פני 13 יכולות. OmniRoute: ‏367 ספקים, יותר מ-150 מסלולים חינמיים מובנים, 19 אסטרטגיות ניתוב, דחיסת טוקנים באמצעות 12 מנועים, שרת MCP מובנה עם 110 כלים, פרוטוקול סוכנים A2A, זיכרון מתמשך, מנגנוני הגנה, סוכני ענן, הסוואת טביעת אצבע של TLS, תמיכה ב-Desktop/Termux/PWA ו-42 שפות ממשק משתמש במסגרת i18n. ‏OmniRoute מופץ ברישיון MIT וניתן לאירוח עצמי. היכולות והכמויות של המתחרים עשויות להשתנות; ראו את המתודולוגיה המקושרת."/>
 
-<sub>📊 מתודולוגיה מלאה ופירוט לפי תכונה בהשוואה ל-9router, ל-OpenRouter, ל-CLIProxyAPI ול-LiteLLM ← [`docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md`](docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md)</sub>
+<sub>📊 המתודולוגיה המלאה ופרטים לכל תכונה בהשוואה ל-9router, OpenRouter, CLIProxyAPI ו-LiteLLM ‏← [`docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md`](docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md)</sub>
 
 <br/>
 
@@ -1262,22 +1262,22 @@ OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # גם CI=1 מדלג ע�
 
 <table>
   <tr><th align="left">שכבה</th><th align="left">טכנולוגיה</th></tr>
-  <tr><td nowrap><b>סביבת ריצה</b></td><td>Node.js 22.x / 24.x LTS — <code>&gt;=22.22.2 &lt;23 || &gt;=24.0.0 &lt;27</code></td></tr>
+  <tr><td nowrap><b>סביבת הרצה</b></td><td>Node.js 22.x / 24.x LTS — <code>&gt;=22.22.2 &lt;23 || &gt;=24.0.0 &lt;27</code></td></tr>
   <tr><td nowrap><b>שפה</b></td><td>TypeScript 6.0 — <b>100% TypeScript</b> בכל <code>src/</code> ו-<code>open-sse/</code> (ללא <code>any</code> בליבה מאז v2.0)</td></tr>
-  <tr><td nowrap><b>פריימוורק</b></td><td>Next.js 16 + React 19 + Tailwind CSS 4</td></tr>
-  <tr><td nowrap><b>מסד נתונים</b></td><td>better-sqlite3 (SQLite, תיעוד WAL) + LowDB (מורשת JSON) — 137 מודולי תחום, 199 מיגרציות</td></tr>
-  <tr><td nowrap><b>זיכרון</b></td><td>חיפוש טקסט מלא באמצעות SQLite FTS5 + הטמעות וקטוריות מכוונטנות ל-int8, דעיכה מטיפוסית</td></tr>
+  <tr><td nowrap><b>מסגרת עבודה</b></td><td>Next.js 16 + React 19 + Tailwind CSS 4</td></tr>
+  <tr><td nowrap><b>מסד נתונים</b></td><td>better-sqlite3 (SQLite, רישום WAL) + LowDB (JSON מדור קודם) — 137 מודולי תחום, 200 מיגרציות</td></tr>
+  <tr><td nowrap><b>זיכרון</b></td><td>חיפוש טקסט מלא באמצעות SQLite FTS5 + הטמעות וקטוריות מכומתות ל-int8, דעיכה מוקלדת</td></tr>
   <tr><td nowrap><b>סכמות</b></td><td>Zod 4 — אימות קלט/פלט של כלי MCP + חוזי API</td></tr>
   <tr><td nowrap><b>פרוטוקולים</b></td><td>MCP (stdio / HTTP / SSE) + A2A v0.3 (JSON-RPC 2.0 + SSE)</td></tr>
   <tr><td nowrap><b>הזרמה</b></td><td>Server-Sent Events (SSE) + גשר WebSocket (<code>/v1/ws</code>)</td></tr>
-  <tr><td nowrap><b>דחיסה</b></td><td>צינור עיבוד בן 12 מנועים — RTK, Caveman, LLMLingua-2 (MobileBERT ONNX), GCF, OmniGlyph</td></tr>
-  <tr><td nowrap><b>אימות ואבטחה</b></td><td>OAuth 2.0 (PKCE) + JWT + מפתחות API + אימות MCP מבוסס היקף · AES-256-GCM במצב מנוחה · DOMPurify</td></tr>
-  <tr><td nowrap><b>הסוואה</b></td><td>wreq-js — התחזות לטביעות אצבע של JA3 / JA4 TLS, פרוקסי תלת-רמתי</td></tr>
-  <tr><td nowrap><b>עמידות</b></td><td>מפסק זרם, השהיה מעריכית, מניעת עומס המוני פתאומי, ריפוי עצמי אוטומטי משולב</td></tr>
+  <tr><td nowrap><b>דחיסה</b></td><td>צינור עיבוד בעל 12 מנועים — RTK, Caveman, LLMLingua-2 (MobileBERT ONNX), GCF, OmniGlyph</td></tr>
+  <tr><td nowrap><b>אימות ואבטחה</b></td><td>OAuth 2.0 (PKCE) + JWT + מפתחות API + אימות MCP מוגבל-היקף · AES-256-GCM לנתונים במנוחה · DOMPurify</td></tr>
+  <tr><td nowrap><b>הסוואה</b></td><td>wreq-js — התחזות לטביעות אצבע TLS מסוג JA3 / JA4, פרוקסי בעל 3 רמות</td></tr>
+  <tr><td nowrap><b>עמידות</b></td><td>מפסק זרם, השהיה מעריכית, מניעת עומס מתפרץ, ריפוי עצמי אוטומטי משולב</td></tr>
   <tr><td nowrap><b>רישום</b></td><td>pino — יומני JSON מובנים עם הקשר הבקשה</td></tr>
   <tr><td nowrap><b>בדיקות</b></td><td>מריץ הבדיקות של Node.js + Vitest — <b>39,000+ הצהרות בדיקה סטטיות</b> הפרוסות על פני 5,100+ קובצי בדיקה במעקב (יחידה, אינטגרציה, E2E, אבטחה, מערכת אקולוגית)</td></tr>
   <tr><td nowrap><b>פלטפורמות</b></td><td>מחשב שולחני (Electron) · Android (Termux) · PWA (כל דפדפן)</td></tr>
-  <tr><td nowrap><b>CI/CD</b></td><td>GitHub Actions — פרסום אוטומטי ל-npm ול-Docker Hub בעת הפצה</td></tr>
+  <tr><td nowrap><b>CI/CD</b></td><td>GitHub Actions — פרסום אוטומטי ל-npm ול-Docker Hub בעת הפצת גרסה</td></tr>
   <tr><td nowrap><b>קישורים</b></td><td><a href="https://omniroute.online">אתר אינטרנט</a> · <a href="https://www.npmjs.com/package/omniroute">npm</a> · <a href="https://hub.docker.com/r/diegosouzapw/omniroute">Docker Hub</a></td></tr>
 </table>
 

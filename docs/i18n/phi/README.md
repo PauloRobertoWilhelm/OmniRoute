@@ -13,7 +13,7 @@
 
 # 🚀 OmniRoute — Ang Libreng AI Gateway
 
-<img src="./docs/diagrams/readme-hero.svg" width="100%" alt="OmniRoute — Huwag kailanman tumigil sa pag-code. Bawat AI tool → 359 provider — 150+ libre — sa pamamagitan ng iisang endpoint. Claude Code, Codex, Cursor, Cline, Copilot at Antigravity tungo sa LIBRENG Claude / GPT / Gemini na may awtomatikong fallback. Ang pinagsamang RTK + Caveman compression ay nakakatipid ng 15–95% ng mga token (~89% sa karaniwan) — huwag kailanman umabot sa mga limitasyon. 359 AI provider · 150+ libreng tier · ~1.62B libreng token/buwan · 19 na diskarte sa pagruruta · $0 para magsimula."/>
+<img src="./docs/diagrams/readme-hero.svg" width="100%" alt="OmniRoute — Huwag kailanman tumigil sa pag-code. Bawat AI tool → 367 provider — 150+ libre — sa pamamagitan ng iisang endpoint. Claude Code, Codex, Cursor, Cline, Copilot at Antigravity tungo sa LIBRENG Claude / GPT / Gemini na may awtomatikong fallback. Ang pinagsamang RTK + Caveman compression ay nakakatipid ng 15–95% ng mga token (~89% sa karaniwan) — huwag kailanman umabot sa mga limitasyon. 367 AI provider · 150+ libreng tier · ~1.62B libreng token/buwan · 19 na diskarte sa routing · $0 para magsimula."/>
 
 </div>
 
@@ -218,16 +218,16 @@
 
 </div>
 
-<img src="./docs/diagrams/works-zero-config.svg" width="100%" alt="Gumagana agad sa sandaling i-install mo ito — walang config. Tatlong hakbang: 1. I-install — npm i -g omniroute, magsisimula ang server sa localhost:20128. 2. Ituro ang iyong tool sa http://localhost:20128/v1 — anumang tool na compatible sa OpenAI (Claude Code, Cursor, Cline). 3. Sasagot ito — tawagin ang model auto para sa agarang tugon, nang walang API key, pagpaparehistro, o configuration. Ang provider na hindi nangangailangan ng key na OpenCode Free ay naka-pre-wire sa auto combo, kaya agad na tumutugon ang bagong installation."/>
+<img src="./docs/diagrams/works-zero-config.svg" width="100%" alt="Gumagana agad sa sandaling i-install mo ito — walang config. Tatlong hakbang: 1. I-install — npm i -g omniroute, aandar ang server sa localhost:20128. 2. Ituro ang iyong tool sa http://localhost:20128/v1 — anumang tool na compatible sa OpenAI (Claude Code, Cursor, Cline). 3. Sasagot ito — tawagin ang model na auto para sa agarang tugon, nang walang API key, signup, o configuration. Ang keyless provider na OpenCode Free ay naka-pre-wire sa auto combo, kaya handang tumugon agad ang bagong installation."/>
 
 ```bash
-# Bagong installation, walang credential — gumagana na ang `auto`:
+# Bagong install, walang credential — gumagana na agad ang `auto`:
 curl http://localhost:20128/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{"model":"auto","messages":[{"role":"user","content":"Hello!"}]}'
 ```
 
-<sub>Mas gusto mo ba ang isang partikular na libreng backend? Direktang tawagin ang `oc/…` (OpenCode Free). Pagkatapos, lumipat sa `auto` at hayaang OmniRoute ang pumili.</sub>
+<sub>Mas gusto mo ba ang isang partikular na libreng backend? Direktang tawagin ang `oc/…` (OpenCode Free). Pagkatapos, lumipat sa `auto` at hayaan ang OmniRoute na pumili.</sub>
 
 <sub>📦 Mga quickstart script na maaaring i-copy-paste para sa **Python, Node.js, PHP, at cURL** → [`examples/quickstart/`](examples/quickstart/)</sub>
 
@@ -239,7 +239,7 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/promise-pillars.svg" width="100%" alt="Ang Pangako — Isang endpoint at 359 na provider. Patuloy ang pagruruta sa pamamagitan ng awtomatikong fallback habang may isa pang malusog na target. Anim na haligi: matatag na fallback sa 359 na provider · hanggang 95% na matitipid sa token para sa mga kwalipikadong workload · $0 para magsimula gamit ang 150+ libreng tier at 54 na umuulit/walang-key na provider na libre magpakailanman · 36 na integration sa CLI/agent sa pamamagitan ng iisang config · compatibility sa OpenAI, Claude, Gemini, at Responses API sa /v1 · mga kontrol para sa production kabilang ang mga circuit breaker, TLS stealth, 110 MCP tool, A2A, memory, guardrail, eval, at 39,000+ static test declaration sa 5,100+ sinusubaybayang test file."/>
+<img src="./docs/diagrams/promise-pillars.svg" width="100%" alt="Ang Pangako — Isang endpoint at 367 provider. Patuloy na nagru-route ang awtomatikong fallback habang may isa pang malusog na target. Anim na haligi: matatag na fallback sa 367 provider · hanggang 95% na matitipid sa token para sa mga kwalipikadong workload · $0 para magsimula gamit ang 150+ libreng tier at 54 na umuulit/keyless na provider na libre magpakailanman · 36 na CLI/agent integration sa pamamagitan ng iisang config · compatibility sa OpenAI, Claude, Gemini, at Responses API sa /v1 · mga production control kabilang ang mga circuit breaker, TLS stealth, MCP 110 tool, A2A, memory, guardrail, eval, at 39,000+ static test declaration sa 5,100+ sinusubaybayang test file."/>
 
 <br/>
 <br/>
@@ -250,11 +250,11 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/why-pain-fix.svg" width="100%" alt="Bakit OmniRoute — itigil ang pagpapalipat-lipat sa 10 dashboard, mga hindi gumaganang API key, at mga nakakagulat na bayarin. Sampung pang-araw-araw na problema at mga solusyon: nag-e-expire ang quota nang hindi nagagamit → sulitin ang mga subscription; mga rate limit habang nagko-code → 4-tier na auto-fallback (Subscription → API → Mura → Libre); inuubos ng mga output ng tool ang mga token → RTK + Caveman compression (15–95%); mamahaling API → pagrurutang naka-optimize sa gastos; magkakaibang setup para sa bawat tool → isang endpoint, isang dashboard; naka-block ang AI → 3-level proxy + TLS stealth; mga hindi gumaganang key → 3-layer na katatagan (mga circuit breaker, cooldown ng key, lockout ng model); iisang subscription na pinagsasaluhan ng team → mga key pool na may patas na paghahati ng quota; dumadaan ang mga prompt sa cloud ng ibang tao → local-first na may mga key na naka-encrypt gamit ang AES-256-GCM; walang visibility sa gastos → live analytics (paggamit, quota, matitipid, p95 latency)."/>
+<img src="./docs/diagrams/why-pain-fix.svg" width="100%" alt="Bakit OmniRoute — itigil ang pagpapalipat-lipat sa 10 dashboard, mga hindi gumaganang API key, at mga nakakagulat na bill. Sampung pang-araw-araw na problema at solusyon: nag-e-expire ang quota nang hindi nagagamit → sulitin ang mga subscription; naaabot ang rate limit habang nagko-code → 4-tier na auto-fallback (Subscription → API → Cheap → Free); inuubos ng mga output ng tool ang mga token → RTK + Caveman compression (15–95%); mamahaling API → routing na naka-optimize sa gastos; bawat tool ay may sariling setup → isang endpoint, isang dashboard; naka-block ang AI → 3-level proxy + TLS stealth; mga hindi gumaganang key → 3-layer na katatagan (mga circuit breaker, key cooldown, model lockout); iisang subscription na pinagsasaluhan ng team → mga key pool na may patas na quota; dumadaan ang mga prompt sa cloud ng ibang tao → local-first na may mga key na naka-encrypt gamit ang AES-256-GCM; walang visibility sa paggastos → live analytics (paggamit, quota, natipid, p95 latency)."/>
 
 <div align="center">
 
-<img src="./docs/diagrams/tier-cascade.svg" width="100%" alt="Daloy ng request sa OmniRoute: tumatawag ang iyong IDE o CLI (Claude Code, Cursor, Cline…) sa iisang lokal na endpoint (http://localhost:20128/v1); maaaring mag-fallback ang OmniRoute Smart Router (RTK + Caveman compression, 19 na diskarte sa pagruruta, mga circuit breaker, TLS stealth, MCP, A2A, mga guardrail) sa 4 na tier ng provider habang may natitirang kwalipikado at malusog na target — Tier 1 Subscription, Tier 2 API Key, Tier 3 Mura, at Tier 4 Libre."/>
+<img src="./docs/diagrams/tier-cascade.svg" width="100%" alt="Daloy ng request sa OmniRoute: tumatawag ang iyong IDE o CLI (Claude Code, Cursor, Cline…) sa iisang lokal na endpoint (http://localhost:20128/v1); maaaring mag-fallback ang OmniRoute Smart Router (RTK + Caveman compression, 19 na routing strategy, mga circuit breaker, TLS stealth, MCP, A2A, mga guardrail) sa 4 na provider tier habang may natitirang kwalipikado at malusog na target — Tier 1 Subscription, Tier 2 API Key, Tier 3 Cheap, at Tier 4 Free."/>
 
 </div>
 
@@ -488,13 +488,13 @@ Lahat ng **19** na diskarte — paghalu-haluin at pagtugmain sa bawat hakbang ng
 
 <div align="center">
 
-## 🏆 Ang Nagpapabukod-tangi sa OmniRoute
+## 🏆 Ano ang Nagbukod-tangi sa OmniRoute
 
 </div>
 
-<img src="./docs/diagrams/comparison-table.svg" width="100%" alt="Ang nagpapabukod-tangi sa OmniRoute — isang may petsang snapshot ng mga feature kumpara sa 9router, OpenRouter, CLIProxyAPI at LiteLLM sa 13 kakayahan. OmniRoute: 359 provider, 150+ libreng tier na built-in, 19 na diskarte sa routing, 12-engine na token compression, built-in na MCP server na may 110 tool, A2A agent protocol, persistent memory, guardrails, cloud agents, TLS fingerprint stealth, Desktop/Termux/PWA at 42 i18n na locale ng UI. Ang OmniRoute ay may lisensyang MIT at maaaring i-self-host. Maaaring magbago ang mga kakayahan at bilang ng mga kakumpitensya; tingnan ang naka-link na metodolohiya."/>
+<img src="./docs/diagrams/comparison-table.svg" width="100%" alt="Ano ang nagbukod-tangi sa OmniRoute — isang snapshot ng mga feature sa isang takdang panahon kumpara sa 9router, OpenRouter, CLIProxyAPI, at LiteLLM sa 13 kakayahan. OmniRoute: 367 provider, 150+ built-in na libreng tier, 19 na estratehiya sa pagruruta, 12-engine na pag-compress ng token, built-in na MCP server na may 110 tool, A2A agent protocol, persistent memory, mga guardrail, mga cloud agent, TLS fingerprint stealth, Desktop/Termux/PWA, at 42 i18n UI locale. Ang OmniRoute ay may lisensyang MIT at maaaring i-self-host. Maaaring magbago ang mga kakayahan at bilang ng mga kakumpitensya; tingnan ang naka-link na metodolohiya."/>
 
-<sub>📊 Buong metodolohiya &amp; mga detalye sa bawat feature kumpara sa 9router, OpenRouter, CLIProxyAPI &amp; LiteLLM → [`docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md`](docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md)</sub>
+<sub>📊 Kumpletong metodolohiya at detalye ng bawat feature kumpara sa 9router, OpenRouter, CLIProxyAPI, at LiteLLM → [`docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md`](docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md)</sub>
 
 <br/>
 
@@ -1265,19 +1265,19 @@ Mga canonical na sukatan noong 2026-08-24: **1.029 natatanging video** · **11.1
   <tr><td nowrap><b>Runtime</b></td><td>Node.js 22.x / 24.x LTS — <code>&gt;=22.22.2 &lt;23 || &gt;=24.0.0 &lt;27</code></td></tr>
   <tr><td nowrap><b>Wika</b></td><td>TypeScript 6.0 — <b>100% TypeScript</b> sa buong <code>src/</code> at <code>open-sse/</code> (walang <code>any</code> sa core mula noong v2.0)</td></tr>
   <tr><td nowrap><b>Framework</b></td><td>Next.js 16 + React 19 + Tailwind CSS 4</td></tr>
-  <tr><td nowrap><b>Database</b></td><td>better-sqlite3 (SQLite, WAL journaling) + LowDB (legacy na JSON) — 137 domain module, 199 migration</td></tr>
-  <tr><td nowrap><b>Memorya</b></td><td>SQLite FTS5 full-text + int8-quantized vector embedding, naka-type na decay</td></tr>
+  <tr><td nowrap><b>Database</b></td><td>better-sqlite3 (SQLite, WAL journaling) + LowDB (legacy na JSON) — 137 domain module, 200 migration</td></tr>
+  <tr><td nowrap><b>Memory</b></td><td>SQLite FTS5 full-text + int8-quantized vector embedding, decay na may type</td></tr>
   <tr><td nowrap><b>Mga Schema</b></td><td>Zod 4 — pagpapatunay ng I/O ng MCP tool + mga kontrata ng API</td></tr>
   <tr><td nowrap><b>Mga Protocol</b></td><td>MCP (stdio / HTTP / SSE) + A2A v0.3 (JSON-RPC 2.0 + SSE)</td></tr>
   <tr><td nowrap><b>Streaming</b></td><td>Server-Sent Events (SSE) + WebSocket bridge (<code>/v1/ws</code>)</td></tr>
   <tr><td nowrap><b>Compression</b></td><td>12-engine pipeline — RTK, Caveman, LLMLingua-2 (MobileBERT ONNX), GCF, OmniGlyph</td></tr>
-  <tr><td nowrap><b>Awtorisasyon at seguridad</b></td><td>OAuth 2.0 (PKCE) + JWT + API Keys + MCP scoped auth · AES-256-GCM para sa nakaimbak na data · DOMPurify</td></tr>
-  <tr><td nowrap><b>Pagkukubli</b></td><td>wreq-js — pagpapanggap ng JA3 / JA4 TLS fingerprint, 3-level proxy</td></tr>
+  <tr><td nowrap><b>Awtorisasyon &amp; seguridad</b></td><td>OAuth 2.0 (PKCE) + JWT + mga API Key + awtorisasyong may saklaw sa MCP · AES-256-GCM para sa nakaimbak na data · DOMPurify</td></tr>
+  <tr><td nowrap><b>Stealth</b></td><td>wreq-js — pagpapanggap bilang JA3 / JA4 TLS fingerprint, 3-level na proxy</td></tr>
   <tr><td nowrap><b>Katatagan</b></td><td>Circuit breaker, exponential backoff, anti-thundering-herd, kusang paghilom ng auto-combo</td></tr>
-  <tr><td nowrap><b>Pagla-log</b></td><td>pino — mga nakabalangkas na JSON log na may konteksto ng request</td></tr>
+  <tr><td nowrap><b>Pagla-log</b></td><td>pino — mga nakaayos na JSON log na may konteksto ng request</td></tr>
   <tr><td nowrap><b>Pagsubok</b></td><td>Node.js test runner + Vitest — <b>39,000+ static na deklarasyon ng pagsubok</b> sa 5,100+ sinusubaybayang test file (unit, integration, E2E, seguridad, ecosystem)</td></tr>
   <tr><td nowrap><b>Mga Platform</b></td><td>Desktop (Electron) · Android (Termux) · PWA (anumang browser)</td></tr>
-  <tr><td nowrap><b>CI/CD</b></td><td>GitHub Actions — awtomatikong pag-publish sa npm + Docker Hub tuwing release</td></tr>
+  <tr><td nowrap><b>CI/CD</b></td><td>GitHub Actions — awtomatikong pag-publish sa npm + Docker Hub kapag naglalabas ng release</td></tr>
   <tr><td nowrap><b>Mga Link</b></td><td><a href="https://omniroute.online">Website</a> · <a href="https://www.npmjs.com/package/omniroute">npm</a> · <a href="https://hub.docker.com/r/diegosouzapw/omniroute">Docker Hub</a></td></tr>
 </table>
 

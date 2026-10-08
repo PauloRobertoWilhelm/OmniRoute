@@ -6,14 +6,14 @@
 
 <div align="center">
 
-<img src="./docs/screenshots/MainOmniRoute.png" alt="OmniRoute 仪表板" width="820"/>
+<img src="./docs/screenshots/MainOmniRoute.png" alt="OmniRoute 仪表盘" width="820"/>
 
 <br/>
 <br/>
 
-# 🚀 OmniRoute — 免费 AI 网关
+# 🚀 OmniRoute — 免费的 AI 网关
 
-<img src="./docs/diagrams/readme-hero.svg" width="100%" alt="OmniRoute — 永不停歇地编码。每个 AI 工具 → 359 个提供者 — 150+ 个免费 — 通过一个端点即可访问。将 Claude Code、Codex、Cursor、Cline、Copilot 和 Antigravity 接入免费的 Claude / GPT / Gemini，并支持自动故障转移。RTK + Caveman 叠加压缩可节省 15–95% 的 token（平均约 89%）— 永不触及限制。359 个 AI 提供者 · 150+ 个免费层级 · 每月约 16.2 亿个免费 token · 19 种路由策略 · $0 起步。"/>
+<img src="./docs/diagrams/readme-hero.svg" width="100%" alt="OmniRoute — 编码永不停歇。每款 AI 工具 → 367 个提供者 — 150+ 个免费提供者 — 统一通过一个端点访问。将 Claude Code、Codex、Cursor、Cline、Copilot 和 Antigravity 接入免费的 Claude / GPT / Gemini，并支持自动故障转移。RTK + Caveman 堆叠压缩可节省 15–95% 的 token（平均约 89%）— 永不触及限额。367 个 AI 提供者 · 150+ 个免费套餐 · 每月约 16.2 亿个免费 token · 19 种路由策略 · $0 即可开始。"/>
 
 </div>
 
@@ -218,7 +218,7 @@
 
 </div>
 
-<img src="./docs/diagrams/works-zero-config.svg" width="100%" alt="安装即用——零配置。三个步骤：1. 安装——npm i -g omniroute，服务器在 localhost:20128 上启动。2. 将工具指向 http://localhost:20128/v1——支持任何兼容 OpenAI 的工具（Claude Code、Cursor、Cline）。3. 获取回答——调用模型 auto 即可立即获得回复，无需 API 密钥、无需注册、无需配置。无密钥提供者 OpenCode Free 已预先接入 auto 组合，因此全新安装后即可直接响应。"/>
+<img src="./docs/diagrams/works-zero-config.svg" width="100%" alt="安装即用——零配置。只需三步：1. 安装——npm i -g omniroute，服务器在 localhost:20128 上启动。2. 将你的工具指向 http://localhost:20128/v1——任何兼容 OpenAI 的工具（Claude Code、Cursor、Cline）。3. 即刻响应——调用模型 auto 即可立即获得回复，无需 API 密钥、无需注册、无需配置。无密钥提供者 OpenCode Free 已预先接入 auto 组合，因此全新安装后即可开箱响应。"/>
 
 ```bash
 # 全新安装，零凭据——`auto` 已可直接使用：
@@ -227,9 +227,9 @@ curl http://localhost:20128/v1/chat/completions \
   -d '{"model":"auto","messages":[{"role":"user","content":"Hello!"}]}'
 ```
 
-<sub>更喜欢特定的免费后端？可直接调用 `oc/…`（OpenCode Free）。之后再升级到 `auto`，让 OmniRoute 自动选择。</sub>
+<sub>更想使用特定的免费后端？可直接调用 `oc/…`（OpenCode Free）。之后再升级使用 `auto`，让 OmniRoute 自动选择。</sub>
 
-<sub>📦 适用于 **Python、Node.js、PHP 和 cURL** 的复制即用快速入门脚本 → [`examples/quickstart/`](examples/quickstart/)</sub>
+<sub>📦 适用于 **Python、Node.js、PHP 和 cURL** 的可复制粘贴快速入门脚本 → [`examples/quickstart/`](examples/quickstart/)</sub>
 
 <br/>
 
@@ -239,7 +239,7 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/promise-pillars.svg" width="100%" alt="我们的承诺——一个端点，连接 359 个提供者。只要还有其他健康的目标可用，自动故障转移就会保持路由畅通。六大支柱：跨 359 个提供者的弹性故障转移 · 符合条件的工作负载最多可节省 95% 的令牌 · 零成本起步，提供 150 多个免费套餐，以及 54 个持续免费或无密钥的永久免费提供者 · 通过一份配置集成 36 个 CLI/代理 · 在 /v1 提供 OpenAI、Claude、Gemini 和 Responses API 兼容性 · 生产级控制，包括断路器、TLS 隐匿、包含 110 个工具的 MCP、A2A、记忆、护栏、评估，以及分布在 5,100 多个受跟踪测试文件中的 39,000 多条静态测试声明。"/>
+<img src="./docs/diagrams/promise-pillars.svg" width="100%" alt="我们的承诺——一个端点，连接 367 个提供者。只要仍有其他符合条件且健康的目标可用，自动回退就会持续路由。六大支柱：跨 367 个提供者的弹性回退 · 对符合条件的工作负载最高可节省 95% 的 token · 零成本起步，拥有 150+ 个免费层级和 54 个周期性或无密钥的永久免费提供者 · 通过一份配置集成 36 个 CLI/智能体 · 在 /v1 上兼容 OpenAI、Claude、Gemini 和 Responses API · 生产级控制，包括断路器、TLS 隐匿、拥有 110 个工具的 MCP、A2A、记忆、护栏、评估，以及分布在 5,100+ 个受跟踪测试文件中的 39,000+ 条静态测试声明。"/>
 
 <br/>
 <br/>
@@ -250,11 +250,11 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/why-pain-fix.svg" width="100%" alt="为什么选择 OmniRoute——不再为 10 个控制面板、失效的 API 密钥和意外账单疲于奔命。十大日常痛点及解决方案：配额过期未用 → 最大化利用订阅；编码途中遇到速率限制 → 4 级自动故障转移（订阅 → API → 低价 → 免费）；工具输出消耗大量令牌 → RTK + Caveman 压缩（15–95%）；API 费用高昂 → 成本优化路由；每个工具都要单独设置 → 一个端点、一个控制面板；AI 被封锁 → 3 级代理 + TLS 隐匿；密钥失效 → 3 层弹性保障（断路器、密钥冷却、模型锁定）；团队共用一份订阅 → 使用带公平份额配额的密钥池；提示词经过他人的云端 → 本地优先，密钥使用 AES-256-GCM 加密；支出缺乏可见性 → 实时分析（用量、配额、节省金额、p95 延迟）。"/>
+<img src="./docs/diagrams/why-pain-fix.svg" width="100%" alt="为什么选择 OmniRoute——不再疲于应付 10 个控制台、失效的 API 密钥和意外账单。十个日常痛点及解决方案：配额过期未用 → 最大化利用订阅；编码途中触发速率限制 → 4 层自动回退（订阅 → API → 低价 → 免费）；工具输出消耗大量 token → RTK + Caveman 压缩（15–95%）；API 价格昂贵 → 成本优化路由；每个工具都要单独配置 → 一个端点、一个控制台；AI 被屏蔽 → 3 级代理 + TLS 隐匿；密钥失效 → 3 层弹性机制（断路器、密钥冷却、模型锁定）；团队共享一个订阅 → 具有公平份额配额的密钥池；提示词经过他人的云端 → 本地优先，并使用 AES-256-GCM 加密密钥；无法掌握支出 → 实时分析（用量、配额、节省金额、p95 延迟）。"/>
 
 <div align="center">
 
-<img src="./docs/diagrams/tier-cascade.svg" width="100%" alt="OmniRoute 请求流程：您的 IDE 或 CLI（Claude Code、Cursor、Cline……）调用一个本地端点（http://localhost:20128/v1）；只要仍有符合条件且健康的目标可用，OmniRoute 智能路由器（RTK + Caveman 压缩、19 种路由策略、断路器、TLS 隐匿、MCP、A2A、护栏）便可在 4 个提供者层级之间进行故障转移——第 1 层：订阅，第 2 层：API 密钥，第 3 层：低价，第 4 层：免费。"/>
+<img src="./docs/diagrams/tier-cascade.svg" width="100%" alt="OmniRoute 请求流程：你的 IDE 或 CLI（Claude Code、Cursor、Cline……）调用一个本地端点（http://localhost:20128/v1）；只要仍有符合条件且健康的目标可用，OmniRoute 智能路由器（RTK + Caveman 压缩、19 种路由策略、断路器、TLS 隐匿、MCP、A2A、护栏）就能跨 4 个提供者层级进行回退——第 1 层：订阅，第 2 层：API 密钥，第 3 层：低价，第 4 层：免费。"/>
 
 </div>
 
@@ -492,9 +492,9 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/comparison-table.svg" width="100%" alt="OmniRoute 的独特之处——与 9router、OpenRouter、CLIProxyAPI 和 LiteLLM 在 13 项能力上的阶段性功能对比快照。OmniRoute：支持 359 个提供者，内置 150+ 个免费套餐、19 种路由策略、12 引擎令牌压缩、内置具有 110 个工具的 MCP 服务器、A2A 智能体协议、持久化记忆、护栏机制、云端智能体、TLS 指纹隐匿，以及 Desktop/Termux/PWA 和支持 42 种国际化语言的 UI。OmniRoute 采用 MIT 许可证，并支持自托管。竞争产品的能力和数量可能会发生变化；请参阅链接中的方法说明。"/>
+<img src="./docs/diagrams/comparison-table.svg" width="100%" alt="OmniRoute 的独特之处——与 9router、OpenRouter、CLIProxyAPI 和 LiteLLM 在 13 项能力上的特性快照对比（数据截至特定日期）。OmniRoute：367 个提供者、内置 150+ 个免费套餐、19 种路由策略、12 引擎令牌压缩、内置含 110 个工具的 MCP 服务器、A2A 智能体协议、持久化记忆、安全护栏、云端智能体、TLS 指纹隐匿、Desktop/Termux/PWA，以及支持 42 种语言区域设置的 UI。OmniRoute 采用 MIT 许可证并支持自托管。竞品的能力和数量可能发生变化；请参阅链接中的方法说明。"/>
 
-<sub>📊 完整方法说明及与 9router、OpenRouter、CLIProxyAPI 和 LiteLLM 的逐项功能对比详情 → [`docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md`](docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md)</sub>
+<sub>📊 完整方法说明以及与 9router、OpenRouter、CLIProxyAPI 和 LiteLLM 的逐项功能对比详情 → [`docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md`](docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md)</sub>
 
 <br/>
 
@@ -1262,21 +1262,21 @@ OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 也会跳过
 <table>
   <tr><th align="left">层级</th><th align="left">技术</th></tr>
   <tr><td nowrap><b>运行时</b></td><td>Node.js 22.x / 24.x LTS — <code>&gt;=22.22.2 &lt;23 || &gt;=24.0.0 &lt;27</code></td></tr>
-  <tr><td nowrap><b>语言</b></td><td>TypeScript 6.0 — <code>src/</code> 和 <code>open-sse/</code> 中均为 <b>100% TypeScript</b>（自 v2.0 起，核心代码中不存在 <code>any</code>）</td></tr>
+  <tr><td nowrap><b>语言</b></td><td>TypeScript 6.0 — 在 <code>src/</code> 和 <code>open-sse/</code> 中使用 <b>100% TypeScript</b>（自 v2.0 起核心代码中无任何 <code>any</code>）</td></tr>
   <tr><td nowrap><b>框架</b></td><td>Next.js 16 + React 19 + Tailwind CSS 4</td></tr>
-  <tr><td nowrap><b>数据库</b></td><td>better-sqlite3（SQLite、WAL 日志模式）+ LowDB（旧版 JSON）— 137 个领域模块，199 次迁移</td></tr>
-  <tr><td nowrap><b>记忆</b></td><td>SQLite FTS5 全文搜索 + int8 量化向量嵌入、类型化衰减</td></tr>
-  <tr><td nowrap><b>模式</b></td><td>Zod 4 — MCP 工具 I/O 验证 + API 契约</td></tr>
+  <tr><td nowrap><b>数据库</b></td><td>better-sqlite3（SQLite、WAL 日志模式）+ LowDB（旧版 JSON）— 137 个领域模块、200 个迁移</td></tr>
+  <tr><td nowrap><b>记忆</b></td><td>SQLite FTS5 全文检索 + int8 量化向量嵌入、类型化衰减</td></tr>
+  <tr><td nowrap><b>模式</b></td><td>Zod 4 — MCP 工具输入/输出验证 + API 契约</td></tr>
   <tr><td nowrap><b>协议</b></td><td>MCP（stdio / HTTP / SSE）+ A2A v0.3（JSON-RPC 2.0 + SSE）</td></tr>
   <tr><td nowrap><b>流式传输</b></td><td>服务器发送事件（SSE）+ WebSocket 桥接（<code>/v1/ws</code>）</td></tr>
-  <tr><td nowrap><b>压缩</b></td><td>12 引擎流水线 — RTK、Caveman、LLMLingua-2（MobileBERT ONNX）、GCF、OmniGlyph</td></tr>
-  <tr><td nowrap><b>身份验证与amp;安全</b></td><td>OAuth 2.0（PKCE）+ JWT + API 密钥 + MCP 作用域身份验证 · 静态数据采用 AES-256-GCM 加密 · DOMPurify</td></tr>
-  <tr><td nowrap><b>隐匿</b></td><td>wreq-js — JA3 / JA4 TLS 指纹伪装、三级代理</td></tr>
-  <tr><td nowrap><b>弹性</b></td><td>断路器、指数退避、防惊群、自动组合自愈</td></tr>
-  <tr><td nowrap><b>日志记录</b></td><td>pino — 包含请求上下文的结构化 JSON 日志</td></tr>
-  <tr><td nowrap><b>测试</b></td><td>Node.js 测试运行器 + Vitest — 在 5,100+ 个受跟踪测试文件中包含 <b>39,000+ 个静态测试声明</b>（单元测试、集成测试、E2E、安全性、生态系统）</td></tr>
+  <tr><td nowrap><b>压缩</b></td><td>12 引擎管线 — RTK、Caveman、LLMLingua-2（MobileBERT ONNX）、GCF、OmniGlyph</td></tr>
+  <tr><td nowrap><b>身份验证与安全</b></td><td>OAuth 2.0（PKCE）+ JWT + API 密钥 + MCP 作用域身份验证 · 静态数据采用 AES-256-GCM 加密 · DOMPurify</td></tr>
+  <tr><td nowrap><b>隐匿性</b></td><td>wreq-js — JA3 / JA4 TLS 指纹模拟、三级代理</td></tr>
+  <tr><td nowrap><b>韧性</b></td><td>断路器、指数退避、防惊群、自动组合自愈</td></tr>
+  <tr><td nowrap><b>日志</b></td><td>pino — 包含请求上下文的结构化 JSON 日志</td></tr>
+  <tr><td nowrap><b>测试</b></td><td>Node.js 测试运行器 + Vitest — 在 5,100 多个受跟踪测试文件中包含 <b>39,000 多个静态测试声明</b>（单元测试、集成测试、E2E 测试、安全测试、生态系统测试）</td></tr>
   <tr><td nowrap><b>平台</b></td><td>桌面端（Electron）· Android（Termux）· PWA（任意浏览器）</td></tr>
-  <tr><td nowrap><b>CI/CD</b></td><td>GitHub Actions — 发布版本时自动发布至 npm + Docker Hub</td></tr>
+  <tr><td nowrap><b>CI/CD</b></td><td>GitHub Actions — 发布版本时自动发布到 npm 和 Docker Hub</td></tr>
   <tr><td nowrap><b>链接</b></td><td><a href="https://omniroute.online">网站</a> · <a href="https://www.npmjs.com/package/omniroute">npm</a> · <a href="https://hub.docker.com/r/diegosouzapw/omniroute">Docker Hub</a></td></tr>
 </table>
 

@@ -13,7 +13,7 @@
 
 # 🚀 OmniRoute — Ücretsiz Yapay Zekâ Ağ Geçidi
 
-<img src="./docs/diagrams/readme-hero.svg" width="100%" alt="OmniRoute — Kodlamayı asla bırakmayın. Tüm yapay zekâ araçları → 359 sağlayıcı — 150+ ücretsiz — tek bir uç nokta üzerinden. Claude Code, Codex, Cursor, Cline, Copilot ve Antigravity'yi otomatik yedeklemeyle ÜCRETSİZ Claude / GPT / Gemini'ye bağlayın. RTK + Caveman birleşik sıkıştırması token kullanımını %15–95 (~ortalama %89) azaltır — sınırlara asla takılmayın. 359 yapay zekâ sağlayıcısı · 150+ ücretsiz katman · ayda ~1,62 milyar ücretsiz token · 19 yönlendirme stratejisi · başlangıç maliyeti $0."/>
+<img src="./docs/diagrams/readme-hero.svg" width="100%" alt="OmniRoute — Kodlamayı asla bırakmayın. Tüm yapay zekâ araçları → 367 sağlayıcı — 150+ ücretsiz — tek bir uç nokta üzerinden. Claude Code, Codex, Cursor, Cline, Copilot ve Antigravity'yi otomatik yedeklemeyle ÜCRETSİZ Claude / GPT / Gemini'ye bağlayın. RTK + Caveman katmanlı sıkıştırma, token kullanımında %15–95 (~%89 ortalama) tasarruf sağlar — sınırlara asla takılmayın. 367 yapay zekâ sağlayıcısı · 150+ ücretsiz katman · ayda ~1,62 milyar ücretsiz token · 19 yönlendirme stratejisi · başlangıç maliyeti $0."/>
 
 </div>
 
@@ -218,7 +218,7 @@
 
 </div>
 
-<img src="./docs/diagrams/works-zero-config.svg" width="100%" alt="Yüklediğiniz anda çalışır — sıfır yapılandırma. Üç adım: 1. Yükleyin — npm i -g omniroute, sunucu localhost:20128 üzerinde başlar. 2. Aracınızı http://localhost:20128/v1 adresine yönlendirin — OpenAI uyumlu herhangi bir araç (Claude Code, Cursor, Cline). 3. Yanıt verir — API anahtarı, kayıt veya yapılandırma olmadan anında yanıt almak için auto modelini çağırın. Anahtarsız sağlayıcı OpenCode Free, auto kombinasyonuna önceden bağlanmıştır; böylece yeni bir kurulum kutudan çıktığı anda yanıt verir."/>
+<img src="./docs/diagrams/works-zero-config.svg" width="100%" alt="Yüklediğiniz anda çalışır — sıfır yapılandırma. Üç adım: 1. Yükleyin — npm i -g omniroute, sunucu localhost:20128 üzerinde başlar. 2. Aracınızı http://localhost:20128/v1 adresine yönlendirin — OpenAI uyumlu herhangi bir araç (Claude Code, Cursor, Cline). 3. Yanıt verir — API anahtarı, kayıt veya yapılandırma olmadan anında yanıt almak için auto modelini çağırın. Anahtarsız sağlayıcı OpenCode Free, auto kombinasyonuna önceden bağlanmıştır; böylece yeni bir kurulum kutudan çıktığı gibi yanıt verir."/>
 
 ```bash
 # Yeni kurulum, sıfır kimlik bilgisi — `auto` zaten çalışır:
@@ -227,7 +227,7 @@ curl http://localhost:20128/v1/chat/completions \
   -d '{"model":"auto","messages":[{"role":"user","content":"Hello!"}]}'
 ```
 
-<sub>Belirli bir ücretsiz arka ucu mu tercih ediyorsunuz? Doğrudan `oc/…` (OpenCode Free) çağırın. Ardından `auto` seçeneğine geçin ve seçimi OmniRoute'a bırakın.</sub>
+<sub>Belirli bir ücretsiz arka ucu mu tercih ediyorsunuz? Doğrudan `oc/…` (OpenCode Free) çağırın. Ardından `auto` kullanımına geçin ve seçimi OmniRoute'a bırakın.</sub>
 
 <sub>📦 **Python, Node.js, PHP ve cURL** için kopyalayıp yapıştırabileceğiniz hızlı başlangıç betikleri → [`examples/quickstart/`](examples/quickstart/)</sub>
 
@@ -239,7 +239,7 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/promise-pillars.svg" width="100%" alt="Vaat — Tek uç nokta ve 359 sağlayıcı. Kullanılabilir durumda başka bir sağlıklı hedef olduğu sürece otomatik yedekleme yönlendirmeyi sürdürür. Altı temel ilke: 359 sağlayıcı arasında dayanıklı yedekleme · uygun iş yüklerinde %95'e varan token tasarrufu · 150'den fazla ücretsiz katman ve 54 yinelenen/anahtarsız, sonsuza kadar ücretsiz sağlayıcıyla başlangıç maliyeti $0 · tek yapılandırmayla 36 CLI/ajan entegrasyonu · /v1 üzerinde OpenAI, Claude, Gemini ve Responses API uyumluluğu · devre kesiciler, TLS gizleme, MCP 110 aracı, A2A, bellek, güvenlik bariyerleri, değerlendirmeler ve takip edilen 5.100'den fazla test dosyasında 39.000'den fazla statik test bildirimi dahil olmak üzere üretim denetimleri."/>
+<img src="./docs/diagrams/promise-pillars.svg" width="100%" alt="Vaat — Tek uç nokta ve 367 sağlayıcı. Başka bir sağlıklı hedef mevcut olduğu sürece otomatik yedekleme yönlendirmeyi sürdürür. Altı temel ilke: 367 sağlayıcı genelinde dayanıklı yedekleme · uygun iş yüklerinde %95'e varan token tasarrufu · 150'den fazla ücretsiz katman ve düzenli yenilenen/anahtarsız, sonsuza kadar ücretsiz 54 sağlayıcıyla başlamak için $0 · tek bir yapılandırmayla 36 CLI/ajan entegrasyonu · /v1 üzerinde OpenAI, Claude, Gemini ve Responses API uyumluluğu · devre kesiciler, TLS gizleme, MCP 110 aracı, A2A, bellek, koruma bariyerleri, değerlendirmeler ve takip edilen 5.100'den fazla test dosyasında 39.000'den fazla statik test bildirimi dâhil olmak üzere üretim denetimleri."/>
 
 <br/>
 <br/>
@@ -250,11 +250,11 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/why-pain-fix.svg" width="100%" alt="Neden OmniRoute — 10 gösterge paneli, çalışmayan API anahtarları ve sürpriz faturalar arasında mekik dokumayı bırakın. On günlük sorun ve çözümleri: kota kullanılmadan sona eriyor → abonelikleri en üst düzeyde kullanın; kodlama sırasında hız sınırlarına takılma → 4 katmanlı otomatik yedekleme (Abonelik → API → Ucuz → Ücretsiz); araç çıktıları token tüketiyor → RTK + Caveman sıkıştırması (%15–95); pahalı API'ler → maliyet odaklı yönlendirme; her araç için ayrı kurulum → tek uç nokta, tek gösterge paneli; yapay zekâ engelleniyor → 3 seviyeli proxy + TLS gizleme; çalışmayan anahtarlar → 3 katmanlı dayanıklılık (devre kesiciler, anahtar bekleme süresi, model kilitleme); ekibin tek aboneliği paylaşması → adil kullanım kotalarına sahip anahtar havuzları; istemlerin başka birinin bulutu üzerinden geçmesi → AES-256-GCM ile şifrelenmiş anahtarlarla önce yerel yaklaşım; harcama görünürlüğü yok → canlı analizler (kullanım, kota, tasarruf, p95 gecikme)."/>
+<img src="./docs/diagrams/why-pain-fix.svg" width="100%" alt="Neden OmniRoute — 10 kontrol paneli, çalışmayan API anahtarları ve sürpriz faturalar arasında gidip gelmeyi bırakın. Günlük on sorun ve çözümü: kullanılmadan süresi dolan kota → abonelikleri en üst düzeyde kullanın; kodlama sırasında hız sınırları → 4 katmanlı otomatik yedekleme (Abonelik → API → Ucuz → Ücretsiz); token tüketen araç çıktıları → RTK + Caveman sıkıştırması (%15–95); pahalı API'ler → maliyet için optimize edilmiş yönlendirme; her aracın kendine özgü kurulumu → tek uç nokta, tek kontrol paneli; engellenen yapay zekâ → 3 seviyeli proxy + TLS gizleme; çalışmayan anahtarlar → 3 katmanlı dayanıklılık (devre kesiciler, anahtar bekleme süresi, model kilitleme); tek aboneliği paylaşan ekip → adil paylaşım kotalarına sahip anahtar havuzları; istemlerin başka birinin bulutundan geçmesi → AES-256-GCM ile şifrelenmiş anahtarlarla önce yerel yaklaşım; harcama görünürlüğünün olmaması → canlı analizler (kullanım, kota, tasarruf, p95 gecikme)."/>
 
 <div align="center">
 
-<img src="./docs/diagrams/tier-cascade.svg" width="100%" alt="OmniRoute istek akışı: IDE'niz veya CLI aracınız (Claude Code, Cursor, Cline…) tek bir yerel uç noktayı (http://localhost:20128/v1) çağırır; OmniRoute Smart Router (RTK + Caveman sıkıştırması, 19 yönlendirme stratejisi, devre kesiciler, TLS gizleme, MCP, A2A, güvenlik bariyerleri), uygun ve sağlıklı bir hedef kaldığı sürece 4 sağlayıcı katmanı arasında yedekleme yapabilir — Katman 1 Abonelik, Katman 2 API Anahtarı, Katman 3 Ucuz ve Katman 4 Ücretsiz."/>
+<img src="./docs/diagrams/tier-cascade.svg" width="100%" alt="OmniRoute istek akışı: IDE'niz veya CLI aracınız (Claude Code, Cursor, Cline…) tek bir yerel uç noktayı (http://localhost:20128/v1) çağırır; OmniRoute Akıllı Yönlendirici (RTK + Caveman sıkıştırması, 19 yönlendirme stratejisi, devre kesiciler, TLS gizleme, MCP, A2A, koruma bariyerleri), uygun ve sağlıklı bir hedef kaldığı sürece 4 sağlayıcı katmanı arasında yedekleme yapabilir — Katman 1 Abonelik, Katman 2 API Anahtarı, Katman 3 Ucuz ve Katman 4 Ücretsiz."/>
 
 </div>
 
@@ -488,13 +488,13 @@ Kombo oluşturmanız gerekmez. Modelinizi `auto` (veya bir varyantı) olarak aya
 
 <div align="center">
 
-## 🏆 OmniRoute'u Farklı Kılan Nedir
+## 🏆 OmniRoute'u Farklı Kılan Nedir?
 
 </div>
 
-<img src="./docs/diagrams/comparison-table.svg" width="100%" alt="OmniRoute'u farklı kılan özellikler — 13 yetenek kapsamında 9router, OpenRouter, CLIProxyAPI ve LiteLLM ile karşılaştırmalı, belirli bir tarihe ait özellik anlık görüntüsü. OmniRoute: 359 sağlayıcı, yerleşik 150'den fazla ücretsiz katman, 19 yönlendirme stratejisi, 12 motorlu token sıkıştırma, 110 araca sahip yerleşik MCP sunucusu, A2A ajan protokolü, kalıcı bellek, koruma önlemleri, bulut ajanları, TLS parmak izi gizleme, Desktop/Termux/PWA ve 42 uluslararasılaştırılmış kullanıcı arayüzü yerel ayarı. OmniRoute, MIT lisanslıdır ve kendi sunucunuzda barındırılabilir. Rakiplerin yetenekleri ve sayıları değişebilir; bağlantısı verilen metodolojiye bakın."/>
+<img src="./docs/diagrams/comparison-table.svg" width="100%" alt="OmniRoute'u farklı kılan özellikler — 13 yetenek açısından 9router, OpenRouter, CLIProxyAPI ve LiteLLM ile tarihli bir özellik karşılaştırması. OmniRoute: 367 sağlayıcı, yerleşik 150+ ücretsiz katman, 19 yönlendirme stratejisi, 12 motorlu token sıkıştırma, 110 araç içeren yerleşik MCP sunucusu, A2A ajan protokolü, kalıcı bellek, güvenlik sınırları, bulut ajanları, TLS parmak izi gizleme, Desktop/Termux/PWA ve 42 uluslararasılaştırılmış kullanıcı arayüzü dili. OmniRoute, MIT lisanslıdır ve kendi sunucunuzda barındırılabilir. Rakiplerin yetenekleri ve sayıları değişebilir; bağlantılı metodolojiye bakın."/>
 
-<sub>📊 Tam metodoloji ve 9router, OpenRouter, CLIProxyAPI ile LiteLLM karşısındaki özellik bazında ayrıntılar → [`docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md`](docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md)</sub>
+<sub>📊 9router, OpenRouter, CLIProxyAPI &amp; LiteLLM ile karşılaştırmalı tam metodoloji &amp; özellik bazında ayrıntılar → [`docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md`](docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md)</sub>
 
 <br/>
 
@@ -1259,18 +1259,18 @@ Doğrulama metrikleri: 1002 takip edilen video · 7.069.190 bilinen görüntüle
   <tr><th align="left">Katman</th><th align="left">Teknoloji</th></tr>
   <tr><td nowrap><b>Çalışma zamanı</b></td><td>Node.js 22.x / 24.x LTS — <code>&gt;=22.22.2 &lt;23 || &gt;=24.0.0 &lt;27</code></td></tr>
   <tr><td nowrap><b>Dil</b></td><td>TypeScript 6.0 — <code>src/</code> ve <code>open-sse/</code> genelinde <b>%100 TypeScript</b> (v2.0'dan beri çekirdekte sıfır <code>any</code>)</td></tr>
-  <tr><td nowrap><b>Çatı</b></td><td>Next.js 16 + React 19 + Tailwind CSS 4</td></tr>
-  <tr><td nowrap><b>Veritabanı</b></td><td>better-sqlite3 (SQLite, WAL günlükleme) + LowDB (eski JSON) — 137 etki alanı modülü, 199 geçiş</td></tr>
-  <tr><td nowrap><b>Bellek</b></td><td>SQLite FTS5 tam metin + int8 ile nicemlenmiş vektör gömmeleri, türlendirilmiş azaltma</td></tr>
+  <tr><td nowrap><b>Framework</b></td><td>Next.js 16 + React 19 + Tailwind CSS 4</td></tr>
+  <tr><td nowrap><b>Veritabanı</b></td><td>better-sqlite3 (SQLite, WAL günlükleme) + LowDB (eski JSON) — 137 etki alanı modülü, 200 migrasyon</td></tr>
+  <tr><td nowrap><b>Bellek</b></td><td>SQLite FTS5 tam metin + int8 ile kuantize edilmiş vektör gömmeleri, türü belirlenmiş azalma</td></tr>
   <tr><td nowrap><b>Şemalar</b></td><td>Zod 4 — MCP aracı G/Ç doğrulaması + API sözleşmeleri</td></tr>
   <tr><td nowrap><b>Protokoller</b></td><td>MCP (stdio / HTTP / SSE) + A2A v0.3 (JSON-RPC 2.0 + SSE)</td></tr>
-  <tr><td nowrap><b>Akış</b></td><td>Sunucu Gönderimli Olaylar (SSE) + WebSocket köprüsü (<code>/v1/ws</code>)</td></tr>
+  <tr><td nowrap><b>Akış</b></td><td>Sunucu Tarafından Gönderilen Olaylar (SSE) + WebSocket köprüsü (<code>/v1/ws</code>)</td></tr>
   <tr><td nowrap><b>Sıkıştırma</b></td><td>12 motorlu işlem hattı — RTK, Caveman, LLMLingua-2 (MobileBERT ONNX), GCF, OmniGlyph</td></tr>
-  <tr><td nowrap><b>Kimlik doğrulama &amp; güvenlik</b></td><td>OAuth 2.0 (PKCE) + JWT + API Anahtarları + MCP kapsamlı kimlik doğrulama · bekleyen veriler için AES-256-GCM · DOMPurify</td></tr>
+  <tr><td nowrap><b>Kimlik doğrulama ve güvenlik</b></td><td>OAuth 2.0 (PKCE) + JWT + API Anahtarları + MCP kapsamlı kimlik doğrulama · bekleyen veriler için AES-256-GCM · DOMPurify</td></tr>
   <tr><td nowrap><b>Gizlilik</b></td><td>wreq-js — JA3 / JA4 TLS parmak izi taklidi, 3 seviyeli proxy</td></tr>
-  <tr><td nowrap><b>Dayanıklılık</b></td><td>Devre kesici, üstel geri çekilme, ani eşzamanlı yük önleme, otomatik kombinasyonlu kendi kendini iyileştirme</td></tr>
-  <tr><td nowrap><b>Günlükleme</b></td><td>pino — istek bağlamına sahip yapılandırılmış JSON günlükleri</td></tr>
-  <tr><td nowrap><b>Test</b></td><td>Node.js test çalıştırıcısı + Vitest — 5.100'den fazla izlenen test dosyasında <b>39.000'den fazla statik test bildirimi</b> (birim, entegrasyon, E2E, güvenlik, ekosistem)</td></tr>
+  <tr><td nowrap><b>Dayanıklılık</b></td><td>Devre kesici, üstel geri çekilme, ani yük yığılmasını önleme, otomatik kombinasyonlu kendi kendini iyileştirme</td></tr>
+  <tr><td nowrap><b>Günlükleme</b></td><td>pino — istek bağlamı içeren yapılandırılmış JSON günlükleri</td></tr>
+  <tr><td nowrap><b>Test</b></td><td>Node.js test çalıştırıcısı + Vitest — takip edilen 5.100'den fazla test dosyasında <b>39.000'den fazla statik test bildirimi</b> (birim, entegrasyon, E2E, güvenlik, ekosistem)</td></tr>
   <tr><td nowrap><b>Platformlar</b></td><td>Masaüstü (Electron) · Android (Termux) · PWA (herhangi bir tarayıcı)</td></tr>
   <tr><td nowrap><b>CI/CD</b></td><td>GitHub Actions — sürüm yayımlandığında otomatik npm yayımlama + Docker Hub</td></tr>
   <tr><td nowrap><b>Bağlantılar</b></td><td><a href="https://omniroute.online">Web sitesi</a> · <a href="https://www.npmjs.com/package/omniroute">npm</a> · <a href="https://hub.docker.com/r/diegosouzapw/omniroute">Docker Hub</a></td></tr>

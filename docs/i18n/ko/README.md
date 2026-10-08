@@ -13,7 +13,7 @@
 
 # 🚀 OmniRoute — 무료 AI 게이트웨이
 
-<img src="./docs/diagrams/readme-hero.svg" width="100%" alt="OmniRoute — 코딩을 멈추지 마세요. 모든 AI 도구 → 359개 제공업체 — 150개 이상 무료 — 하나의 엔드포인트로 연결합니다. Claude Code, Codex, Cursor, Cline, Copilot 및 Antigravity를 자동 폴백 기능과 함께 무료 Claude / GPT / Gemini로 연결합니다. RTK + Caveman 스택 압축으로 토큰을 15~95%(평균 약 89%) 절약하여 한도에 도달하지 않습니다. 359개 AI 제공업체 · 150개 이상의 무료 티어 · 월 약 16억 2천만 개 무료 토큰 · 19가지 라우팅 전략 · $0로 시작."/>
+<img src="./docs/diagrams/readme-hero.svg" width="100%" alt="OmniRoute — 코딩을 멈추지 마세요. 모든 AI 도구 → 367개 제공업체 — 150개 이상의 무료 제공업체 — 하나의 엔드포인트로 연결. Claude Code, Codex, Cursor, Cline, Copilot 및 Antigravity를 자동 폴백을 통해 무료 Claude / GPT / Gemini에 연결합니다. RTK + Caveman 다중 압축으로 토큰을 15~95%(평균 약 89%) 절감하여 한도에 도달하지 않습니다. 367개 AI 제공업체 · 150개 이상의 무료 티어 · 월 약 16억 2천만 개의 무료 토큰 · 19가지 라우팅 전략 · $0로 시작."/>
 
 </div>
 
@@ -218,16 +218,16 @@
 
 </div>
 
-<img src="./docs/diagrams/works-zero-config.svg" width="100%" alt="설치하는 즉시 작동 — 설정 불필요. 세 단계: 1. 설치 — npm i -g omniroute를 실행하면 localhost:20128에서 서버가 시작됩니다. 2. 도구가 http://localhost:20128/v1을 가리키도록 설정 — OpenAI 호환 도구라면 무엇이든 사용 가능(Claude Code, Cursor, Cline). 3. 응답 확인 — API 키, 가입, 설정 없이 model auto를 호출하면 즉시 응답합니다. 키가 필요 없는 제공자 OpenCode Free가 auto 조합에 미리 연결되어 있어 새로 설치하자마자 바로 응답합니다."/>
+<img src="./docs/diagrams/works-zero-config.svg" width="100%" alt="설치하는 즉시 작동 — 설정 불필요. 세 단계: 1. 설치 — npm i -g omniroute를 실행하면 서버가 localhost:20128에서 시작됩니다. 2. 도구가 http://localhost:20128/v1을 가리키도록 설정 — OpenAI 호환 도구(Claude Code, Cursor, Cline)라면 무엇이든 가능합니다. 3. 응답 수신 — API 키, 가입, 설정 없이 즉시 응답을 받으려면 auto 모델을 호출하세요. 키가 필요 없는 제공업체 OpenCode Free가 auto 조합에 미리 연결되어 있어 새로 설치하자마자 바로 응답합니다."/>
 
 ```bash
-# 새로 설치해도 자격 증명 없이 `auto`가 바로 작동합니다:
+# 새로 설치한 상태, 자격 증명 없음 — `auto`는 이미 작동합니다:
 curl http://localhost:20128/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{"model":"auto","messages":[{"role":"user","content":"Hello!"}]}'
 ```
 
-<sub>특정 무료 백엔드를 선호하시나요? `oc/…`(OpenCode Free)를 직접 호출하세요. 그런 다음 `auto`로 전환하여 OmniRoute가 선택하도록 하세요.</sub>
+<sub>특정 무료 백엔드를 사용하고 싶으신가요? `oc/…`(OpenCode Free)를 직접 호출하세요. 이후 `auto`로 전환하여 OmniRoute가 선택하도록 맡기세요.</sub>
 
 <sub>📦 **Python, Node.js, PHP, cURL**용 복사하여 바로 사용할 수 있는 빠른 시작 스크립트 → [`examples/quickstart/`](examples/quickstart/)</sub>
 
@@ -239,7 +239,7 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/promise-pillars.svg" width="100%" alt="약속 — 하나의 엔드포인트와 359개 제공자. 정상 상태인 다른 대상이 있는 동안 자동 폴백이 라우팅을 유지합니다. 여섯 가지 핵심 요소: 359개 제공자를 아우르는 복원력 있는 폴백 · 적합한 워크로드에서 최대 95%의 토큰 절감 · 150개 이상의 무료 티어와 54개의 반복 제공/키리스 평생 무료 제공자를 통해 $0로 시작 · 하나의 설정으로 36개의 CLI/에이전트 통합 · /v1에서 OpenAI, Claude, Gemini 및 Responses API 호환 · 회로 차단기, TLS 스텔스, MCP 도구 110개, A2A, 메모리, 가드레일, 평가 및 추적되는 5,100개 이상의 테스트 파일에 걸친 39,000개 이상의 정적 테스트 선언을 포함한 프로덕션 제어 기능."/>
+<img src="./docs/diagrams/promise-pillars.svg" width="100%" alt="약속 — 하나의 엔드포인트와 367개의 제공업체. 정상 상태인 다른 대상이 있는 동안 자동 폴백을 통해 라우팅이 계속됩니다. 여섯 가지 핵심 요소: 367개 제공업체를 아우르는 복원력 있는 폴백 · 적합한 워크로드에서 최대 95%의 토큰 절감 · 150개 이상의 무료 티어와 54개의 반복 제공/키리스 평생 무료 제공업체로 $0부터 시작 · 하나의 설정으로 36개의 CLI/에이전트 통합 · /v1에서 OpenAI, Claude, Gemini 및 Responses API 호환성 제공 · 회로 차단기, TLS 스텔스, MCP 110개 도구, A2A, 메모리, 가드레일, 평가 및 추적되는 5,100개 이상의 테스트 파일에 걸친 39,000개 이상의 정적 테스트 선언을 포함하는 프로덕션 제어 기능."/>
 
 <br/>
 <br/>
@@ -250,11 +250,11 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/why-pain-fix.svg" width="100%" alt="OmniRoute를 사용해야 하는 이유 — 10개의 대시보드, 작동하지 않는 API 키, 예상치 못한 청구서를 더 이상 번갈아 관리하지 마세요. 일상적인 10가지 문제와 해결책: 사용하지 못한 채 만료되는 할당량 → 구독 활용 극대화; 코딩 도중 발생하는 속도 제한 → 4단계 자동 폴백(구독 → API → 저가 → 무료); 토큰을 소모하는 도구 출력 → RTK + Caveman 압축(15~95%); 비싼 API → 비용 최적화 라우팅; 도구마다 별도 설정 필요 → 하나의 엔드포인트, 하나의 대시보드; AI 차단 → 3단계 프록시 + TLS 스텔스; 작동하지 않는 키 → 3계층 복원력(회로 차단기, 키 쿨다운, 모델 잠금); 하나의 구독을 공유하는 팀 → 공정 분배 할당량이 적용된 키 풀; 타인의 클라우드를 통과하는 프롬프트 → AES-256-GCM으로 암호화된 키를 사용하는 로컬 우선 방식; 지출 가시성 부재 → 실시간 분석(사용량, 할당량, 절감액, p95 지연 시간)."/>
+<img src="./docs/diagrams/why-pain-fix.svg" width="100%" alt="OmniRoute를 선택해야 하는 이유 — 10개의 대시보드, 작동하지 않는 API 키, 예상치 못한 청구서를 더 이상 번갈아 관리하지 마세요. 일상적인 문제 10가지와 해결책: 사용하지 못한 채 만료되는 할당량 → 구독 활용 극대화; 코딩 도중의 속도 제한 → 4단계 자동 폴백(구독 → API → 저가 → 무료); 토큰을 소모하는 도구 출력 → RTK + Caveman 압축(15~95%); 비싼 API → 비용 최적화 라우팅; 도구마다 별도 설정 필요 → 하나의 엔드포인트, 하나의 대시보드; AI 차단 → 3단계 프록시 + TLS 스텔스; 작동하지 않는 키 → 3계층 복원력(회로 차단기, 키 쿨다운, 모델 잠금); 하나의 구독을 공유하는 팀 → 공정 분배 할당량이 적용된 키 풀; 타인의 클라우드를 통과하는 프롬프트 → AES-256-GCM으로 암호화된 키를 사용하는 로컬 우선 방식; 지출 가시성 부족 → 실시간 분석(사용량, 할당량, 절감액, p95 지연 시간)."/>
 
 <div align="center">
 
-<img src="./docs/diagrams/tier-cascade.svg" width="100%" alt="OmniRoute 요청 흐름: IDE 또는 CLI(Claude Code, Cursor, Cline 등)가 하나의 로컬 엔드포인트(http://localhost:20128/v1)를 호출합니다. OmniRoute Smart Router(RTK + Caveman 압축, 19가지 라우팅 전략, 회로 차단기, TLS 스텔스, MCP, A2A, 가드레일)는 적합하며 정상 상태인 대상이 남아 있는 동안 4개의 제공자 티어에 걸쳐 폴백할 수 있습니다 — 티어 1 구독, 티어 2 API 키, 티어 3 저가, 티어 4 무료."/>
+<img src="./docs/diagrams/tier-cascade.svg" width="100%" alt="OmniRoute 요청 흐름: IDE 또는 CLI(Claude Code, Cursor, Cline…)가 하나의 로컬 엔드포인트(http://localhost:20128/v1)를 호출합니다. OmniRoute Smart Router(RTK + Caveman 압축, 19가지 라우팅 전략, 회로 차단기, TLS 스텔스, MCP, A2A, 가드레일)는 적합하고 정상 상태인 대상이 남아 있는 동안 4개의 제공업체 티어에 걸쳐 폴백할 수 있습니다 — 티어 1 구독, 티어 2 API 키, 티어 3 저가, 티어 4 무료."/>
 
 </div>
 
@@ -492,9 +492,9 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/comparison-table.svg" width="100%" alt="13가지 기능을 기준으로 OmniRoute와 9router, OpenRouter, CLIProxyAPI 및 LiteLLM을 비교한 특정 시점의 기능 현황입니다. OmniRoute: 359개 제공업체, 150개 이상의 기본 제공 무료 티어, 19가지 라우팅 전략, 12개 엔진 기반 토큰 압축, 110개 도구가 포함된 내장 MCP 서버, A2A 에이전트 프로토콜, 영구 메모리, 가드레일, 클라우드 에이전트, TLS 핑거프린트 스텔스, Desktop/Termux/PWA 및 42개 다국어 UI 로케일. OmniRoute는 MIT 라이선스로 제공되며 자체 호스팅할 수 있습니다. 경쟁 제품의 기능과 수치는 변경될 수 있으므로 링크된 방법론을 참조하세요."/>
+<img src="./docs/diagrams/comparison-table.svg" width="100%" alt="OmniRoute의 차별점 — 13개 기능에 걸쳐 9router, OpenRouter, CLIProxyAPI 및 LiteLLM과 비교한 특정 시점의 기능 스냅샷입니다. OmniRoute: 367개 제공업체, 150개 이상의 기본 제공 무료 티어, 19가지 라우팅 전략, 12개 엔진 기반 토큰 압축, 110개 도구가 포함된 내장 MCP 서버, A2A 에이전트 프로토콜, 영구 메모리, 가드레일, 클라우드 에이전트, TLS 지문 은닉, Desktop/Termux/PWA 및 42개 다국어 UI 로케일을 지원합니다. OmniRoute는 MIT 라이선스로 제공되며 자체 호스팅이 가능합니다. 경쟁 제품의 기능과 수치는 변경될 수 있습니다. 링크된 방법론을 참조하세요."/>
 
-<sub>📊 전체 방법론 및 9router, OpenRouter, CLIProxyAPI, LiteLLM과의 기능별 상세 비교 → [`docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md`](docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md)</sub>
+<sub>📊 전체 방법론 및 9router, OpenRouter, CLIProxyAPI, LiteLLM과의 기능별 세부 비교 → [`docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md`](docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md)</sub>
 
 <br/>
 
@@ -1262,20 +1262,20 @@ OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1도 이를 건너�
 <table>
   <tr><th align="left">계층</th><th align="left">기술</th></tr>
   <tr><td nowrap><b>런타임</b></td><td>Node.js 22.x / 24.x LTS — <code>&gt;=22.22.2 &lt;23 || &gt;=24.0.0 &lt;27</code></td></tr>
-  <tr><td nowrap><b>언어</b></td><td>TypeScript 6.0 — <code>src/</code> 및 <code>open-sse/</code> 전체에 걸쳐 <b>100% TypeScript</b> 사용(v2.0부터 핵심 코드에서 <code>any</code> 미사용)</td></tr>
+  <tr><td nowrap><b>언어</b></td><td>TypeScript 6.0 — <code>src/</code> 및 <code>open-sse/</code> 전체에 걸쳐 <b>100% TypeScript</b> 사용(v2.0부터 코어에 <code>any</code> 없음)</td></tr>
   <tr><td nowrap><b>프레임워크</b></td><td>Next.js 16 + React 19 + Tailwind CSS 4</td></tr>
-  <tr><td nowrap><b>데이터베이스</b></td><td>better-sqlite3 (SQLite, WAL 저널링) + LowDB (레거시 JSON) — 도메인 모듈 137개, 마이그레이션 199개</td></tr>
+  <tr><td nowrap><b>데이터베이스</b></td><td>better-sqlite3 (SQLite, WAL 저널링) + LowDB (레거시 JSON) — 137개 도메인 모듈, 200개 마이그레이션</td></tr>
   <tr><td nowrap><b>메모리</b></td><td>SQLite FTS5 전문 검색 + int8 양자화 벡터 임베딩, 유형별 감쇠</td></tr>
-  <tr><td nowrap><b>스키마</b></td><td>Zod 4 — MCP 도구 I/O 검증 + API 계약</td></tr>
+  <tr><td nowrap><b>스키마</b></td><td>Zod 4 — MCP 도구 입출력 검증 + API 계약</td></tr>
   <tr><td nowrap><b>프로토콜</b></td><td>MCP (stdio / HTTP / SSE) + A2A v0.3 (JSON-RPC 2.0 + SSE)</td></tr>
-  <tr><td nowrap><b>스트리밍</b></td><td>Server-Sent Events (SSE) + WebSocket 브리지(<code>/v1/ws</code>)</td></tr>
+  <tr><td nowrap><b>스트리밍</b></td><td>서버 전송 이벤트(SSE) + WebSocket 브리지(<code>/v1/ws</code>)</td></tr>
   <tr><td nowrap><b>압축</b></td><td>12개 엔진 파이프라인 — RTK, Caveman, LLMLingua-2 (MobileBERT ONNX), GCF, OmniGlyph</td></tr>
   <tr><td nowrap><b>인증 및 보안</b></td><td>OAuth 2.0 (PKCE) + JWT + API 키 + MCP 범위 지정 인증 · 저장 데이터 AES-256-GCM 암호화 · DOMPurify</td></tr>
-  <tr><td nowrap><b>스텔스</b></td><td>wreq-js — JA3 / JA4 TLS 지문 가장, 3단계 프록시</td></tr>
+  <tr><td nowrap><b>스텔스</b></td><td>wreq-js — JA3 / JA4 TLS 핑거프린트 위장, 3단계 프록시</td></tr>
   <tr><td nowrap><b>복원력</b></td><td>서킷 브레이커, 지수 백오프, 동시 요청 폭주 방지, 자동 조합 자가 복구</td></tr>
-  <tr><td nowrap><b>로깅</b></td><td>pino — 요청 컨텍스트가 포함된 구조화 JSON 로그</td></tr>
+  <tr><td nowrap><b>로깅</b></td><td>pino — 요청 컨텍스트를 포함한 구조화된 JSON 로그</td></tr>
   <tr><td nowrap><b>테스트</b></td><td>Node.js 테스트 러너 + Vitest — 추적되는 5,100개 이상의 테스트 파일에 걸쳐 <b>39,000개 이상의 정적 테스트 선언</b>(단위, 통합, E2E, 보안, 생태계)</td></tr>
-  <tr><td nowrap><b>플랫폼</b></td><td>데스크톱(Electron) · Android (Termux) · PWA(모든 브라우저)</td></tr>
+  <tr><td nowrap><b>플랫폼</b></td><td>데스크톱(Electron) · Android (Termux) · PWA (모든 브라우저)</td></tr>
   <tr><td nowrap><b>CI/CD</b></td><td>GitHub Actions — 릴리스 시 npm 및 Docker Hub에 자동 게시</td></tr>
   <tr><td nowrap><b>링크</b></td><td><a href="https://omniroute.online">웹사이트</a> · <a href="https://www.npmjs.com/package/omniroute">npm</a> · <a href="https://hub.docker.com/r/diegosouzapw/omniroute">Docker Hub</a></td></tr>
 </table>

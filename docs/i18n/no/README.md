@@ -13,7 +13,7 @@
 
 # 🚀 OmniRoute — Den gratis AI-gatewayen
 
-<img src="./docs/diagrams/readme-hero.svg" width="100%" alt="OmniRoute — Slutt aldri å kode. Alle AI-verktøy → 359 leverandører — 150+ gratis — gjennom ett endepunkt. Claude Code, Codex, Cursor, Cline, Copilot og Antigravity til GRATIS Claude / GPT / Gemini med automatisk reservevalg. Stablet RTK- og Caveman-komprimering sparer 15–95 % tokens (~89 % i snitt) — nå aldri grensene. 359 AI-leverandører · 150+ gratisnivåer · ~1,62 mrd. gratis tokens/md. · 19 rutingsstrategier · $0 for å komme i gang."/>
+<img src="./docs/diagrams/readme-hero.svg" width="100%" alt="OmniRoute — Slutt aldri å kode. Alle AI-verktøy → 367 leverandører — over 150 gratis — gjennom ett endepunkt. Claude Code, Codex, Cursor, Cline, Copilot og Antigravity koblet til GRATIS Claude / GPT / Gemini med automatisk reservebytte. Kombinert RTK- og Caveman-komprimering sparer 15–95 % av tokenene (~89 % i snitt) — nå aldri grensene. 367 AI-leverandører · over 150 gratisnivåer · ~1,62 mrd. gratis tokener/md. · 19 rutingsstrategier · $0 for å komme i gang."/>
 
 </div>
 
@@ -218,7 +218,7 @@
 
 </div>
 
-<img src="./docs/diagrams/works-zero-config.svg" width="100%" alt="Fungerer med én gang du installerer det — null konfigurasjon. Tre trinn: 1. Installer — npm i -g omniroute, serveren starter på localhost:20128. 2. Pek verktøyet ditt mot http://localhost:20128/v1 — ethvert OpenAI-kompatibelt verktøy (Claude Code, Cursor, Cline). 3. Det svarer — kall modellen auto for et umiddelbart svar, uten API-nøkkel, registrering eller konfigurasjon. Den nøkkelfrie leverandøren OpenCode Free er forhåndskoblet til auto-kombinasjonen, slik at en ny installasjon svarer med én gang."/>
+<img src="./docs/diagrams/works-zero-config.svg" width="100%" alt="Fungerer med én gang du installerer det — uten konfigurasjon. Tre trinn: 1. Installer — npm i -g omniroute, serveren starter på localhost:20128. 2. Pek verktøyet ditt mot http://localhost:20128/v1 — et hvilket som helst OpenAI-kompatibelt verktøy (Claude Code, Cursor, Cline). 3. Det svarer — kall modellen auto for et umiddelbart svar, uten API-nøkkel, registrering eller konfigurasjon. Den nøkkelfrie leverandøren OpenCode Free er forhåndskoblet til auto-kombinasjonen, slik at en ny installasjon svarer rett ut av boksen."/>
 
 ```bash
 # Ny installasjon, ingen påloggingsopplysninger — `auto` fungerer allerede:
@@ -227,9 +227,9 @@ curl http://localhost:20128/v1/chat/completions \
   -d '{"model":"auto","messages":[{"role":"user","content":"Hello!"}]}'
 ```
 
-<sub>Foretrekker du en bestemt gratis backend? Kall `oc/…` (OpenCode Free) direkte. Gå deretter videre til `auto`, og la OmniRoute velge.</sub>
+<sub>Foretrekker du en bestemt gratis backend? Kall `oc/…` (OpenCode Free) direkte. Gå deretter over til `auto` og la OmniRoute velge.</sub>
 
-<sub>📦 Hurtigstartskript som kan kopieres og limes inn, for **Python, Node.js, PHP og cURL** → [`examples/quickstart/`](examples/quickstart/)</sub>
+<sub>📦 Kopier-og-lim-inn-hurtigstartskript for **Python, Node.js, PHP og cURL** → [`examples/quickstart/`](examples/quickstart/)</sub>
 
 <br/>
 
@@ -239,7 +239,7 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/promise-pillars.svg" width="100%" alt="Løftet — ett endepunkt og 359 leverandører. Automatisk reservebytte opprettholder rutingen så lenge et annet friskt mål er tilgjengelig. Seks søyler: robust reservebytte på tvers av 359 leverandører · opptil 95 % tokenbesparelse for kvalifiserte arbeidsbelastninger · $0 for å komme i gang med over 150 gratisnivåer og 54 gjentakende eller nøkkelfrie leverandører som er gratis for alltid · 36 CLI-/agentintegrasjoner gjennom én konfigurasjon · kompatibilitet med OpenAI, Claude, Gemini og Responses API på /v1 · produksjonskontroller, inkludert effektbrytere, TLS-kamuflasje, MCP med 110 verktøy, A2A, minne, sikkerhetsmekanismer, evalueringer og over 39 000 statiske testdeklarasjoner fordelt på over 5 100 sporede testfiler."/>
+<img src="./docs/diagrams/promise-pillars.svg" width="100%" alt="Løftet — ett endepunkt og 367 leverandører. Automatisk reservekobling opprettholder rutingen så lenge et annet friskt mål er tilgjengelig. Seks grunnpilarer: robust reservekobling på tvers av 367 leverandører · opptil 95 % tokenbesparelse for egnede arbeidsbelastninger · $0 for å komme i gang med over 150 gratisnivåer og 54 tilbakevendende/nøkkelfrie leverandører som er gratis for alltid · 36 CLI-/agentintegrasjoner gjennom én konfigurasjon · kompatibilitet med OpenAI, Claude, Gemini og Responses API på /v1 · produksjonskontroller, inkludert effektbrytere, TLS-kamuflasje, MCP med 110 verktøy, A2A, minne, sikkerhetsmekanismer, evalueringer og over 39 000 statiske testerklæringer fordelt på over 5 100 sporede testfiler."/>
 
 <br/>
 <br/>
@@ -250,11 +250,11 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/why-pain-fix.svg" width="100%" alt="Hvorfor OmniRoute — slutt å sjonglere 10 kontrollpaneler, døde API-nøkler og overraskende regninger. Ti daglige problemer og løsninger: kvoter utløper ubrukt → få mest mulig ut av abonnementene; hastighetsgrenser midt i kodingen → automatisk reservebytte i 4 nivåer (abonnement → API → rimelig → gratis); verktøyutdata bruker opp tokens → RTK- og Caveman-komprimering (15–95 %); dyre API-er → kostnadsoptimalisert ruting; hvert verktøy har sitt eget oppsett → ett endepunkt, ett kontrollpanel; KI er blokkert → proxy i 3 nivåer + TLS-kamuflasje; døde nøkler → robusthet i 3 lag (effektbrytere, nedkjøling av nøkler, modellsperring); teamet deler ett abonnement → nøkkelgrupper med rettferdig fordelte kvoter; ledetekster går gjennom andres skyløsning → lokal først, med AES-256-GCM-krypterte nøkler; ingen oversikt over forbruk → sanntidsanalyse (bruk, kvote, besparelser, p95-forsinkelse)."/>
+<img src="./docs/diagrams/why-pain-fix.svg" width="100%" alt="Hvorfor OmniRoute — slutt å sjonglere 10 kontrollpaneler, døde API-nøkler og overraskende regninger. Ti daglige problemer og løsninger: kvoter utløper ubrukt → maksimer abonnementene; hastighetsgrenser midt i kodingen → automatisk reservekobling med 4 nivåer (Abonnement → API → Billig → Gratis); verktøyutdata bruker opp tokens → RTK + Caveman-komprimering (15–95 %); dyre API-er → kostnadsoptimalisert ruting; hvert verktøy har sitt eget oppsett → ett endepunkt, ett kontrollpanel; KI blokkert → proxy med 3 nivåer + TLS-kamuflasje; døde nøkler → robusthet i 3 lag (effektbrytere, nedkjøling av nøkler, modellsperring); teamet deler ett abonnement → nøkkelgrupper med rettferdige kvoter; ledetekster sendes gjennom andres sky → lokalt først med AES-256-GCM-krypterte nøkler; ingen oversikt over forbruk → sanntidsanalyse (bruk, kvoter, besparelser, p95-forsinkelse)."/>
 
 <div align="center">
 
-<img src="./docs/diagrams/tier-cascade.svg" width="100%" alt="OmniRoute-forespørselsflyt: IDE-en eller CLI-et ditt (Claude Code, Cursor, Cline…) kaller ett lokalt endepunkt (http://localhost:20128/v1); OmniRoute Smart Router (RTK- og Caveman-komprimering, 19 rutingstrategier, effektbrytere, TLS-kamuflasje, MCP, A2A, sikkerhetsmekanismer) kan bytte til reserver på tvers av 4 leverandørnivåer så lenge et kvalifisert, friskt mål gjenstår — nivå 1: abonnement, nivå 2: API-nøkkel, nivå 3: rimelig og nivå 4: gratis."/>
+<img src="./docs/diagrams/tier-cascade.svg" width="100%" alt="OmniRoute-forespørselsflyt: IDE-en eller CLI-et ditt (Claude Code, Cursor, Cline …) kaller ett lokalt endepunkt (http://localhost:20128/v1); OmniRoute Smart Router (RTK + Caveman-komprimering, 19 rutingsstrategier, effektbrytere, TLS-kamuflasje, MCP, A2A, sikkerhetsmekanismer) kan bruke reservekobling på tvers av 4 leverandørnivåer så lenge et egnet og friskt mål gjenstår — nivå 1 Abonnement, nivå 2 API-nøkkel, nivå 3 Billig og nivå 4 Gratis."/>
 
 </div>
 
@@ -492,7 +492,7 @@ Alle **19** strategiene — bland og kombiner per kombinasjonstrinn:
 
 </div>
 
-<img src="./docs/diagrams/comparison-table.svg" width="100%" alt="Hva som skiller OmniRoute fra andre — et datert øyeblikksbilde av funksjoner sammenlignet med 9router, OpenRouter, CLIProxyAPI og LiteLLM på tvers av 13 funksjonsområder. OmniRoute: 359 leverandører, over 150 innebygde gratisnivåer, 19 rutingsstrategier, tokenkomprimering med 12 motorer, innebygd MCP-server med 110 verktøy, A2A-agentprotokoll, vedvarende minne, sikkerhetsmekanismer, skyagenter, skjult TLS-fingeravtrykk, Desktop/Termux/PWA og brukergrensesnitt på 42 språk. OmniRoute er MIT-lisensiert og kan driftes på egen infrastruktur. Konkurrentenes funksjoner og antall kan endres; se den lenkede metodikken."/>
+<img src="./docs/diagrams/comparison-table.svg" width="100%" alt="Hva som skiller OmniRoute fra andre — et datert øyeblikksbilde av funksjoner sammenlignet med 9router, OpenRouter, CLIProxyAPI og LiteLLM på tvers av 13 funksjonsområder. OmniRoute: 367 leverandører, over 150 innebygde gratisnivåer, 19 rutingsstrategier, tokenkomprimering med 12 motorer, innebygd MCP-server med 110 verktøy, A2A-agentprotokoll, vedvarende minne, sikkerhetsmekanismer, skyagenter, skjult TLS-fingeravtrykk, Desktop/Termux/PWA og brukergrensesnitt på 42 språk. OmniRoute er MIT-lisensiert og kan driftes på egen infrastruktur. Konkurrentenes funksjoner og antall kan endres; se den lenkede metodikken."/>
 
 <sub>📊 Fullstendig metodikk og detaljer per funksjon sammenlignet med 9router, OpenRouter, CLIProxyAPI og LiteLLM → [`docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md`](docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md)</sub>
 
@@ -1271,22 +1271,22 @@ Kanoniske målinger per 2026-08-24: **1.029 unike videoer** · **11.132.922 kjen
 
 <table>
   <tr><th align="left">Lag</th><th align="left">Teknologi</th></tr>
-  <tr><td nowrap><b>Kjøremiljø</b></td><td>Node.js 22.x / 24.x LTS — <code>&gt;=22.22.2 &lt;23 || &gt;=24.0.0 &lt;27</code></td></tr>
+  <tr><td nowrap><b>Kjøretidsmiljø</b></td><td>Node.js 22.x / 24.x LTS — <code>&gt;=22.22.2 &lt;23 || &gt;=24.0.0 &lt;27</code></td></tr>
   <tr><td nowrap><b>Språk</b></td><td>TypeScript 6.0 — <b>100 % TypeScript</b> på tvers av <code>src/</code> og <code>open-sse/</code> (ingen <code>any</code> i kjernen siden v2.0)</td></tr>
   <tr><td nowrap><b>Rammeverk</b></td><td>Next.js 16 + React 19 + Tailwind CSS 4</td></tr>
-  <tr><td nowrap><b>Database</b></td><td>better-sqlite3 (SQLite, WAL-journalføring) + LowDB (eldre JSON-format) — 137 domenemoduler, 199 migreringer</td></tr>
-  <tr><td nowrap><b>Minne</b></td><td>SQLite FTS5-fulltekst + int8-kvantiserte vektorinnebygginger, typet nedbrytning</td></tr>
-  <tr><td nowrap><b>Skjemaer</b></td><td>Zod 4 — I/U-validering for MCP-verktøy + API-kontrakter</td></tr>
+  <tr><td nowrap><b>Database</b></td><td>better-sqlite3 (SQLite, WAL-journalføring) + LowDB (eldre JSON-format) — 137 domenemoduler, 200 migreringer</td></tr>
+  <tr><td nowrap><b>Minne</b></td><td>SQLite FTS5-fulltekstsøk + int8-kvantiserte vektorinnbygginger, typet nedbrytning</td></tr>
+  <tr><td nowrap><b>Skjemaer</b></td><td>Zod 4 — validering av MCP-verktøyenes inn- og utdata + API-kontrakter</td></tr>
   <tr><td nowrap><b>Protokoller</b></td><td>MCP (stdio / HTTP / SSE) + A2A v0.3 (JSON-RPC 2.0 + SSE)</td></tr>
   <tr><td nowrap><b>Strømming</b></td><td>Server-Sent Events (SSE) + WebSocket-bro (<code>/v1/ws</code>)</td></tr>
-  <tr><td nowrap><b>Komprimering</b></td><td>Behandlingskjede med 12 motorer — RTK, Caveman, LLMLingua-2 (MobileBERT ONNX), GCF, OmniGlyph</td></tr>
-  <tr><td nowrap><b>Autentisering &amp; sikkerhet</b></td><td>OAuth 2.0 (PKCE) + JWT + API-nøkler + omfangsbegrenset MCP-autentisering · AES-256-GCM ved lagring · DOMPurify</td></tr>
-  <tr><td nowrap><b>Kamuflasje</b></td><td>wreq-js — etterligning av JA3-/JA4-TLS-fingeravtrykk, proxy i tre nivåer</td></tr>
-  <tr><td nowrap><b>Robusthet</b></td><td>Effektbryter, eksponentiell tilbakeholdelse, beskyttelse mot samtidige forespørselsstormer, selvreparasjon med auto-combo</td></tr>
+  <tr><td nowrap><b>Komprimering</b></td><td>Rørledning med 12 motorer — RTK, Caveman, LLMLingua-2 (MobileBERT ONNX), GCF, OmniGlyph</td></tr>
+  <tr><td nowrap><b>Autentisering og sikkerhet</b></td><td>OAuth 2.0 (PKCE) + JWT + API-nøkler + omfangsbasert MCP-autentisering · AES-256-GCM for lagrede data · DOMPurify</td></tr>
+  <tr><td nowrap><b>Kamuflering</b></td><td>wreq-js — etterligning av JA3-/JA4-TLS-fingeravtrykk, proxy på 3 nivåer</td></tr>
+  <tr><td nowrap><b>Robusthet</b></td><td>Effektbryter, eksponentiell tilbakekobling, beskyttelse mot samtidige forespørselsbølger, selvreparerende automatisk kombinasjon</td></tr>
   <tr><td nowrap><b>Logging</b></td><td>pino — strukturerte JSON-logger med forespørselskontekst</td></tr>
-  <tr><td nowrap><b>Testing</b></td><td>Node.js-testkjører + Vitest — <b>39 000+ statiske testdeklarasjoner</b> på tvers av 5 100+ sporede testfiler (enhet, integrasjon, E2E, sikkerhet, økosystem)</td></tr>
+  <tr><td nowrap><b>Testing</b></td><td>Node.js-testkjører + Vitest — <b>over 39 000 statiske testerklæringer</b> fordelt på over 5 100 sporede testfiler (enhets-, integrasjons-, E2E-, sikkerhets- og økosystemtester)</td></tr>
   <tr><td nowrap><b>Plattformer</b></td><td>Skrivebord (Electron) · Android (Termux) · PWA (alle nettlesere)</td></tr>
-  <tr><td nowrap><b>CI/CD</b></td><td>GitHub Actions — automatisk publisering til npm + Docker Hub ved utgivelse</td></tr>
+  <tr><td nowrap><b>CI/CD</b></td><td>GitHub Actions — automatisk npm-publisering + Docker Hub ved utgivelse</td></tr>
   <tr><td nowrap><b>Lenker</b></td><td><a href="https://omniroute.online">Nettsted</a> · <a href="https://www.npmjs.com/package/omniroute">npm</a> · <a href="https://hub.docker.com/r/diegosouzapw/omniroute">Docker Hub</a></td></tr>
 </table>
 

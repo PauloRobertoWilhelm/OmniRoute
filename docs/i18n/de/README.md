@@ -13,7 +13,7 @@
 
 # 🚀 OmniRoute — Das kostenlose KI-Gateway
 
-<img src="./docs/diagrams/readme-hero.svg" width="100%" alt="OmniRoute — Nie wieder mit dem Programmieren aufhören. Jedes KI-Tool → 359 Anbieter — über 150 kostenlos — über einen einzigen Endpunkt. Claude Code, Codex, Cursor, Cline, Copilot & Antigravity mit KOSTENLOSEM Claude / GPT / Gemini und automatischem Fallback. Die kombinierte Komprimierung aus RTK + Caveman spart 15–95 % der Tokens (durchschnittlich ca. 89 %) — nie wieder Limits erreichen. 359 KI-Anbieter · über 150 kostenlose Tarife · ca. 1,62 Mrd. kostenlose Tokens/Monat · 19 Routing-Strategien · Einstieg für 0 $."/>
+<img src="./docs/diagrams/readme-hero.svg" width="100%" alt="OmniRoute — Höre niemals auf zu programmieren. Jedes KI-Tool → 367 Anbieter — über 150 kostenlos — über einen einzigen Endpunkt. Claude Code, Codex, Cursor, Cline, Copilot & Antigravity mit KOSTENLOSEM Claude / GPT / Gemini und automatischem Fallback. Die kombinierte Komprimierung mit RTK + Caveman spart 15–95 % der Tokens (durchschnittlich ca. 89 %) — stoße nie wieder an Limits. 367 KI-Anbieter · über 150 kostenlose Tarife · ca. 1,62 Mrd. kostenlose Tokens/Monat · 19 Routing-Strategien · Einstieg für $0."/>
 
 </div>
 
@@ -218,7 +218,7 @@
 
 </div>
 
-<img src="./docs/diagrams/works-zero-config.svg" width="100%" alt="Funktioniert sofort nach der Installation — ganz ohne Konfiguration. Drei Schritte: 1. Installieren — npm i -g omniroute, der Server startet unter localhost:20128. 2. Das Tool auf http://localhost:20128/v1 verweisen — jedes OpenAI-kompatible Tool (Claude Code, Cursor, Cline). 3. Es antwortet — das Modell auto aufrufen und sofort eine Antwort erhalten, ohne API-Schlüssel, Registrierung oder Konfiguration. Der schlüssellose Anbieter OpenCode Free ist bereits in die auto-Kombination integriert, sodass eine Neuinstallation sofort einsatzbereit ist."/>
+<img src="./docs/diagrams/works-zero-config.svg" width="100%" alt="Funktioniert sofort nach der Installation — ohne Konfiguration. Drei Schritte: 1. Installieren — npm i -g omniroute, der Server startet unter localhost:20128. 2. Dein Tool auf http://localhost:20128/v1 verweisen — jedes OpenAI-kompatible Tool (Claude Code, Cursor, Cline). 3. Es antwortet — das Modell auto aufrufen und sofort eine Antwort erhalten, ohne API-Schlüssel, Registrierung oder Konfiguration. Der schlüssellose Anbieter OpenCode Free ist bereits in die auto-Kombination integriert, sodass eine Neuinstallation sofort einsatzbereit ist."/>
 
 ```bash
 # Neuinstallation, keine Zugangsdaten — `auto` funktioniert bereits:
@@ -227,7 +227,7 @@ curl http://localhost:20128/v1/chat/completions \
   -d '{"model":"auto","messages":[{"role":"user","content":"Hello!"}]}'
 ```
 
-<sub>Sie bevorzugen ein bestimmtes kostenloses Backend? Rufen Sie `oc/…` (OpenCode Free) direkt auf. Wechseln Sie anschließend zu `auto` und lassen Sie OmniRoute auswählen.</sub>
+<sub>Bevorzugst du ein bestimmtes kostenloses Backend? Rufe `oc/…` (OpenCode Free) direkt auf. Wechsle anschließend zu `auto` und überlasse OmniRoute die Auswahl.</sub>
 
 <sub>📦 Kopierfertige Schnellstartskripte für **Python, Node.js, PHP und cURL** → [`examples/quickstart/`](examples/quickstart/)</sub>
 
@@ -239,7 +239,7 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/promise-pillars.svg" width="100%" alt="Das Versprechen — ein Endpunkt und 359 Anbieter. Automatisches Fallback hält das Routing aufrecht, solange ein anderes verfügbares Ziel funktionsfähig ist. Sechs Säulen: ausfallsicheres Fallback über 359 Anbieter · bis zu 95 % Token-Einsparung bei geeigneten Workloads · kostenloser Einstieg mit über 150 kostenlosen Tarifen und 54 wiederkehrend kostenlosen bzw. schlüssellosen, dauerhaft kostenlosen Anbietern · 36 CLI-/Agenten-Integrationen über eine einzige Konfiguration · Kompatibilität mit OpenAI, Claude, Gemini und der Responses API unter /v1 · Produktionskontrollen einschließlich Schutzschaltern, TLS-Tarnung, MCP mit 110 Tools, A2A, Speicher, Schutzmechanismen, Evaluierungen und über 39.000 statischen Testdeklarationen in mehr als 5.100 erfassten Testdateien."/>
+<img src="./docs/diagrams/promise-pillars.svg" width="100%" alt="Das Versprechen — ein Endpunkt und 367 Anbieter. Automatisches Fallback hält das Routing aufrecht, solange ein anderes funktionsfähiges Ziel verfügbar ist. Sechs Säulen: robustes Fallback über 367 Anbieter · bis zu 95 % Token-Ersparnis bei geeigneten Workloads · Einstieg für 0 $ mit mehr als 150 kostenlosen Tarifen und 54 wiederkehrenden bzw. schlüssellosen, dauerhaft kostenlosen Anbietern · 36 CLI-/Agenten-Integrationen über eine einzige Konfiguration · Kompatibilität mit OpenAI, Claude, Gemini und der Responses API unter /v1 · Produktionskontrollen einschließlich Circuit Breakers, TLS-Stealth, MCP mit 110 Tools, A2A, Speicher, Guardrails, Evaluationen und mehr als 39.000 statischen Testdeklarationen in über 5.100 erfassten Testdateien."/>
 
 <br/>
 <br/>
@@ -250,11 +250,11 @@ curl http://localhost:20128/v1/chat/completions \
 
 </div>
 
-<img src="./docs/diagrams/why-pain-fix.svg" width="100%" alt="Warum OmniRoute — Schluss mit dem Jonglieren zwischen 10 Dashboards, ungültigen API-Schlüsseln und überraschenden Rechnungen. Zehn alltägliche Probleme und ihre Lösungen: Kontingent verfällt ungenutzt → Abonnements optimal ausschöpfen; Ratenlimits mitten beim Programmieren → vierstufiges automatisches Fallback (Abonnement → API → günstig → kostenlos); Tool-Ausgaben verbrauchen Tokens → RTK- + Caveman-Komprimierung (15–95 %); teure APIs → kostenoptimiertes Routing; jedes Tool erfordert eine eigene Einrichtung → ein Endpunkt, ein Dashboard; KI blockiert → dreistufiger Proxy + TLS-Tarnung; ungültige Schlüssel → dreischichtige Ausfallsicherheit (Schutzschalter, Schlüssel-Abklingzeit, Modellsperre); ein Team teilt sich ein Abonnement → Schlüsselpools mit fair aufgeteilten Kontingenten; Prompts laufen durch die Cloud eines Drittanbieters → Local-First mit AES-256-GCM-verschlüsselten Schlüsseln; keine Kostentransparenz → Live-Analysen (Nutzung, Kontingent, Einsparungen, p95-Latenz)."/>
+<img src="./docs/diagrams/why-pain-fix.svg" width="100%" alt="Warum OmniRoute — Schluss mit 10 Dashboards, ungültigen API-Schlüsseln und überraschenden Rechnungen. Zehn alltägliche Probleme und Lösungen: Kontingent verfällt ungenutzt → Abonnements maximal ausschöpfen; Ratenbegrenzungen mitten beim Programmieren → vierstufiges automatisches Fallback (Abonnement → API → günstig → kostenlos); Tool-Ausgaben verbrauchen zu viele Token → RTK- und Caveman-Komprimierung (15–95 %); teure APIs → kostenoptimiertes Routing; jedes Tool erfordert eine eigene Einrichtung → ein Endpunkt, ein Dashboard; KI blockiert → dreistufiger Proxy + TLS-Stealth; ungültige Schlüssel → dreischichtige Ausfallsicherheit (Circuit Breakers, Schlüsselabkühlung, Modellsperre); ein Team teilt sich ein Abonnement → Schlüssel-Pools mit fair verteilten Kontingenten; Prompts laufen durch die Cloud eines Drittanbieters → Local-First mit AES-256-GCM-verschlüsselten Schlüsseln; keine Kostentransparenz → Live-Analysen (Nutzung, Kontingent, Einsparungen, p95-Latenz)."/>
 
 <div align="center">
 
-<img src="./docs/diagrams/tier-cascade.svg" width="100%" alt="OmniRoute-Anfragefluss: Ihre IDE oder CLI (Claude Code, Cursor, Cline…) ruft einen einzigen lokalen Endpunkt auf (http://localhost:20128/v1); der intelligente OmniRoute-Router (RTK- + Caveman-Komprimierung, 19 Routing-Strategien, Schutzschalter, TLS-Tarnung, MCP, A2A, Schutzmechanismen) kann auf vier Anbieterebenen zurückfallen, solange ein geeignetes, funktionsfähiges Ziel verfügbar ist — Ebene 1: Abonnement, Ebene 2: API-Schlüssel, Ebene 3: günstig und Ebene 4: kostenlos."/>
+<img src="./docs/diagrams/tier-cascade.svg" width="100%" alt="OmniRoute-Anfrageablauf: Deine IDE oder CLI (Claude Code, Cursor, Cline …) ruft einen einzigen lokalen Endpunkt auf (http://localhost:20128/v1); der OmniRoute Smart Router (RTK- und Caveman-Komprimierung, 19 Routing-Strategien, Circuit Breakers, TLS-Stealth, MCP, A2A, Guardrails) kann auf vier Anbieterstufen zurückfallen, solange ein geeignetes, funktionsfähiges Ziel verfügbar ist — Stufe 1: Abonnement, Stufe 2: API-Schlüssel, Stufe 3: günstig und Stufe 4: kostenlos."/>
 
 </div>
 
@@ -492,7 +492,7 @@ Alle **19** Strategien — pro Combo-Schritt frei kombinierbar:
 
 </div>
 
-<img src="./docs/diagrams/comparison-table.svg" width="100%" alt="Was OmniRoute auszeichnet — eine zeitgebundene Momentaufnahme der Funktionen im Vergleich zu 9router, OpenRouter, CLIProxyAPI und LiteLLM anhand von 13 Fähigkeiten. OmniRoute: 359 Anbieter, über 150 integrierte kostenlose Tarife, 19 Routing-Strategien, Token-Komprimierung mit 12 Engines, integrierter MCP-Server mit 110 Tools, A2A-Agentenprotokoll, persistenter Speicher, Schutzmechanismen, Cloud-Agenten, Tarnung des TLS-Fingerabdrucks, Desktop/Termux/PWA und 42 i18n-Sprachversionen der Benutzeroberfläche. OmniRoute ist MIT-lizenziert und selbst hostbar. Die Fähigkeiten und Zahlen der Wettbewerber können sich ändern; siehe die verlinkte Methodik."/>
+<img src="./docs/diagrams/comparison-table.svg" width="100%" alt="Was OmniRoute auszeichnet — eine datierte Momentaufnahme der Funktionen im Vergleich zu 9router, OpenRouter, CLIProxyAPI und LiteLLM anhand von 13 Fähigkeiten. OmniRoute: 367 Anbieter, über 150 integrierte kostenlose Tarife, 19 Routing-Strategien, Token-Komprimierung mit 12 Engines, integrierter MCP-Server mit 110 Tools, A2A-Agentenprotokoll, persistenter Speicher, Schutzmechanismen, Cloud-Agenten, Verschleierung des TLS-Fingerabdrucks, Desktop/Termux/PWA und 42 Gebietsschemata für die internationalisierte Benutzeroberfläche. OmniRoute ist MIT-lizenziert und kann selbst gehostet werden. Die Fähigkeiten und Zahlen der Wettbewerber können sich ändern; siehe die verlinkte Methodik."/>
 
 <sub>📊 Vollständige Methodik &amp; Details zu den einzelnen Funktionen im Vergleich zu 9router, OpenRouter, CLIProxyAPI &amp; LiteLLM → [`docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md`](docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md)</sub>
 
@@ -1274,19 +1274,19 @@ Kanonische Kennzahlen vom 2026-08-24: **1.029 einzigartige Videos** · **11.132.
   <tr><td nowrap><b>Laufzeitumgebung</b></td><td>Node.js 22.x / 24.x LTS — <code>&gt;=22.22.2 &lt;23 || &gt;=24.0.0 &lt;27</code></td></tr>
   <tr><td nowrap><b>Sprache</b></td><td>TypeScript 6.0 — <b>100 % TypeScript</b> in <code>src/</code> und <code>open-sse/</code> (seit v2.0 kein <code>any</code> im Kern)</td></tr>
   <tr><td nowrap><b>Framework</b></td><td>Next.js 16 + React 19 + Tailwind CSS 4</td></tr>
-  <tr><td nowrap><b>Datenbank</b></td><td>better-sqlite3 (SQLite, WAL-Journaling) + LowDB (JSON-Altsystem) — 137 Domänenmodule, 199 Migrationen</td></tr>
-  <tr><td nowrap><b>Speicher</b></td><td>SQLite-FTS5-Volltextsuche + int8-quantisierte Vektoreinbettungen, typisierter Zerfall</td></tr>
-  <tr><td nowrap><b>Schemata</b></td><td>Zod 4 — Validierung der Ein- und Ausgaben von MCP-Werkzeugen + API-Verträge</td></tr>
+  <tr><td nowrap><b>Datenbank</b></td><td>better-sqlite3 (SQLite, WAL-Journaling) + LowDB (JSON-Altsystem) — 137 Domänenmodule, 200 Migrationen</td></tr>
+  <tr><td nowrap><b>Speicher</b></td><td>SQLite-FTS5-Volltextsuche + int8-quantisierte Vektoreinbettungen, typisierter Verfall</td></tr>
+  <tr><td nowrap><b>Schemata</b></td><td>Zod 4 — E/A-Validierung für MCP-Tools + API-Verträge</td></tr>
   <tr><td nowrap><b>Protokolle</b></td><td>MCP (stdio / HTTP / SSE) + A2A v0.3 (JSON-RPC 2.0 + SSE)</td></tr>
   <tr><td nowrap><b>Streaming</b></td><td>Server-Sent Events (SSE) + WebSocket-Bridge (<code>/v1/ws</code>)</td></tr>
   <tr><td nowrap><b>Komprimierung</b></td><td>Pipeline mit 12 Engines — RTK, Caveman, LLMLingua-2 (MobileBERT ONNX), GCF, OmniGlyph</td></tr>
-  <tr><td nowrap><b>Authentifizierung &amp; Sicherheit</b></td><td>OAuth 2.0 (PKCE) + JWT + API-Schlüssel + bereichsgebundene MCP-Authentifizierung · AES-256-GCM bei der Speicherung · DOMPurify</td></tr>
+  <tr><td nowrap><b>Authentifizierung &amp; Sicherheit</b></td><td>OAuth 2.0 (PKCE) + JWT + API-Schlüssel + bereichsspezifische MCP-Authentifizierung · AES-256-GCM für ruhende Daten · DOMPurify</td></tr>
   <tr><td nowrap><b>Tarnung</b></td><td>wreq-js — Nachahmung von JA3-/JA4-TLS-Fingerabdrücken, dreistufiger Proxy</td></tr>
-  <tr><td nowrap><b>Ausfallsicherheit</b></td><td>Leistungsschalter, exponentieller Backoff, Schutz vor Anfragestürmen, selbstheilende automatische Kombination</td></tr>
+  <tr><td nowrap><b>Ausfallsicherheit</b></td><td>Leistungsschalter, exponentielles Backoff, Schutz vor Thundering-Herd-Effekten, selbstheilende automatische Kombinationen</td></tr>
   <tr><td nowrap><b>Protokollierung</b></td><td>pino — strukturierte JSON-Protokolle mit Anfragekontext</td></tr>
-  <tr><td nowrap><b>Tests</b></td><td>Node.js-Test-Runner + Vitest — <b>über 39.000 statische Testdeklarationen</b> in mehr als 5.100 nachverfolgten Testdateien (Unit-, Integrations-, E2E-, Sicherheits- und Ökosystemtests)</td></tr>
+  <tr><td nowrap><b>Tests</b></td><td>Node.js-Test-Runner + Vitest — <b>über 39.000 statische Testdeklarationen</b> in mehr als 5.100 erfassten Testdateien (Unit-, Integrations-, E2E-, Sicherheits- und Ökosystemtests)</td></tr>
   <tr><td nowrap><b>Plattformen</b></td><td>Desktop (Electron) · Android (Termux) · PWA (jeder Browser)</td></tr>
-  <tr><td nowrap><b>CI/CD</b></td><td>GitHub Actions — automatische Veröffentlichung auf npm und Docker Hub bei einem Release</td></tr>
+  <tr><td nowrap><b>CI/CD</b></td><td>GitHub Actions — automatische Veröffentlichung auf npm und Docker Hub bei Releases</td></tr>
   <tr><td nowrap><b>Links</b></td><td><a href="https://omniroute.online">Website</a> · <a href="https://www.npmjs.com/package/omniroute">npm</a> · <a href="https://hub.docker.com/r/diegosouzapw/omniroute">Docker Hub</a></td></tr>
 </table>
 
