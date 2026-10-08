@@ -1,0 +1,1 @@
+- Generated REST CLI commands now require and encode URL path parameters, including routes without explicit OpenAPI parameter declarations. Path-level parameters and operation overrides are preserved, and repeated placeholders are all replaced.
