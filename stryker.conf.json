@@ -601,7 +601,8 @@
       "tests/unit/db-proxies-ventilated.test.ts",
       "tests/unit/github-copilot-model-not-supported-learning-15634.test.ts",
       "tests/unit/alibaba-free-quota-drain-preserves-model-catalog-cache.test.ts",
-      "tests/unit/upstreamErrorEnvelope.test.ts"
+      "tests/unit/upstreamErrorEnvelope.test.ts",
+      "tests/unit/model-capacity-failure-scope-15788.test.ts"
     ],
     "nodeArgs": [
       "--import",
