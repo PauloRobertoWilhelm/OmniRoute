@@ -78,6 +78,22 @@ test("agent-required selection retains an HTTP key in a mixed PAT/HTTP pool", as
   assert.equal(selected?.connectionId, http.id);
 });
 
+test("a PAT cooldown cannot make a tool request wait for an incompatible connection", async () => {
+  await deleteProviderConnectionsByProvider("qoder");
+  const pat = await createProviderConnection({
+    provider: "qoder",
+    authType: "apikey",
+    name: "Cooling PAT",
+    apiKey: "pt-cooling-fixture",
+    isActive: true,
+    rateLimitedUntil: new Date(Date.now() + 60_000).toISOString(),
+  });
+  const selected = await getProviderCredentials("qoder", null, [pat.id], "qwen3.8-max-preview", {
+    requireToolCalling: true,
+  });
+  assert.equal(selected, null);
+});
+
 test("PAT executor rejects caller tools before launching the local CLI", async () => {
   const previous = process.env.CLI_QODER_BIN;
   process.env.CLI_QODER_BIN = path.join(dataDir, "missing-qodercli");
