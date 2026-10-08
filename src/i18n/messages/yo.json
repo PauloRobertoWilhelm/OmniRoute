@@ -5732,6 +5732,8 @@
     "targetFormatAuto": "Àiyipada (láìfọwọ́yí)",
     "targetFormatGemini": "Gemini",
     "targetFormatAntigravity": "Antigravity",
+    "maxOutputTokenOverrideLabel": "Iye Tó Pọ̀ Jù ti Àwọn Tókẹ́ẹ̀nù Àbájáde",
+    "maxOutputTokenOverrideHint": "Tẹ iye tọ́kẹ̀n odidi tí ó ju òdo lọ. Fi sílẹ̀ láìkọ nǹkan láti lo iye àiyipada.",
     "contextWindowOverrideLabel": "Ìṣètò Àfikún Fèrèsé Àyíká-ọ̀rọ̀",
     "contextWindowOverridePlaceholder": "f.à. 131072",
     "contextWindowOverrideHint": "Ṣètò fèrèsé àyíká-ọ̀rọ̀ gidi ti módẹ́lì yìí (àwọn token) pẹ̀lú ọwọ́ nígbà tí olupèsè bá jabo rẹ̀ lọ́nà tí kò tọ́. Èyí yóò borí àwọn iye tí a ṣàwárí láìfọwọ́yí/tó wà nínú àkójọ, yóò sì dènà combo routing láti yọ módẹ́lì náà kúrò.",

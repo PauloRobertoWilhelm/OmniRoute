@@ -5732,6 +5732,8 @@
     "targetFormatAuto": "Zadano (auto)",
     "targetFormatGemini": "Gemini",
     "targetFormatAntigravity": "Antigravity",
+    "maxOutputTokenOverrideLabel": "Maksimalni izlazni tokeni",
+    "maxOutputTokenOverrideHint": "Unesite pozitivan cijeli broj tokena. Ostavite prazno za zadanu vrijednost.",
     "contextWindowOverrideLabel": "Prepisivanje prozora konteksta",
     "contextWindowOverridePlaceholder": "npr. 131072",
     "contextWindowOverrideHint": "Ručno postavite stvarni prozor konteksta (tokeni) ovog modela kada provajder pogrešno prijavi. Ima prednost nad auto-detektovanim/kataloškim vrijednostima i sprečava da combo rutiranje izbaci model.",
