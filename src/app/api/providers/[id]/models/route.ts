@@ -40,6 +40,7 @@ import {
   fetchGheCopilotModels,
 } from "@omniroute/open-sse/services/githubCopilotModels.ts";
 import { fetchKiroAvailableModels } from "@omniroute/open-sse/services/kiroModels.ts";
+import { resolveClineModels } from "@omniroute/open-sse/services/clinepassModels.ts";
 import {
   buildGlmCodingHeaders,
   buildGlmModelsUrl,
@@ -2203,20 +2204,7 @@ export async function GET(
       return buildResponse({
         provider,
         connectionId,
-        models: localCatalog.map((m) => ({
-          id: m.id,
-          name: m.name || m.id,
-          ...((m as Record<string, unknown>).apiFormat
-            ? { apiFormat: (m as Record<string, unknown>).apiFormat as string | undefined }
-            : {}),
-          ...((m as Record<string, unknown>).supportedEndpoints
-            ? {
-                supportedEndpoints: (m as Record<string, unknown>).supportedEndpoints as
-                  string[] | undefined,
-              }
-            : {}),
-          ...(registryCatalogModels.length > 0 ? { owned_by: provider } : {}),
-        })),
+        models: toLocalCatalogModels(),
         source: "local_catalog",
         // #5460/#5465 — providers with no discovery config (embedding/rerank/
         // web-cookie providers like voyage-ai, jina-ai, t3-web) are
@@ -2232,11 +2220,8 @@ export async function GET(
       );
     }
 
-    const cachedResponse = maybeReturnCachedDiscovery();
-    if (cachedResponse) return cachedResponse;
-
-    const autoFetchDisabledResponse = maybeReturnAutoFetchDisabled();
-    if (autoFetchDisabledResponse) return autoFetchDisabledResponse;
+    const cachedOrDisabledResponse = maybeReturnCachedDiscovery() || maybeReturnAutoFetchDisabled();
+    if (cachedOrDisabledResponse) return cachedOrDisabledResponse;
 
     // Get auth token
     const token = accessToken || apiKey;
@@ -2253,6 +2238,20 @@ export async function GET(
         },
         { status: 400 }
       );
+    }
+
+    if (provider === "cline") {
+      const models = await resolveClineModels((input, init) =>
+        safeOutboundFetch(String(input), {
+          ...SAFE_OUTBOUND_FETCH_PRESETS.modelsPagination,
+          guard: getProviderOutboundGuard(),
+          proxyConfig: proxy,
+          ...init,
+        })
+      );
+      return models === null
+        ? buildDiscoveryFallbackResponse() || errorResponse(502, "Cline catalog unavailable")
+        : buildApiDiscoveryResponse(models);
     }
 
     // Build request URL
