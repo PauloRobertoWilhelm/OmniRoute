@@ -474,12 +474,12 @@ GET /api/v1/provider-plugin-manifest
 | POST | `/api/v1/vscode/{token}/api/chat`         | Ollama 令牌化别名                |
 | GET  | `/api/v1/vscode/{token}/api/tags`         | Ollama 标签令牌化别名            |
 
-所有 POST 路由都遵循相同的格式：`Bearer your-api-key` + 经过 Zod 验证的 JSON 正文（`v1RerankSchema`、`v1ModerationSchema`、`v1AudioSpeechSchema` 等，参见 `src/shared/validation/schemas.ts`）。模式验证失败时返回 4xx。
+所有 POST 路由都遵循相同的形式：`Bearer your-api-key` + 经过 Zod 验证的 JSON 正文（`v1RerankSchema`、`v1ModerationSchema`、`v1AudioSpeechSchema` 等，参见 `src/shared/validation/schemas.ts`）。架构验证失败时返回 4xx。
 
-对于无法附加 `Authorization: Bearer ...` 的客户端，OmniRoute 还支持通过 URL 传递 API 密钥，既可以使用查询字符串兼容方式（`?token=...`、`?apiKey=...`、`?api_key=...`、`?key=...`），也可以使用下文所述的专用 `/api/v1/vscode/{token}/...` 端点。
+对于无法附加 `Authorization: Bearer ...` 的客户端，OmniRoute 还支持通过 URL 传递 API 密钥，既可使用查询字符串兼容形式（`?token=...`、`?apiKey=...`、`?api_key=...`、`?key=...`），也可使用下文所述的专用 `/api/v1/vscode/{token}/...` 端点。
 
 ```bash
-# 重排序（云注册表提供者，或以 "<prefix>/<model>" 表示的 OpenAI 兼容提供者节点）
+# 重排序（云注册表提供者，或表示为“<prefix>/<model>”的 OpenAI 兼容提供者节点）
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
 # Jina 分类（Foundation API 凭据）
@@ -497,8 +497,8 @@ POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 # TTS — 返回 audio/mpeg（或请求的格式）正文
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS 需要指定语言和语音：`language` 默认为 "en"；缺少
-# voice 或使用 OpenAI 内置语音名称（alloy、nova、…）时，将改为 "Adrian"
+# Soniox TTS 需要语言和语音：`language` 默认为 "en"；缺少
+# voice 或使用 OpenAI 内置语音名称（alloy、nova、……）时将改为 "Adrian"
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # 图像编辑（multipart）
@@ -509,26 +509,30 @@ POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **重排序提供者节点：** `POST /v1/rerank` 也会路由到以 `<node-prefix>/<model>` 寻址的 OpenAI 兼容提供者节点
-> （oMLX、vLLM、网关后的 Infinity、TEI 等）。环回节点（`localhost`、`127.0.0.1`、`172.16.0.0/12`）
-> 始终可用。位于其他任何主机上的节点（局域网设备或 Tailscale 对等节点）仅在运维人员启用
-> `RERANK_REMOTE_PROVIDER_NODES` 功能标志，**并且**节点的基础 URL 通过提供者出站 URL 策略
-> （`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`）时才可用。
-> 内存引擎的重排序步骤通过环回地址调用此路由，
-> 因此相同的规则也适用于 Memory 设置中的 `rerankProviderModel`。
+> **重排序提供者节点：** `POST /v1/rerank` 还会路由到以 `<node-prefix>/<model>` 形式指定的 OpenAI 兼容提供者节点
+> （oMLX、vLLM、Infinity、位于网关之后的 TEI 等）。环回
+> 节点（`localhost`、`127.0.0.1`、`172.16.0.0/12`）始终符合条件，运营者在
+> `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` 中列出的主机名也同样符合条件（例如 Docker/Compose 服务名称，
+> 如 `http://reranker:8080/v1`；这些节点始终直接调用，从不经过 `HTTP(S)_PROXY` 或
+> 某个连接固定的代理）。位于任何其他
+> 主机上的节点（例如局域网设备或 Tailscale 对等节点）仅在运营者启用
+> `RERANK_REMOTE_PROVIDER_NODES` 功能标志，**并且**节点的基础 URL 通过提供者
+> 出站 URL 策略（`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`）时才符合条件。
+> 内存引擎的重排序步骤通过
+> 环回调用此路由，因此相同规则也适用于 Memory 设置中的 `rerankProviderModel`。
 >
-> **本地服务器格式：** 节点首先通过 `<base>/v1/rerank` 调用；若返回 404，则改用 `<base>/rerank`
-> （Infinity、TEI）。上游正文同时包含 Cohere/OpenAI 拼写（`documents`、
-> `return_documents`）和 TEI 拼写（`texts`、`return_text`），上游响应则会
-> 规范化为 Cohere 封装格式：无论是 TEI 的裸数组 `[{index, score, text}]`、精简网关返回的
-> `{results: [{index, score}]}`，还是 Voyage 风格的 `{data: [...]}`，最终都会以
+> **本地服务器形式：** 节点首先通过 `<base>/v1/rerank` 调用；如果返回 404，则改用 `<base>/rerank`
+> （Infinity、TEI）。上游正文同时携带 Cohere/OpenAI 拼写形式（`documents`、
+> `return_documents`）和 TEI 拼写形式（`texts`、`return_text`），上游响应则会
+> 规范化为 Cohere 封装格式：TEI 的裸 `[{index, score, text}]`、精简网关返回的
+> `{results: [{index, score}]}` 以及 Voyage 风格的 `{data: [...]}` 都会以
 > `{results: [{index, relevance_score, document?}]}` 的形式返回给客户端，并按分数排序且限制为 `top_n` 条。
 
-> **提供者节点发现：** OpenAI 兼容提供者节点上的模型会显示在 `GET /v1/models`
-> 中，并带有节点前缀。未携带端点元数据的条目（本地 `/v1/models` 列表中的典型情况）
+> **提供者节点发现：** OpenAI 兼容提供者节点上的模型会显示在 `GET /v1/models` 中，
+> 并位于该节点的前缀下。不包含端点元数据的条目（常见于本地 `/v1/models` 列表）
 > 会继承节点的 `apiType`，因此 `embeddings` 节点的模型为 `type: "embedding"`，
-> `rerank` 节点的模型为 `type: "rerank"`，而不是默认为聊天类型；在已同步或手动添加的条目上显式设置的
-> `supportedEndpoints` 仍然具有更高优先级。
+> `rerank` 节点的模型为 `type: "rerank"`，而不是默认为聊天类型；已同步或手动添加的条目中显式指定的
+> `supportedEndpoints` 仍具有更高优先级。
 
 ### 专用提供者路由
 

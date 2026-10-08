@@ -448,39 +448,39 @@ Lo ojú-ọ̀nà yìí nígbà tí sidecar bá ń ṣiṣẹ́ níta process tí
 
 ---
 
-## Àwọn Endpoint Ìbámu
+## Àwọn Ojú-ọ̀nà Ìbámu
 
-| Ọ̀nà  | Path                                      | Fọ́ọ̀mù                                       |
-| ---- | ----------------------------------------- | ------------------------------------------- |
-| POST | `/v1/chat/completions`                    | OpenAI                                      |
-| POST | `/v1/messages`                            | Anthropic                                   |
-| POST | `/v1/responses`                           | OpenAI Responses                            |
-| POST | `/v1/embeddings`                          | OpenAI                                      |
-| POST | `/v1/images/generations`                  | OpenAI Images                               |
-| POST | `/v1/images/edits`                        | OpenAI Images (àtúnṣe/inpaint)              |
-| POST | `/v1/videos/generations`                  | Ìṣẹ̀dá fídíò ara OpenAI                      |
-| POST | `/v1/music/generations`                   | Ìṣẹ̀dá orin ara OpenAI                       |
-| POST | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                          |
-| POST | `/v1/audio/speech`                        | OpenAI TTS (ń dá ara ohun padà)             |
-| POST | `/v1/rerank`                              | Àtúntò ipò ara Cohere/Voyage                |
-| POST | `/v1/classify`                            | Ìsọ̀rí Jina (`api.jina.ai`)                  |
-| POST | `/v1/segment`                             | Olùpín Jina (`segment.jina.ai`)             |
-| POST | `/v1/moderations`                         | OpenAI Moderations                          |
-| GET  | `/v1/models`                              | OpenAI                                      |
-| POST | `/v1/messages/count_tokens`               | Anthropic                                   |
-| GET  | `/v1beta/models`                          | Gemini                                      |
-| POST | `/v1beta/models/{...path}`                | Gemini generateContent                      |
-| POST | `/v1/api/chat`                            | Ollama                                      |
-| GET  | `/api/v1/vscode/{token}/`                 | Àpèjúwe-kúkúrú katalogi OpenAI              |
-| GET  | `/api/v1/vscode/{token}/models`           | Àpèjúwe-kúkúrú àwọn model OpenAI            |
-| POST | `/api/v1/vscode/{token}/chat/completions` | Àpèjúwe-kúkúrú OpenAI tó ní token           |
-| POST | `/api/v1/vscode/{token}/responses`        | Àpèjúwe-kúkúrú OpenAI Responses tó ní token |
-| POST | `/api/v1/vscode/{token}/api/chat`         | Àpèjúwe-kúkúrú Ollama tó ní token           |
-| GET  | `/api/v1/vscode/{token}/api/tags`         | Àpèjúwe-kúkúrú àwọn àmì Ollama tó ní token  |
+| Ọ̀nà  | Ipa-ọ̀nà                                   | Ìṣètò                                        |
+| ---- | ----------------------------------------- | -------------------------------------------- |
+| POST | `/v1/chat/completions`                    | OpenAI                                       |
+| POST | `/v1/messages`                            | Anthropic                                    |
+| POST | `/v1/responses`                           | Àwọn Ìdáhùn OpenAI                           |
+| POST | `/v1/embeddings`                          | OpenAI                                       |
+| POST | `/v1/images/generations`                  | Àwọn Àwòrán OpenAI                           |
+| POST | `/v1/images/edits`                        | Àwọn Àwòrán OpenAI (àtúnṣe/inpaint)          |
+| POST | `/v1/videos/generations`                  | Ìṣẹ̀dá fídíò ara OpenAI                       |
+| POST | `/v1/music/generations`                   | Ìṣẹ̀dá orin ara OpenAI                        |
+| POST | `/v1/audio/transcriptions`                | Ohùn OpenAI (STT)                            |
+| POST | `/v1/audio/speech`                        | OpenAI TTS (ń dá ara ohùn padà)              |
+| POST | `/v1/rerank`                              | Àtúntò ipò ara Cohere/Voyage                 |
+| POST | `/v1/classify`                            | Ìsọ̀rí Jina (`api.jina.ai`)                   |
+| POST | `/v1/segment`                             | Olùpín Jina (`segment.jina.ai`)              |
+| POST | `/v1/moderations`                         | Àwọn Àyẹ̀wò OpenAI                            |
+| GET  | `/v1/models`                              | OpenAI                                       |
+| POST | `/v1/messages/count_tokens`               | Anthropic                                    |
+| GET  | `/v1beta/models`                          | Gemini                                       |
+| POST | `/v1beta/models/{...path}`                | Gemini generateContent                       |
+| POST | `/v1/api/chat`                            | Ollama                                       |
+| GET  | `/api/v1/vscode/{token}/`                 | Orúkọ-àfidípò àkójọ OpenAI                   |
+| GET  | `/api/v1/vscode/{token}/models`           | Orúkọ-àfidípò àwọn àwòṣe OpenAI              |
+| POST | `/api/v1/vscode/{token}/chat/completions` | Orúkọ-àfidípò OpenAI tó ní token             |
+| POST | `/api/v1/vscode/{token}/responses`        | Orúkọ-àfidípò Àwọn Ìdáhùn OpenAI tó ní token |
+| POST | `/api/v1/vscode/{token}/api/chat`         | Orúkọ-àfidípò Ollama tó ní token             |
+| GET  | `/api/v1/vscode/{token}/api/tags`         | Orúkọ-àfidípò àwọn àmì Ollama tó ní token    |
 
-Gbogbo àwọn ipa-ọ̀nà POST ń tẹ̀lé àkópọ̀ kan náà: `Bearer your-api-key` + ara JSON tí Zod ti fìdí rẹ̀ múlẹ̀ (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, àti bẹ́ẹ̀ bẹ́ẹ̀ lọ; wo `src/shared/validation/schemas.ts`). A máa dá 4xx padà nígbà tí ìfìdímúlẹ̀ schema bá kùnà.
+Gbogbo àwọn ipa-ọ̀nà POST ń tẹ̀lé ìrísí kan náà: `Bearer your-api-key` + ara JSON tí Zod ti fọwọ́sí (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, àti bẹ́ẹ̀ bẹ́ẹ̀ lọ; wo `src/shared/validation/schemas.ts`). A máa dá 4xx padà nígbà tí ìfọwọ́sí schema bá kùnà.
 
-Fún àwọn client tí kò lè so `Authorization: Bearer ...` mọ́ ìbéèrè, OmniRoute tún gba àwọn API key nínú URL nípasẹ̀ ìbámu query-string (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) tàbí àwọn endpoint `/api/v1/vscode/{token}/...` pàtó tí a ṣàkọsílẹ̀ rẹ̀ ní ìsàlẹ̀.
+Fún àwọn client tí kò lè so `Authorization: Bearer ...` mọ́ ìbéèrè, OmniRoute tún ń gba àwọn kọ́kọ́rọ́ API nínú URL nípasẹ̀ ìbámu query-string (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) tàbí àwọn ojú-ọ̀nà pàtó `/api/v1/vscode/{token}/...` tí a ṣàkọsílẹ̀ rẹ̀ ní ìsàlẹ̀.
 
 ```bash
 # Àtúntò ipò (olùpèsè ìforúkọsílẹ̀ cloud, tàbí node olùpèsè tó bá OpenAI mu gẹ́gẹ́ bí "<prefix>/<model>")
@@ -492,47 +492,50 @@ POST /v1/classify    { "model": "jina-embeddings-v5-text-small", "input": ["..."
 # Olùpín Jina
 POST /v1/segment     { "content": "...", "return_chunks": true }
 
-# Ìṣàwárí Jina (s.jina.ai; àwọn àpèjúwe-kúkúrú olùpèsè: jina-search, jina-ai, jina)
+# Ìṣàwárí Jina (s.jina.ai; àwọn orúkọ-àfidípò olùpèsè: jina-search, jina-ai, jina)
 POST /v1/search      { "query": "...", "provider": "jina-search" }
 
-# Ìṣàkóso àkóónú
+# Àwọn àyẹ̀wò
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
-# TTS — ń dá ara audio/mpeg (tàbí fọ́ọ̀mù tí a béèrè) padà
+# TTS — ń dá ara audio/mpeg (tàbí ìṣètò tí a béèrè) padà
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS nílò èdè àti ohùn kan: `language` máa ń lo "en" gẹ́gẹ́ bí àiyípadà; ohùn tí kò sí
-# tàbí orúkọ ohùn àkọ́kọ́ OpenAI (alloy, nova, …) yóò di "Adrian"
+# Soniox TTS nílò èdè àti ohùn kan: `language` máa ń lo "en" bí àkọ́kọ́; ohùn tí kò sí
+# tàbí orúkọ ohùn àkójọpọ̀ OpenAI (alloy, nova, …) yóò di "Adrian"
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # Àtúnṣe àwòrán (multipart)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# Ìṣẹ̀dá fídíò / orin (id model tó ní àkọ́kọ́ orúkọ olùpèsè)
+# Ìṣẹ̀dá fídíò / orin (id àwòṣe tó ní ìpele olùpèsè)
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
 > **Àwọn node olùpèsè àtúntò ipò:** `POST /v1/rerank` tún ń darí sí àwọn node olùpèsè tó bá OpenAI mu
-> (oMLX, vLLM, Infinity, TEI lẹ́yìn gateway kan, …) tí a ń tọ́ka sí gẹ́gẹ́ bí `<node-prefix>/<model>`. Àwọn node
-> loopback (`localhost`, `127.0.0.1`, `172.16.0.0/12`) máa ń tóótun ní gbogbo ìgbà. Àwọn node lórí host
-> èyíkéyìí mìíràn — ẹ̀rọ LAN kan tàbí Tailscale peer — máa ń tóótun nìkan nígbà tí olùṣàkóso bá tan
-> àsíá ẹ̀ya `RERANK_REMOTE_PROVIDER_NODES` **àti** tí URL ìpìlẹ̀ node náà bá kọjá ìlànà URL
-> àbájáde olùpèsè (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
-> Ìgbésẹ̀ àtúntò ipò ti engine ìrántí ń pe ipa-ọ̀nà yìí nípasẹ̀
+> (oMLX, vLLM, Infinity, TEI lẹ́yìn gateway, …) tí a tọ́ka sí gẹ́gẹ́ bí `<node-prefix>/<model>`. Àwọn node
+> loopback (`localhost`, `127.0.0.1`, `172.16.0.0/12`) máa ń yẹ ní gbogbo ìgbà, bẹ́ẹ̀ sì ni àwọn hostname tí
+> olùṣàkóso ṣe àtòjọ wọn nínú `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` (fún àpẹẹrẹ, orúkọ iṣẹ́ Docker/Compose
+> bíi `http://reranker:8080/v1`; a máa ń pè wọ́n ní tààrà, kì í ṣe nípasẹ̀ `HTTP(S)_PROXY` tàbí proxy tí
+> a ti so mọ́ connection kan). Àwọn node lórí
+> host mìíràn — ẹ̀rọ LAN kan tàbí Tailscale peer — yóò yẹ nìkan nígbà tí olùṣàkóso bá tan feature flag
+> `RERANK_REMOTE_PROVIDER_NODES` **àti** tí URL ìpilẹ̀ node náà bá kọjá ìlànà URL àbájáde olùpèsè
+> (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
+> Ìgbésẹ̀ àtúntò ipò ti ẹ́ńjìnnì ìrántí ń pe ipa-ọ̀nà yìí nípasẹ̀
 > loopback, nítorí náà òfin kan náà ló ń ṣàkóso `rerankProviderModel` nínú àwọn ètò Memory.
 >
-> **Àwọn àkópọ̀ server agbègbè:** a máa pe node náà ní `<base>/v1/rerank`, àti nígbà 404, ní `<base>/rerank`
-> (Infinity, TEI). Ara upstream náà ní ìkọ̀wé Cohere/OpenAI (`documents`,
-> `return_documents`) àti ìkọ̀wé TEI (`texts`, `return_text`), a sì máa ṣe response upstream náà
-> sí ìlànà àkọ́ṣe Cohere: àkójọ lasán TEI `[{index, score, text}]`, `{results: [{index, score}]}`
-> láti àwọn gateway kéékèèké, àti `{data: [...]}` ara Voyage, gbogbo wọn ni a máa dá padà sí client gẹ́gẹ́ bí
-> `{results: [{index, relevance_score, document?}]}`, tí a tò nípa score tí a sì fi òpin sí ní `top_n`.
+> **Àwọn ìrísí server abẹ́lé:** a máa ń pe node náà ní `<base>/v1/rerank`, àti nígbà 404, ní `<base>/rerank`
+> (Infinity, TEI). Ara upstream náà ní méjèèjì ọ̀nà ìkọ̀wé Cohere/OpenAI (`documents`,
+> `return_documents`) àti ọ̀nà ìkọ̀wé TEI (`texts`, `return_text`), a sì máa ń ṣe àtúnṣe ìdáhùn upstream
+> sí àpò Cohere: àtòjọ lasán TEI `[{index, score, text}]`, `{results: [{index, score}]}`
+> láti àwọn gateway fẹ́ẹ́rẹ́, àti `{data: [...]}` ara Voyage, gbogbo wọn ni a máa dá padà sí client gẹ́gẹ́ bí
+> `{results: [{index, relevance_score, document?}]}`, tí a tò gẹ́gẹ́ bí score tí a sì fi òpin sí ní `top_n`.
 
-> **Ìṣàwárí node olùpèsè:** àwọn model lórí node olùpèsè tó bá OpenAI mu máa ń farahàn nínú `GET /v1/models`
-> lábẹ́ prefix node náà. Àwọn row tí kò ní metadata endpoint (gẹ́gẹ́ bí ó ṣe wọ́pọ̀ fún àwọn àkójọ `/v1/models` abẹ́lẹ̀)
-> jogún `apiType` node náà, nítorí náà àwọn model node `embeddings` jẹ́ `type: "embedding"` àti àwọn
-> model node `rerank` jẹ́ `type: "rerank"` dípò kí wọ́n lo chat gẹ́gẹ́ bí ìpìlẹ̀; `supportedEndpoints` tí a sọ ní tààrà lórí row tí a sync tàbí tí a fi kún un lọ́wọ́ ṣì ní ààyò.
+> **Ìṣàwárí node olùpèsè:** àwọn model tó wà lórí node olùpèsè tó bá OpenAI mu máa ń hàn nínú `GET /v1/models`
+> lábẹ́ ìṣáájú node náà. Àwọn ìlà tí kò ní metadata endpoint kankan (gẹ́gẹ́ bí ó ṣe wọ́pọ̀ fún àwọn àtòjọ `/v1/models` ti agbègbè)
+> jogún `apiType` node náà, nítorí náà àwọn model node `embeddings` jẹ́ `type: "embedding"` àti pé
+> àwọn model node `rerank` jẹ́ `type: "rerank"` dípò kí wọ́n lo chat gẹ́gẹ́ bí àìyípadà; `supportedEndpoints` tí a sọ ní tààrà lórí ìlà tí a múṣiṣẹ́pọ̀ tàbí tí a fi kún un lọ́wọ́ ṣì ní ipò àkọ́kọ́.
 
 ### Àwọn Route Olùpèsè Pàtó
 
@@ -542,7 +545,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-A máa fi prefix olùpèsè kún un láìfọwọ́yí bí kò bá sí. Àwọn model tí kò bá mu padà `400`.
+A máa fi ìṣáájú olùpèsè kún un láìfọwọ́ṣe bí kò bá sí. Àwọn model tí kò bá mu máa dá `400` padà.
 
 ---
 

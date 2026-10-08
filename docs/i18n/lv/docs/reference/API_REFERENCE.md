@@ -449,37 +449,37 @@ Atgriež JSON drošo pakalpojumu spraudņa manifestu, ko izmanto Bifrost, CLIPro
 
 ## Saderības galapunkti
 
-| Metode | Ceļš                                      | Formāts                                  |
-| ------ | ----------------------------------------- | ---------------------------------------- |
-| POST   | `/v1/chat/completions`                    | OpenAI                                   |
-| POST   | `/v1/messages`                            | Anthropic                                |
-| POST   | `/v1/responses`                           | OpenAI Responses                         |
-| POST   | `/v1/embeddings`                          | OpenAI                                   |
-| POST   | `/v1/images/generations`                  | OpenAI Images                            |
-| POST   | `/v1/images/edits`                        | OpenAI Images (rediģēšana/aizpildīšana)  |
-| POST   | `/v1/videos/generations`                  | OpenAI stila video ģenerēšana            |
-| POST   | `/v1/music/generations`                   | OpenAI stila mūzikas ģenerēšana          |
-| POST   | `/v1/audio/transcriptions`                | OpenAI Audio (runas pārvēršana tekstā)   |
-| POST   | `/v1/audio/speech`                        | OpenAI TTS (atgriež audio ķermeni)       |
-| POST   | `/v1/rerank`                              | Cohere/Voyage stila pārkārtošana         |
-| POST   | `/v1/classify`                            | Jina klasificēšana (`api.jina.ai`)       |
-| POST   | `/v1/segment`                             | Jina segmentētājs (`segment.jina.ai`)    |
-| POST   | `/v1/moderations`                         | OpenAI Moderations                       |
-| GET    | `/v1/models`                              | OpenAI                                   |
-| POST   | `/v1/messages/count_tokens`               | Anthropic                                |
-| GET    | `/v1beta/models`                          | Gemini                                   |
-| POST   | `/v1beta/models/{...path}`                | Gemini generateContent                   |
-| POST   | `/v1/api/chat`                            | Ollama                                   |
-| GET    | `/api/v1/vscode/{token}/`                 | OpenAI kataloga aizstājvārds             |
-| GET    | `/api/v1/vscode/{token}/models`           | OpenAI modeļu aizstājvārds               |
-| POST   | `/api/v1/vscode/{token}/chat/completions` | OpenAI tokenizēts aizstājvārds           |
-| POST   | `/api/v1/vscode/{token}/responses`        | OpenAI Responses tokenizēts aizstājvārds |
-| POST   | `/api/v1/vscode/{token}/api/chat`         | Ollama tokenizēts aizstājvārds           |
-| GET    | `/api/v1/vscode/{token}/api/tags`         | Ollama tagu tokenizēts aizstājvārds      |
+| Metode | Ceļš                                      | Formāts                                    |
+| ------ | ----------------------------------------- | ------------------------------------------ |
+| POST   | `/v1/chat/completions`                    | OpenAI                                     |
+| POST   | `/v1/messages`                            | Anthropic                                  |
+| POST   | `/v1/responses`                           | OpenAI Responses                           |
+| POST   | `/v1/embeddings`                          | OpenAI                                     |
+| POST   | `/v1/images/generations`                  | OpenAI Images                              |
+| POST   | `/v1/images/edits`                        | OpenAI Images (rediģēšana/aizpildīšana)    |
+| POST   | `/v1/videos/generations`                  | OpenAI stila video ģenerēšana              |
+| POST   | `/v1/music/generations`                   | OpenAI stila mūzikas ģenerēšana            |
+| POST   | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                         |
+| POST   | `/v1/audio/speech`                        | OpenAI TTS (atgriež audio saturu)          |
+| POST   | `/v1/rerank`                              | Cohere/Voyage stila pārkārtošana           |
+| POST   | `/v1/classify`                            | Jina klasificēšana (`api.jina.ai`)         |
+| POST   | `/v1/segment`                             | Jina segmentētājs (`segment.jina.ai`)      |
+| POST   | `/v1/moderations`                         | OpenAI Moderations                         |
+| GET    | `/v1/models`                              | OpenAI                                     |
+| POST   | `/v1/messages/count_tokens`               | Anthropic                                  |
+| GET    | `/v1beta/models`                          | Gemini                                     |
+| POST   | `/v1beta/models/{...path}`                | Gemini generateContent                     |
+| POST   | `/v1/api/chat`                            | Ollama                                     |
+| GET    | `/api/v1/vscode/{token}/`                 | OpenAI kataloga aizstājvārds               |
+| GET    | `/api/v1/vscode/{token}/models`           | OpenAI modeļu aizstājvārds                 |
+| POST   | `/api/v1/vscode/{token}/chat/completions` | OpenAI marķierizēts aizstājvārds           |
+| POST   | `/api/v1/vscode/{token}/responses`        | OpenAI Responses marķierizēts aizstājvārds |
+| POST   | `/api/v1/vscode/{token}/api/chat`         | Ollama marķierizēts aizstājvārds           |
+| GET    | `/api/v1/vscode/{token}/api/tags`         | Ollama tagu marķierizēts aizstājvārds      |
 
-Visi POST maršruti izmanto vienādu struktūru: `Bearer your-api-key` + ar Zod validēts JSON ķermenis (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` utt.; skatiet `src/shared/validation/schemas.ts`). Shēmas validācijas kļūmes gadījumā tiek atgriezts 4xx.
+Visiem POST maršrutiem ir vienāda struktūra: `Bearer your-api-key` + ar Zod validēts JSON saturs (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` utt.; skatiet `src/shared/validation/schemas.ts`). Shēmas validācijas kļūmes gadījumā tiek atgriezts 4xx.
 
-Klientiem, kuri nevar pievienot `Authorization: Bearer ...`, OmniRoute arī pieņem API atslēgas URL, izmantojot vai nu saderībai paredzētus vaicājuma virknes parametrus (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`), vai tālāk dokumentētos īpašos `/api/v1/vscode/{token}/...` galapunktus.
+Klientiem, kuri nevar pievienot `Authorization: Bearer ...`, OmniRoute pieņem API atslēgas arī URL, izmantojot vai nu vaicājuma virknes saderību (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`), vai tālāk dokumentētos īpašos `/api/v1/vscode/{token}/...` galapunktus.
 
 ```bash
 # Pārkārtošana (mākoņa reģistra nodrošinātājs vai ar OpenAI saderīgs nodrošinātāja mezgls formātā "<prefix>/<model>")
@@ -494,14 +494,14 @@ POST /v1/segment     { "content": "...", "return_chunks": true }
 # Jina meklēšana (s.jina.ai; nodrošinātāja aizstājvārdi: jina-search, jina-ai, jina)
 POST /v1/search      { "query": "...", "provider": "jina-search" }
 
-# Moderēšana
+# Moderācija
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
-# TTS — atgriež audio/mpeg (vai pieprasītā formāta) ķermeni
+# TTS — atgriež audio/mpeg (vai pieprasītā formāta) saturu
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS nepieciešama valoda un balss: `language` noklusējuma vērtība ir "en"; nenorādīta
-# balss vai OpenAI standarta balss nosaukums (alloy, nova, …) tiek aizstāts ar "Adrian"
+# Soniox TTS ir nepieciešama valoda un balss: `language` noklusējuma vērtība ir "en"; ja
+# balss nav norādīta vai izmantots OpenAI standarta balss nosaukums (alloy, nova, …), tiek lietots "Adrian"
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # Attēla rediģēšana (multipart)
@@ -512,29 +512,32 @@ POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **Pārkārtošanas nodrošinātāja mezgli:** `POST /v1/rerank` arī novirza pieprasījumus uz ar OpenAI saderīgiem nodrošinātāja mezgliem
-> (oMLX, vLLM, Infinity, TEI aiz vārtejas, …), kuri tiek adresēti kā `<node-prefix>/<model>`. Atgriezeniskās cilpas
-> mezgli (`localhost`, `127.0.0.1`, `172.16.0.0/12`) vienmēr ir piemēroti. Mezglus jebkurā citā
-> resursdatorā — LAN ierīcē vai Tailscale vienādranga mezglā — var izmantot tikai tad, ja operators iespējo
-> `RERANK_REMOTE_PROVIDER_NODES` funkcijas karogu **un** mezgla bāzes URL atbilst nodrošinātāja
+> **Pārkārtošanas nodrošinātāja mezgli:** `POST /v1/rerank` novirza pieprasījumus arī uz OpenAI saderīgiem nodrošinātāja mezgliem
+> (oMLX, vLLM, Infinity, TEI aiz vārtejas, …), kas adresēti kā `<node-prefix>/<model>`. Atgriezeniskās cilpas
+> mezgli (`localhost`, `127.0.0.1`, `172.16.0.0/12`) vienmēr ir piemēroti, tāpat kā resursdatoru nosaukumi, kurus
+> operators norāda mainīgajā `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` (piemēram, Docker/Compose pakalpojuma nosaukums,
+> tāds kā `http://reranker:8080/v1`; tie tiek izsaukti tieši, nekad neizmantojot `HTTP(S)_PROXY` vai
+> savienojumam piesaistīto starpniekserveri). Mezglus jebkurā citā
+> resursdatorā — LAN ierīcē vai Tailscale līdznodrošinātājā — var izmantot tikai tad, ja operators iespējo
+> `RERANK_REMOTE_PROVIDER_NODES` funkcijas karodziņu **un** mezgla bāzes URL atbilst nodrošinātāja
 > izejošo URL politikai (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
 > Atmiņas dzinēja pārkārtošanas darbība izsauc šo maršrutu, izmantojot
-> atgriezenisko cilpu, tāpēc tas pats noteikums attiecas uz `rerankProviderModel` atmiņas iestatījumos.
+> atgriezenisko cilpu, tādēļ tas pats noteikums attiecas uz `rerankProviderModel` atmiņas iestatījumos.
 >
 > **Lokālo serveru struktūras:** mezgls tiek izsaukts adresē `<base>/v1/rerank` un 404 gadījumā — adresē `<base>/rerank`
-> (Infinity, TEI). Augšupstraumes ķermenī ir gan Cohere/OpenAI rakstība (`documents`,
-> `return_documents`), gan TEI rakstība (`texts`, `return_text`), un augšupstraumes atbilde tiek
+> (Infinity, TEI). Augšupstraumes saturs ietver gan Cohere/OpenAI rakstību (`documents`,
+> `return_documents`), gan TEI rakstību (`texts`, `return_text`), un augšupstraumes atbilde tiek
 > normalizēta atbilstoši Cohere aploksnei: TEI vienkāršais `[{index, score, text}]`, `{results: [{index, score}]}`
 > no vienkāršām vārtejām un Voyage stila `{data: [...]}` klientam tiek atgriezti kā
-> `{results: [{index, relevance_score, document?}]}`, sakārtoti pēc rezultāta un ierobežoti līdz `top_n`.
+> `{results: [{index, relevance_score, document?}]}`, sakārtoti pēc vērtējuma un ierobežoti līdz `top_n`.
 
-> **Pakalpojumu sniedzēja mezgla atklāšana:** ar OpenAI saderīga pakalpojumu sniedzēja mezgla modeļi ir redzami `GET /v1/models`
-> zem mezgla prefiksa. Rindas bez galapunktu metadatiem (kā tas parasti ir lokālajos `/v1/models` sarakstos)
-> pārmanto mezgla `apiType`, tādēļ `embeddings` mezgla modeļiem ir `type: "embedding"`, bet
-> `rerank` mezgla modeļiem ir `type: "rerank"`, nevis pēc noklusējuma tērzēšanas tips; sinhronizētā vai manuāli pievienotā rindā tieši norādītajam
+> **Nodrošinātāja mezgla atklāšana:** ar OpenAI saderīga nodrošinātāja mezgla modeļi ir redzami `GET /v1/models`
+> zem mezgla prefiksa. Rindas, kurās nav galapunkta metadatu (kā tas parasti ir lokālos `/v1/models` sarakstos),
+> manto mezgla `apiType`, tāpēc `embeddings` mezgla modeļiem ir `type: "embedding"`, bet
+> `rerank` mezgla modeļiem ir `type: "rerank"`, nevis pēc noklusējuma tērzēšanas tips; sinhronizētā vai manuāli pievienotā rindā skaidri norādītam
 > `supportedEndpoints` joprojām ir prioritāte.
 
-### Atsevišķi pakalpojumu sniedzēju maršruti
+### Atsevišķi nodrošinātāju maršruti
 
 ```bash
 POST /v1/providers/{provider}/chat/completions
@@ -542,7 +545,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-Ja pakalpojumu sniedzēja prefiksa trūkst, tas tiek pievienots automātiski. Neatbilstoši modeļi atgriež `400`.
+Ja nodrošinātāja prefiksa nav, tas tiek pievienots automātiski. Neatbilstoši modeļi atgriež `400`.
 
 ---
 

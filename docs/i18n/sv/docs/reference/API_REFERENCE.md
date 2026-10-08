@@ -478,12 +478,12 @@ Använd den här slutpunkten när en sidovagn körs utanför processen och inte 
 | POST  | `/v1/responses`                           | OpenAI Responses                      |
 | POST  | `/v1/embeddings`                          | OpenAI                                |
 | POST  | `/v1/images/generations`                  | OpenAI Images                         |
-| POST  | `/v1/images/edits`                        | OpenAI Images (redigering/inpaint)    |
+| POST  | `/v1/images/edits`                        | OpenAI Images (redigering/inpainting) |
 | POST  | `/v1/videos/generations`                  | Videogenerering i OpenAI-stil         |
 | POST  | `/v1/music/generations`                   | Musikgenerering i OpenAI-stil         |
 | POST  | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                    |
-| POST  | `/v1/audio/speech`                        | OpenAI TTS (returnerar ljuddata)      |
-| POST  | `/v1/rerank`                              | Omrankning i Cohere/Voyage-stil       |
+| POST  | `/v1/audio/speech`                        | OpenAI TTS (returnerar ljudinnehåll)  |
+| POST  | `/v1/rerank`                              | Omrangordning i Cohere-/Voyage-stil   |
 | POST  | `/v1/classify`                            | Jina-klassificering (`api.jina.ai`)   |
 | POST  | `/v1/segment`                             | Jina-segmenterare (`segment.jina.ai`) |
 | POST  | `/v1/moderations`                         | OpenAI Moderations                    |
@@ -499,12 +499,12 @@ Använd den här slutpunkten när en sidovagn körs utanför processen och inte 
 | POST  | `/api/v1/vscode/{token}/api/chat`         | Tokeniserad Ollama-alias              |
 | GET   | `/api/v1/vscode/{token}/api/tags`         | Tokeniserad alias för Ollama-taggar   |
 
-Alla POST-rutter följer samma struktur: `Bearer your-api-key` + Zod-validerad JSON-kropp (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` osv., se `src/shared/validation/schemas.ts`). 4xx returneras vid schemafel.
+Alla POST-rutter följer samma struktur: `Bearer your-api-key` + en Zod-validerad JSON-kropp (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` osv., se `src/shared/validation/schemas.ts`). 4xx returneras om schemavalideringen misslyckas.
 
 För klienter som inte kan bifoga `Authorization: Bearer ...` accepterar OmniRoute även API-nycklar i URL:en, antingen via kompatibla frågesträngar (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) eller via de särskilda `/api/v1/vscode/{token}/...`-endpoints som dokumenteras nedan.
 
 ```bash
-# Omrankning (leverantör från molnregistret eller en OpenAI-kompatibel leverantörsnod som "<prefix>/<model>")
+# Omrangordning (leverantör i molnregistret eller en OpenAI-kompatibel leverantörsnod som "<prefix>/<model>")
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
 # Jina-klassificering (autentiseringsuppgifter för Foundation API)
@@ -519,11 +519,11 @@ POST /v1/search      { "query": "...", "provider": "jina-search" }
 # Modereringar
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
-# TTS — returnerar en kropp med audio/mpeg (eller begärt format)
+# TTS — returnerar en audio/mpeg-kropp (eller kroppen i begärt format)
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
 # Soniox TTS kräver ett språk och en röst: `language` har standardvärdet "en"; en saknad
-# röst eller ett OpenAI-standardröstnamn (alloy, nova, …) blir "Adrian"
+# röst eller ett namn på en standardröst från OpenAI (alloy, nova, …) blir "Adrian"
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # Bildredigering (multipart)
@@ -534,29 +534,32 @@ POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **Leverantörsnoder för omrankning:** `POST /v1/rerank` dirigerar även till OpenAI-kompatibla leverantörsnoder
+> **Leverantörsnoder för omrangordning:** `POST /v1/rerank` dirigerar även till OpenAI-kompatibla leverantörsnoder
 > (oMLX, vLLM, Infinity, TEI bakom en gateway, …) som adresseras som `<node-prefix>/<model>`. Loopback-
-> noder (`localhost`, `127.0.0.1`, `172.16.0.0/12`) är alltid behöriga. Noder på någon annan
-> värd — en dator i det lokala nätverket eller en Tailscale-peer — är endast behöriga när operatören aktiverar
-> funktionsflaggan `RERANK_REMOTE_PROVIDER_NODES` **och** nodens bas-URL klarar leverantörens
+> noder (`localhost`, `127.0.0.1`, `172.16.0.0/12`) är alltid tillåtna, liksom värdnamn som
+> operatören anger i `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` (t.ex. namnet på en Docker-/Compose-tjänst
+> som `http://reranker:8080/v1`; dessa anropas direkt, aldrig via `HTTP(S)_PROXY` eller en
+> anslutnings låsta proxy). Noder på alla andra
+> värdar — en dator i det lokala nätverket eller en Tailscale-peer — är endast tillåtna när operatören aktiverar
+> funktionsflaggan `RERANK_REMOTE_PROVIDER_NODES` **och** nodens bas-URL godkänns av leverantörens
 > policy för utgående URL:er (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
-> Minnesmotorns omrankningssteg anropar denna rutt via
+> Minnesmotorns omrangordningssteg anropar denna rutt via
 > loopback, så samma regel styr `rerankProviderModel` i minnesinställningarna.
 >
-> **Lokala serverformat:** noden anropas på `<base>/v1/rerank` och, vid 404, på `<base>/rerank`
-> (Infinity, TEI). Kroppen till uppströmsservern innehåller både Cohere/OpenAI-benämningarna (`documents`,
-> `return_documents`) och TEI-benämningarna (`texts`, `return_text`), och svaret från uppströmsservern
+> **Lokala serverstrukturer:** noden anropas på `<base>/v1/rerank` och, vid 404, på `<base>/rerank`
+> (Infinity, TEI). Kroppen som skickas uppströms innehåller både stavningen från Cohere/OpenAI (`documents`,
+> `return_documents`) och stavningen från TEI (`texts`, `return_text`), och svaret uppströms
 > normaliseras till Cohere-formatet: TEI:s rena `[{index, score, text}]`, `{results: [{index, score}]}`
 > från tunna gateways och Voyage-formatet `{data: [...]}` returneras alla till klienten som
 > `{results: [{index, relevance_score, document?}]}`, sorterade efter poäng och begränsade till `top_n`.
 
-> **Identifiering av providernoder:** modeller på en OpenAI-kompatibel providernod visas i `GET /v1/models`
-> under nodprefixet. Rader utan endpoint-metadata (vilket är typiskt för lokala `/v1/models`-listningar)
-> ärver nodens `apiType`, så modellerna för en `embeddings`-nod får `type: "embedding"` och modellerna för en
-> `rerank`-nod får `type: "rerank"` i stället för att som standard behandlas som chattmodeller; ett uttryckligt
+> **Identifiering av leverantörsnoder:** modeller på en OpenAI-kompatibel leverantörsnod visas i `GET /v1/models`
+> under nodprefixet. Rader som saknar endpoint-metadata (vilket är typiskt för lokala `/v1/models`-listningar)
+> ärver nodens `apiType`, så att modellerna för en `embeddings`-nod får `type: "embedding"` och modellerna
+> för en `rerank`-nod får `type: "rerank"` i stället för att som standard använda chatt; ett uttryckligt
 > `supportedEndpoints` på en synkroniserad eller manuellt tillagd rad har fortfarande företräde.
 
-### Dedikerade providerrutter
+### Dedikerade leverantörsrutter
 
 ```bash
 POST /v1/providers/{provider}/chat/completions
@@ -564,7 +567,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-Providerprefixet läggs till automatiskt om det saknas. Modeller som inte matchar returnerar `400`.
+Leverantörsprefixet läggs till automatiskt om det saknas. Modeller som inte överensstämmer returnerar `400`.
 
 ---
 

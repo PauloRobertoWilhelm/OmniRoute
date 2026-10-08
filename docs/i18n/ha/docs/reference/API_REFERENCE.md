@@ -440,94 +440,97 @@ Yi amfani da wannan endpoint lokacin da sidecar ke gudana a wajen tsari kuma ba 
 
 ---
 
-## Wuraren Ƙarshen Dacewa
+## Wuraren Ƙarshen Daidaituwa
 
-| Hanya | Tafarki                                   | Tsari                                 |
-| ----- | ----------------------------------------- | ------------------------------------- |
-| POST  | `/v1/chat/completions`                    | OpenAI                                |
-| POST  | `/v1/messages`                            | Anthropic                             |
-| POST  | `/v1/responses`                           | OpenAI Responses                      |
-| POST  | `/v1/embeddings`                          | OpenAI                                |
-| POST  | `/v1/images/generations`                  | Hotunan OpenAI                        |
-| POST  | `/v1/images/edits`                        | Hotunan OpenAI (gyara/inpaint)        |
-| POST  | `/v1/videos/generations`                  | Samar da bidiyo irin na OpenAI        |
-| POST  | `/v1/music/generations`                   | Samar da kiɗa irin na OpenAI          |
-| POST  | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                    |
-| POST  | `/v1/audio/speech`                        | OpenAI TTS (yana dawo da jikin sauti) |
-| POST  | `/v1/rerank`                              | Sake jeri irin na Cohere/Voyage       |
-| POST  | `/v1/classify`                            | Rarrabawar Jina (`api.jina.ai`)       |
-| POST  | `/v1/segment`                             | Mai rarraba Jina (`segment.jina.ai`)  |
-| POST  | `/v1/moderations`                         | OpenAI Moderations                    |
-| GET   | `/v1/models`                              | OpenAI                                |
-| POST  | `/v1/messages/count_tokens`               | Anthropic                             |
-| GET   | `/v1beta/models`                          | Gemini                                |
-| POST  | `/v1beta/models/{...path}`                | Gemini generateContent                |
-| POST  | `/v1/api/chat`                            | Ollama                                |
-| GET   | `/api/v1/vscode/{token}/`                 | Laƙabin kundin OpenAI                 |
-| GET   | `/api/v1/vscode/{token}/models`           | Laƙabin samfuran OpenAI               |
-| POST  | `/api/v1/vscode/{token}/chat/completions` | Laƙabin OpenAI mai token              |
-| POST  | `/api/v1/vscode/{token}/responses`        | Laƙabin OpenAI Responses mai token    |
-| POST  | `/api/v1/vscode/{token}/api/chat`         | Laƙabin Ollama mai token              |
-| GET   | `/api/v1/vscode/{token}/api/tags`         | Laƙabin alamun Ollama mai token       |
+| Hanya | Path                                      | Tsari                                   |
+| ----- | ----------------------------------------- | --------------------------------------- |
+| POST  | `/v1/chat/completions`                    | OpenAI                                  |
+| POST  | `/v1/messages`                            | Anthropic                               |
+| POST  | `/v1/responses`                           | OpenAI Responses                        |
+| POST  | `/v1/embeddings`                          | OpenAI                                  |
+| POST  | `/v1/images/generations`                  | OpenAI Images                           |
+| POST  | `/v1/images/edits`                        | OpenAI Images (gyara/cike gurbi)        |
+| POST  | `/v1/videos/generations`                  | Ƙirƙirar bidiyo irin na OpenAI          |
+| POST  | `/v1/music/generations`                   | Ƙirƙirar kiɗa irin na OpenAI            |
+| POST  | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                      |
+| POST  | `/v1/audio/speech`                        | OpenAI TTS (yana mayar da jikin sauti)  |
+| POST  | `/v1/rerank`                              | Sake jere irin na Cohere/Voyage         |
+| POST  | `/v1/classify`                            | Rarrabawar Jina (`api.jina.ai`)         |
+| POST  | `/v1/segment`                             | Mai rarrabawar Jina (`segment.jina.ai`) |
+| POST  | `/v1/moderations`                         | OpenAI Moderations                      |
+| GET   | `/v1/models`                              | OpenAI                                  |
+| POST  | `/v1/messages/count_tokens`               | Anthropic                               |
+| GET   | `/v1beta/models`                          | Gemini                                  |
+| POST  | `/v1beta/models/{...path}`                | Gemini generateContent                  |
+| POST  | `/v1/api/chat`                            | Ollama                                  |
+| GET   | `/api/v1/vscode/{token}/`                 | Laƙabin kundin OpenAI                   |
+| GET   | `/api/v1/vscode/{token}/models`           | Laƙabin models na OpenAI                |
+| POST  | `/api/v1/vscode/{token}/chat/completions` | Laƙabin OpenAI mai token                |
+| POST  | `/api/v1/vscode/{token}/responses`        | Laƙabin OpenAI Responses mai token      |
+| POST  | `/api/v1/vscode/{token}/api/chat`         | Laƙabin Ollama mai token                |
+| GET   | `/api/v1/vscode/{token}/api/tags`         | Laƙabin tags na Ollama mai token        |
 
-Duk hanyoyin POST suna bin tsari iri ɗaya: `Bearer your-api-key` + jikin JSON da Zod ya tantance (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, da sauransu, duba `src/shared/validation/schemas.ts`). Ana dawo da 4xx idan tantancewar schema ta gaza.
+Duk hanyoyin POST suna bin tsari iri ɗaya: `Bearer your-api-key` + jikin JSON da Zod ya inganta (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, da sauransu, duba `src/shared/validation/schemas.ts`). Ana mayar da 4xx idan inganta schema ta gaza.
 
-Ga abokan hulɗa waɗanda ba za su iya haɗa `Authorization: Bearer ...` ba, OmniRoute yana kuma karɓar maɓallan API a cikin URL ta hanyar dacewar query-string (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) ko kuma ta keɓaɓɓun wuraren ƙarshen `/api/v1/vscode/{token}/...` da aka bayyana a ƙasa.
+Ga clients waɗanda ba za su iya haɗa `Authorization: Bearer ...` ba, OmniRoute kuma yana karɓar maɓallan API a cikin URL ta hanyar daidaituwar query-string (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) ko kuma keɓaɓɓun endpoints na `/api/v1/vscode/{token}/...` da aka bayyana a ƙasa.
 
 ```bash
-# Sake jeri (mai bayarwa daga kundin cloud, ko node na mai bayarwa mai dacewa da OpenAI a matsayin "<prefix>/<model>")
+# Sake jere (provider na rajistar cloud, ko provider node mai dacewa da OpenAI a matsayin "<prefix>/<model>")
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
-# Rarrabawar Jina (bayanan shaidar Foundation API)
+# Rarrabawar Jina (shaidun shiga na Foundation API)
 POST /v1/classify    { "model": "jina-embeddings-v5-text-small", "input": ["..."], "labels": ["a", "b"] }
 
-# Mai rarraba Jina
+# Mai rarrabawar Jina
 POST /v1/segment     { "content": "...", "return_chunks": true }
 
-# Binciken Jina (s.jina.ai; laƙaban mai bayarwa: jina-search, jina-ai, jina)
+# Binciken Jina (s.jina.ai; laƙabin providers: jina-search, jina-ai, jina)
 POST /v1/search      { "query": "...", "provider": "jina-search" }
 
-# Tace abubuwan da ba su dace ba
+# Tacewa
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
-# TTS — yana dawo da jikin audio/mpeg (ko tsarin da aka nema)
+# TTS — yana mayar da jikin audio/mpeg (ko tsarin da aka nema)
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS yana buƙatar harshe da murya: ƙimar tsoho ta `language` ita ce "en"; idan babu
-# murya ko kuma an yi amfani da sunan muryar asali ta OpenAI (alloy, nova, …), zai koma "Adrian"
+# Soniox TTS yana buƙatar harshe da murya: `language` yana komawa "en" ta tsohuwa; rashin
+# murya ko sunan muryar asali ta OpenAI (alloy, nova, …) yana zama "Adrian"
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # Gyaran hoto (multipart)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# Samar da bidiyo / kiɗa (id na samfuri mai prefix na mai bayarwa)
+# Ƙirƙirar bidiyo / kiɗa (ID na model mai prefix na provider)
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **Nodes na masu bayar da sake jeri:** `POST /v1/rerank` yana kuma turawa zuwa nodes na masu bayarwa masu dacewa da OpenAI
-> (oMLX, vLLM, Infinity, TEI a bayan gateway, …) waɗanda ake ambata da `<node-prefix>/<model>`. Nodes na loopback
-> (`localhost`, `127.0.0.1`, `172.16.0.0/12`) koyaushe sun cancanta. Nodes da ke kan kowane
-> host dabam — na'ura a LAN ko takwarar Tailscale — suna cancanta ne kawai idan mai gudanarwa ya kunna
-> tutar fasalin `RERANK_REMOTE_PROVIDER_NODES` **kuma** tushen URL na node ɗin ya wuce manufar URL mai fita ta mai bayarwa
-> (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
-> Matakin sake jeri na injin ƙwaƙwalwa yana kiran wannan hanya ta hanyar
-> loopback, don haka wannan ƙa'ida ce ke tafiyar da `rerankProviderModel` a saitunan Memory.
+> **Provider nodes na sake jere:** `POST /v1/rerank` kuma yana tura buƙatu zuwa provider nodes masu dacewa da OpenAI
+> (oMLX, vLLM, Infinity, TEI a bayan gateway, …) waɗanda ake kiran su da `<node-prefix>/<model>`. Loopback
+> nodes (`localhost`, `127.0.0.1`, `172.16.0.0/12`) koyaushe sun cancanta, haka kuma hostnames da
+> operator ya jera a cikin `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` (misali sunan sabis na Docker/Compose kamar
+> `http://reranker:8080/v1`; ana kiran waɗannan kai tsaye, ba a taɓa bi ta `HTTP(S)_PROXY` ko
+> pinned proxy na connection ba). Nodes da ke kan kowane wani
+> host — na'ura a LAN ko Tailscale peer — suna cancanta ne kawai idan operator ya kunna
+> feature flag na `RERANK_REMOTE_PROVIDER_NODES` **kuma** base URL na node ya wuce manufar
+> outbound URL ta provider (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
+> Matakin sake jere na memory engine yana kiran wannan route ta
+> loopback, don haka ƙa'ida ɗaya ce ke sarrafa `rerankProviderModel` a cikin saitunan Memory.
 >
-> **Tsarukan uwar garken gida:** ana kiran node ɗin a `<base>/v1/rerank`, kuma idan an sami 404, a `<base>/rerank`
-> (Infinity, TEI). Jikin upstream yana ɗauke da duka rubutun Cohere/OpenAI (`documents`,
-> `return_documents`) da rubutun TEI (`texts`, `return_text`), sannan ana daidaita amsar upstream
-> zuwa ambulan Cohere: ainihin `[{index, score, text}]` na TEI, `{results: [{index, score}]}`
-> daga ƙananan gateways, da kuma `{data: [...]}` irin na Voyage, duk suna komawa ga abokin hulɗa a matsayin
-> `{results: [{index, relevance_score, document?}]}`, an jera su bisa maki kuma an iyakance su zuwa `top_n`.
+> **Tsarukan local server:** ana kiran node a `<base>/v1/rerank`, kuma idan an samu 404, a `<base>/rerank`
+> (Infinity, TEI). Jikin upstream yana ɗauke da rubutun Cohere/OpenAI (`documents`,
+> `return_documents`) da kuma rubutun TEI (`texts`, `return_text`), sannan ana daidaita martanin upstream
+> zuwa envelope na Cohere: tsantsar `[{index, score, text}]` na TEI, `{results: [{index, score}]}`
+> daga gateways masu sauƙi, da kuma `{data: [...]}` irin na Voyage duk suna komawa ga client a matsayin
+> `{results: [{index, relevance_score, document?}]}`, an jera su bisa score kuma an iyakance su zuwa `top_n`.
 
-> **Gano node na mai bayarwa:** samfuran da ke kan node na mai bayarwa mai dacewa da OpenAI suna bayyana a `GET /v1/models`
-> ƙarƙashin prefix na node ɗin. Layukan da ba su ɗauke da metadata na endpoint ba (kamar yadda aka saba a jeri na cikin gida na `/v1/models`)
-> suna gaji `apiType` na node ɗin, don haka samfuran node na `embeddings` suna zama `type: "embedding"`, sannan na
+> **Gano node na mai samarwa:** model-model da ke kan node na mai samarwa mai dacewa da OpenAI suna bayyana a `GET /v1/models`
+> a ƙarƙashin prefix na node ɗin. Layukan da ba su ɗauke da metadata na endpoint ba (wanda aka saba gani a jerin `/v1/models` na gida)
+> suna gado `apiType` na node ɗin, don haka model-model na node na `embeddings` suna zama `type: "embedding"` sannan na
 > node na `rerank` suna zama `type: "rerank"` maimakon komawa zuwa chat ta tsohuwa; `supportedEndpoints` da aka fayyace
-> kai tsaye a kan layin da aka daidaita ko aka ƙara da hannu har yanzu shi ne ke da fifiko.
+> a layin da aka daidaita ko aka ƙara da hannu har yanzu shi ne ke da fifiko.
 
-### Keɓaɓɓun Hanyoyin Mai Bayarwa
+### Keɓaɓɓun Hanyoyin Mai Samarwa
 
 ```bash
 POST /v1/providers/{provider}/chat/completions
@@ -535,7 +538,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-Ana ƙara prefix na mai bayarwa ta atomatik idan babu shi. Samfuran da ba su dace ba suna mayar da `400`.
+Ana ƙara prefix na mai samarwa ta atomatik idan babu shi. Model-model da ba su dace ba suna dawo da `400`.
 
 ---
 

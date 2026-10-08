@@ -444,40 +444,40 @@ Bir sidecar süreç dışında çalıştığında ve `open-sse/config/providerPl
 
 ## Uyumluluk Uç Noktaları
 
-| Yöntem | Yol                                       | Biçim                                   |
-| ------ | ----------------------------------------- | --------------------------------------- |
-| POST   | `/v1/chat/completions`                    | OpenAI                                  |
-| POST   | `/v1/messages`                            | Anthropic                               |
-| POST   | `/v1/responses`                           | OpenAI Responses                        |
-| POST   | `/v1/embeddings`                          | OpenAI                                  |
-| POST   | `/v1/images/generations`                  | OpenAI Images                           |
-| POST   | `/v1/images/edits`                        | OpenAI Images (düzenleme/inpaint)       |
-| POST   | `/v1/videos/generations`                  | OpenAI tarzı video oluşturma            |
-| POST   | `/v1/music/generations`                   | OpenAI tarzı müzik oluşturma            |
-| POST   | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                      |
-| POST   | `/v1/audio/speech`                        | OpenAI TTS (ses gövdesi döndürür)       |
-| POST   | `/v1/rerank`                              | Cohere/Voyage tarzı yeniden sıralama    |
-| POST   | `/v1/classify`                            | Jina sınıflandırma (`api.jina.ai`)      |
-| POST   | `/v1/segment`                             | Jina bölümleyici (`segment.jina.ai`)    |
-| POST   | `/v1/moderations`                         | OpenAI Moderations                      |
-| GET    | `/v1/models`                              | OpenAI                                  |
-| POST   | `/v1/messages/count_tokens`               | Anthropic                               |
-| GET    | `/v1beta/models`                          | Gemini                                  |
-| POST   | `/v1beta/models/{...path}`                | Gemini generateContent                  |
-| POST   | `/v1/api/chat`                            | Ollama                                  |
-| GET    | `/api/v1/vscode/{token}/`                 | OpenAI katalog diğer adı                |
-| GET    | `/api/v1/vscode/{token}/models`           | OpenAI modelleri diğer adı              |
-| POST   | `/api/v1/vscode/{token}/chat/completions` | OpenAI token içeren diğer ad            |
-| POST   | `/api/v1/vscode/{token}/responses`        | OpenAI Responses token içeren diğer ad  |
-| POST   | `/api/v1/vscode/{token}/api/chat`         | Ollama token içeren diğer ad            |
-| GET    | `/api/v1/vscode/{token}/api/tags`         | Ollama etiketleri token içeren diğer ad |
+| Yöntem | Yol                                       | Biçim                                        |
+| ------ | ----------------------------------------- | -------------------------------------------- |
+| POST   | `/v1/chat/completions`                    | OpenAI                                       |
+| POST   | `/v1/messages`                            | Anthropic                                    |
+| POST   | `/v1/responses`                           | OpenAI Responses                             |
+| POST   | `/v1/embeddings`                          | OpenAI                                       |
+| POST   | `/v1/images/generations`                  | OpenAI Images                                |
+| POST   | `/v1/images/edits`                        | OpenAI Images (düzenleme/inpaint)            |
+| POST   | `/v1/videos/generations`                  | OpenAI tarzı video oluşturma                 |
+| POST   | `/v1/music/generations`                   | OpenAI tarzı müzik oluşturma                 |
+| POST   | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                           |
+| POST   | `/v1/audio/speech`                        | OpenAI TTS (ses gövdesi döndürür)            |
+| POST   | `/v1/rerank`                              | Cohere/Voyage tarzı yeniden sıralama         |
+| POST   | `/v1/classify`                            | Jina sınıflandırma (`api.jina.ai`)           |
+| POST   | `/v1/segment`                             | Jina bölümleyici (`segment.jina.ai`)         |
+| POST   | `/v1/moderations`                         | OpenAI Moderations                           |
+| GET    | `/v1/models`                              | OpenAI                                       |
+| POST   | `/v1/messages/count_tokens`               | Anthropic                                    |
+| GET    | `/v1beta/models`                          | Gemini                                       |
+| POST   | `/v1beta/models/{...path}`                | Gemini generateContent                       |
+| POST   | `/v1/api/chat`                            | Ollama                                       |
+| GET    | `/api/v1/vscode/{token}/`                 | OpenAI katalog diğer adı                     |
+| GET    | `/api/v1/vscode/{token}/models`           | OpenAI modeller diğer adı                    |
+| POST   | `/api/v1/vscode/{token}/chat/completions` | OpenAI token içeren diğer ad                 |
+| POST   | `/api/v1/vscode/{token}/responses`        | OpenAI Responses token içeren diğer ad       |
+| POST   | `/api/v1/vscode/{token}/api/chat`         | Ollama token içeren diğer ad                 |
+| GET    | `/api/v1/vscode/{token}/api/tags`         | Ollama etiketleri için token içeren diğer ad |
 
-Tüm POST rotaları aynı yapıyı izler: `Bearer your-api-key` + Zod ile doğrulanmış JSON gövdesi (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` vb.; bkz. `src/shared/validation/schemas.ts`). Şema doğrulaması başarısız olduğunda 4xx döndürülür.
+Tüm POST rotaları aynı yapıyı izler: `Bearer your-api-key` + Zod ile doğrulanan JSON gövdesi (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` vb.; bkz. `src/shared/validation/schemas.ts`). Şema doğrulaması başarısız olduğunda 4xx döndürülür.
 
-`Authorization: Bearer ...` ekleyemeyen istemciler için OmniRoute, aşağıda belgelenen özel `/api/v1/vscode/{token}/...` uç noktalarının yanı sıra sorgu dizesi uyumluluğu (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) aracılığıyla URL içindeki API anahtarlarını da kabul eder.
+`Authorization: Bearer ...` ekleyemeyen istemciler için OmniRoute, aşağıda belgelenen özel `/api/v1/vscode/{token}/...` uç noktalarının yanı sıra sorgu dizesi uyumluluğu (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) aracılığıyla URL içinde API anahtarlarını da kabul eder.
 
 ```bash
-# Yeniden sıralama (bulut kayıt defteri sağlayıcısı veya "<prefix>/<model>" biçiminde OpenAI uyumlu bir sağlayıcı düğümü)
+# Yeniden sıralama (bulut kayıt sağlayıcısı veya "<prefix>/<model>" biçiminde OpenAI uyumlu bir sağlayıcı düğümü)
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
 # Jina sınıflandırma (Foundation API kimlik bilgileri)
@@ -492,11 +492,11 @@ POST /v1/search      { "query": "...", "provider": "jina-search" }
 # Moderasyonlar
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
-# TTS — audio/mpeg (veya istenen biçimde) gövde döndürür
+# TTS — audio/mpeg (veya istenen biçimde) gövdesi döndürür
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
 # Soniox TTS bir dil ve ses gerektirir: `language` varsayılan olarak "en" değerini alır; eksik
-# bir ses veya standart bir OpenAI ses adı (alloy, nova, …) "Adrian" değerine dönüşür
+# bir ses veya standart bir OpenAI ses adı (alloy, nova, …) "Adrian" olur
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # Görüntü düzenleme (multipart)
@@ -507,31 +507,33 @@ POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **Yeniden sıralama sağlayıcı düğümleri:** `POST /v1/rerank`, `<node-prefix>/<model>` olarak adreslenen
-> OpenAI uyumlu sağlayıcı düğümlerine de yönlendirme yapar (oMLX, vLLM, Infinity, bir ağ geçidinin
-> arkasındaki TEI, …). Geri döngü düğümleri (`localhost`, `127.0.0.1`, `172.16.0.0/12`) her zaman
-> kullanılabilir. Başka herhangi bir ana makinedeki düğümler — bir LAN makinesi veya Tailscale eşi —
-> yalnızca operatör `RERANK_REMOTE_PROVIDER_NODES` özellik bayrağını etkinleştirdiğinde **ve** düğümün
-> temel URL'si sağlayıcının giden URL politikasından geçtiğinde
-> (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`) kullanılabilir.
-> Bellek motorunun yeniden sıralama adımı bu rotayı geri döngü üzerinden çağırır; dolayısıyla aynı
-> kural Bellek ayarlarındaki `rerankProviderModel` için de geçerlidir.
+> **Yeniden sıralama sağlayıcı düğümleri:** `POST /v1/rerank`, `<node-prefix>/<model>` biçiminde adreslenen OpenAI uyumlu sağlayıcı düğümlerine
+> (oMLX, vLLM, Infinity, bir ağ geçidinin arkasındaki TEI, …) de yönlendirme yapar. Geri döngü
+> düğümleri (`localhost`, `127.0.0.1`, `172.16.0.0/12`) her zaman uygundur; ayrıca operatörün
+> `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` içinde listelediği ana bilgisayar adları da uygundur (örneğin
+> `http://reranker:8080/v1` gibi bir Docker/Compose hizmet adı; bunlar doğrudan çağrılır ve hiçbir zaman
+> `HTTP(S)_PROXY` veya bir bağlantının sabitlenmiş proxy'si üzerinden çağrılmaz). Başka herhangi bir
+> ana bilgisayardaki düğümler — bir LAN makinesi veya Tailscale eş düğümü — yalnızca operatör
+> `RERANK_REMOTE_PROVIDER_NODES` özellik bayrağını etkinleştirdiğinde **ve** düğümün temel URL'si sağlayıcının
+> giden URL politikasından geçtiğinde (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`)
+> uygun olur. Bellek motorunun yeniden sıralama adımı bu rotayı geri döngü üzerinden
+> çağırır; dolayısıyla Bellek ayarlarındaki `rerankProviderModel` için de aynı kural geçerlidir.
 >
-> **Yerel sunucu yapıları:** düğüm önce `<base>/v1/rerank`, 404 durumunda ise `<base>/rerank`
-> (Infinity, TEI) üzerinden çağrılır. Üst sunucu gövdesi hem Cohere/OpenAI yazımını (`documents`,
+> **Yerel sunucu yapıları:** düğüm `<base>/v1/rerank` adresinden ve 404 durumunda `<base>/rerank`
+> adresinden çağrılır (Infinity, TEI). Üst sunucu gövdesi hem Cohere/OpenAI yazımını (`documents`,
 > `return_documents`) hem de TEI yazımını (`texts`, `return_text`) taşır ve üst sunucu yanıtı
-> Cohere zarfına normalleştirilir: TEI'nin yalın `[{index, score, text}]` yanıtı, ince ağ geçitlerinden
-> gelen `{results: [{index, score}]}` ve Voyage tarzı `{data: [...]}` yanıtlarının tümü istemciye
-> `{results: [{index, relevance_score, document?}]}` olarak, puana göre sıralanmış ve `top_n` ile
-> sınırlandırılmış biçimde döner.
+> Cohere zarfına normalleştirilir: TEI'nin yalın `[{index, score, text}]` yanıtı, ince ağ
+> geçitlerinden gelen `{results: [{index, score}]}` ve Voyage tarzı `{data: [...]}` yanıtlarının
+> tümü istemciye `{results: [{index, relevance_score, document?}]}` biçiminde, puana göre sıralanmış
+> ve `top_n` ile sınırlandırılmış olarak döner.
 
 > **Sağlayıcı düğümü keşfi:** OpenAI uyumlu bir sağlayıcı düğümündeki modeller, düğüm öneki altında `GET /v1/models`
-> yanıtında görünür. Uç nokta meta verisi taşımayan satırlar (yerel `/v1/models` listelerinde tipik olduğu üzere)
-> düğümün `apiType` değerini devralır; böylece bir `embeddings` düğümünün modelleri varsayılan olarak sohbet türüne ayarlanmak yerine `type: "embedding"`, bir
-> `rerank` düğümünün modelleri ise `type: "rerank"` olur. Eşitlenmiş veya elle eklenmiş bir satırdaki açıkça belirtilen
-> `supportedEndpoints` yine de önceliklidir.
+> içinde görünür. Uç nokta meta verisi taşımayan satırlar (yerel `/v1/models` listelerinde tipik olduğu üzere)
+> düğümün `apiType` değerini devralır; dolayısıyla bir `embeddings` düğümünün modelleri varsayılan olarak sohbet türüne ayarlanmak yerine `type: "embedding"`,
+> bir `rerank` düğümünün modelleri ise `type: "rerank"` olur. Eşitlenmiş veya manuel olarak eklenmiş bir satırdaki açık
+> `supportedEndpoints` değeri yine de önceliklidir.
 
-### Sağlayıcıya Özel Rotalar
+### Özel Sağlayıcı Rotaları
 
 ```bash
 POST /v1/providers/{provider}/chat/completions

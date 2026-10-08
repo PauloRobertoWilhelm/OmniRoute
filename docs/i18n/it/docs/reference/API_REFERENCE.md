@@ -456,7 +456,7 @@ Utilizzare questo endpoint quando un sidecar viene eseguito fuori processo e non
 | POST   | `/v1/music/generations`                   | Generazione musicale in stile OpenAI    |
 | POST   | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                      |
 | POST   | `/v1/audio/speech`                        | OpenAI TTS (restituisce il corpo audio) |
-| POST   | `/v1/rerank`                              | Reranking in stile Cohere/Voyage        |
+| POST   | `/v1/rerank`                              | Rerank in stile Cohere/Voyage           |
 | POST   | `/v1/classify`                            | Classificazione Jina (`api.jina.ai`)    |
 | POST   | `/v1/segment`                             | Segmentatore Jina (`segment.jina.ai`)   |
 | POST   | `/v1/moderations`                         | OpenAI Moderations                      |
@@ -472,12 +472,12 @@ Utilizzare questo endpoint quando un sidecar viene eseguito fuori processo e non
 | POST   | `/api/v1/vscode/{token}/api/chat`         | Alias Ollama con token                  |
 | GET    | `/api/v1/vscode/{token}/api/tags`         | Alias dei tag Ollama con token          |
 
-Tutte le route POST seguono la stessa struttura: `Bearer your-api-key` + corpo JSON convalidato da Zod (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, ecc.; vedere `src/shared/validation/schemas.ts`). In caso di errore dello schema viene restituito un codice 4xx.
+Tutte le route POST seguono la stessa struttura: `Bearer your-api-key` + corpo JSON convalidato tramite Zod (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` e così via; vedere `src/shared/validation/schemas.ts`). In caso di mancata convalida dello schema viene restituito un errore 4xx.
 
-Per i client che non possono allegare `Authorization: Bearer ...`, OmniRoute accetta anche le chiavi API nell'URL, tramite parametri di query compatibili (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) oppure mediante gli endpoint dedicati `/api/v1/vscode/{token}/...` documentati di seguito.
+Per i client che non possono aggiungere `Authorization: Bearer ...`, OmniRoute accetta anche le chiavi API nell'URL, tramite la compatibilità con le stringhe di query (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) oppure tramite gli endpoint dedicati `/api/v1/vscode/{token}/...` documentati di seguito.
 
 ```bash
-# Reranking (provider del registro cloud oppure nodo provider compatibile con OpenAI come "<prefix>/<model>")
+# Rerank (provider del registro cloud oppure nodo provider compatibile con OpenAI come "<prefix>/<model>")
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
 # Classificazione Jina (credenziali Foundation API)
@@ -489,47 +489,51 @@ POST /v1/segment     { "content": "...", "return_chunks": true }
 # Ricerca Jina (s.jina.ai; alias del provider: jina-search, jina-ai, jina)
 POST /v1/search      { "query": "...", "provider": "jina-search" }
 
-# Moderazioni
+# Moderazione
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
 # TTS — restituisce un corpo audio/mpeg (o nel formato richiesto)
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
 # Soniox TTS richiede una lingua e una voce: il valore predefinito di `language` è "en"; una
-# voce mancante o il nome di una voce OpenAI predefinita (alloy, nova, …) diventa "Adrian"
+# voce mancante o il nome di una voce OpenAI standard (alloy, nova, …) viene sostituito con "Adrian"
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
-# Modifica dell'immagine (multipart)
+# Modifica di immagini (multipart)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# Generazione di video/musica (ID modello con prefisso del provider)
+# Generazione video/musicale (ID modello con prefisso del provider)
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **Nodi provider per il reranking:** `POST /v1/rerank` instrada le richieste anche verso nodi provider compatibili con OpenAI
-> (oMLX, vLLM, Infinity, TEI dietro un gateway, …) indirizzati come `<node-prefix>/<model>`. I nodi di loopback
-> (`localhost`, `127.0.0.1`, `172.16.0.0/12`) sono sempre idonei. I nodi su qualsiasi altro
+> **Nodi provider per il rerank:** `POST /v1/rerank` instrada anche verso nodi provider compatibili con OpenAI
+> (oMLX, vLLM, Infinity, TEI dietro un gateway, …) identificati come `<node-prefix>/<model>`. I nodi
+> di loopback (`localhost`, `127.0.0.1`, `172.16.0.0/12`) sono sempre idonei, così come i nomi host
+> elencati dall'operatore in `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` (ad esempio, il nome di un servizio
+> Docker/Compose come `http://reranker:8080/v1`; questi vengono chiamati direttamente, senza mai
+> passare attraverso `HTTP(S)_PROXY` o il proxy fissato di una connessione). I nodi su qualsiasi altro
 > host — un dispositivo nella LAN o un peer Tailscale — sono idonei solo quando l'operatore abilita il
-> feature flag `RERANK_REMOTE_PROVIDER_NODES` **e** l'URL di base del nodo supera i controlli della policy
-> per gli URL in uscita del provider (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
-> Il passaggio di reranking del motore di memoria chiama questa route tramite
-> loopback, quindi la stessa regola disciplina `rerankProviderModel` nelle impostazioni della memoria.
+> flag di funzionalità `RERANK_REMOTE_PROVIDER_NODES` **e** l'URL di base del nodo soddisfa i criteri
+> relativi agli URL in uscita del provider (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
+> Il passaggio di rerank del motore di memoria chiama questa route tramite
+> loopback, pertanto la stessa regola si applica a `rerankProviderModel` nelle impostazioni della memoria.
 >
-> **Strutture dei server locali:** il nodo viene chiamato all'indirizzo `<base>/v1/rerank` e, in caso di 404, all'indirizzo `<base>/rerank`
-> (Infinity, TEI). Il corpo inviato upstream include sia la nomenclatura Cohere/OpenAI (`documents`,
+> **Strutture dei server locali:** il nodo viene chiamato all'indirizzo `<base>/v1/rerank` e, in caso di 404, a `<base>/rerank`
+> (Infinity, TEI). Il corpo upstream contiene sia la denominazione Cohere/OpenAI (`documents`,
 > `return_documents`) sia quella TEI (`texts`, `return_text`), mentre la risposta upstream viene
-> normalizzata nel contenitore Cohere: l'array semplice di TEI `[{index, score, text}]`, `{results: [{index, score}]}`
-> proveniente da gateway leggeri e il formato in stile Voyage `{data: [...]}` vengono tutti restituiti al client come
-> `{results: [{index, relevance_score, document?}]}`, ordinati per punteggio e limitati a `top_n`.
+> normalizzata nel contenitore Cohere: l'array semplice di TEI `[{index, score, text}]`, il formato
+> `{results: [{index, score}]}` dei gateway leggeri e il formato Voyage `{data: [...]}` vengono tutti
+> restituiti al client come `{results: [{index, relevance_score, document?}]}`, ordinati per punteggio
+> e limitati a `top_n`.
 
 > **Rilevamento dei nodi provider:** i modelli su un nodo provider compatibile con OpenAI vengono visualizzati in `GET /v1/models`
-> sotto il prefisso del nodo. Le righe prive di metadati sugli endpoint (caso tipico degli elenchi locali `/v1/models`)
-> ereditano l'`apiType` del nodo, quindi i modelli di un nodo `embeddings` hanno `type: "embedding"` e quelli di un
-> nodo `rerank` hanno `type: "rerank"` anziché essere classificati per impostazione predefinita come chat; un valore
-> `supportedEndpoints` esplicito su una riga sincronizzata o aggiunta manualmente continua ad avere la precedenza.
+> con il prefisso del nodo. Le righe prive di metadati relativi agli endpoint (caso tipico per gli elenchi locali di `/v1/models`)
+> ereditano l'`apiType` del nodo, pertanto i modelli di un nodo `embeddings` hanno `type: "embedding"` e i modelli di un
+> nodo `rerank` hanno `type: "rerank"` anziché usare la chat come valore predefinito; un valore `supportedEndpoints` esplicito
+> in una riga sincronizzata o aggiunta manualmente continua comunque ad avere la precedenza.
 
-### Route dedicate ai provider
+### Route dedicate dei provider
 
 ```bash
 POST /v1/providers/{provider}/chat/completions
@@ -537,7 +541,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-Il prefisso del provider viene aggiunto automaticamente se manca. I modelli non corrispondenti restituiscono `400`.
+Il prefisso del provider viene aggiunto automaticamente se mancante. I modelli non corrispondenti restituiscono `400`.
 
 ---
 

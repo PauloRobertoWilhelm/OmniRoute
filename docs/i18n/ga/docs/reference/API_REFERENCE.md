@@ -464,7 +464,7 @@ feidhmeanna rite, ceanntásca iarratais, agus sonraí cuntais ar lár d'aon ghn�
 | POST | `/v1/videos/generations`                  | Giniúint físe ar nós OpenAI                  |
 | POST | `/v1/music/generations`                   | Giniúint ceoil ar nós OpenAI                 |
 | POST | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                           |
-| POST | `/v1/audio/speech`                        | OpenAI TTS (seoltar corp fuaime ar ais)      |
+| POST | `/v1/audio/speech`                        | OpenAI TTS (seolann sé corp fuaime ar ais)   |
 | POST | `/v1/rerank`                              | Athrangú ar nós Cohere/Voyage                |
 | POST | `/v1/classify`                            | Aicmiú Jina (`api.jina.ai`)                  |
 | POST | `/v1/segment`                             | Deighilteoir Jina (`segment.jina.ai`)        |
@@ -476,14 +476,14 @@ feidhmeanna rite, ceanntásca iarratais, agus sonraí cuntais ar lár d'aon ghn�
 | POST | `/v1/api/chat`                            | Ollama                                       |
 | GET  | `/api/v1/vscode/{token}/`                 | Ailias catalóige OpenAI                      |
 | GET  | `/api/v1/vscode/{token}/models`           | Ailias samhlacha OpenAI                      |
-| POST | `/api/v1/vscode/{token}/chat/completions` | Ailias comharthaithe OpenAI                  |
-| POST | `/api/v1/vscode/{token}/responses`        | Ailias comharthaithe OpenAI Responses        |
-| POST | `/api/v1/vscode/{token}/api/chat`         | Ailias comharthaithe Ollama                  |
-| GET  | `/api/v1/vscode/{token}/api/tags`         | Ailias comharthaithe clibeanna Ollama        |
+| POST | `/api/v1/vscode/{token}/chat/completions` | Ailias comharthaíochta OpenAI                |
+| POST | `/api/v1/vscode/{token}/responses`        | Ailias comharthaíochta OpenAI Responses      |
+| POST | `/api/v1/vscode/{token}/api/chat`         | Ailias comharthaíochta Ollama                |
+| GET  | `/api/v1/vscode/{token}/api/tags`         | Ailias comharthaíochta clibeanna Ollama      |
 
-Leanann gach bealach POST an struchtúr céanna: `Bearer your-api-key` + corp JSON bailíochtaithe le Zod (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, etc., féach `src/shared/validation/schemas.ts`). Seoltar 4xx ar ais má theipeann ar an scéimre.
+Leanann gach bealach POST an cruth céanna: `Bearer your-api-key` + corp JSON bailíochtaithe ag Zod (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, srl., féach `src/shared/validation/schemas.ts`). Seoltar 4xx ar ais má theipeann ar an scéimre.
 
-I gcás cliant nach féidir leo `Authorization: Bearer ...` a cheangal, glacann OmniRoute le heochracha API san URL freisin, trí chomhoiriúnacht teaghráin iarratais (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) nó trí na críochphointí tiomnaithe `/api/v1/vscode/{token}/...` a bhfuil doiciméadú orthu thíos.
+I gcás cliant nach féidir leo `Authorization: Bearer ...` a cheangal, glacann OmniRoute le heochracha API san URL freisin, trí chomhoiriúnacht teaghráin iarratais (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) nó trí na críochphointí tiomnaithe `/api/v1/vscode/{token}/...` atá doiciméadaithe thíos.
 
 ```bash
 # Athrangú (soláthraí clárlainne néil, nó nód soláthraí atá comhoiriúnach le OpenAI mar "<prefix>/<model>")
@@ -498,17 +498,17 @@ POST /v1/segment     { "content": "...", "return_chunks": true }
 # Cuardach Jina (s.jina.ai; ailiasanna soláthraí: jina-search, jina-ai, jina)
 POST /v1/search      { "query": "...", "provider": "jina-search" }
 
-# Modhnóireachtaí
+# Modhnóireacht
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
-# TTS — seoltar corp audio/mpeg (nó an fhormáid iarrtha) ar ais
+# TTS — seolann sé corp audio/mpeg (nó an fhormáid iarrtha) ar ais
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Teastaíonn teanga agus guth ó Soniox TTS: is é "en" réamhshocrú `language`; mura bhfuil
-# guth ann nó más ainm gutha stoic OpenAI é (alloy, nova, …), úsáidtear "Adrian"
+# Teastaíonn teanga agus guth ó Soniox TTS: is é "en" réamhshocrú `language`; athraítear guth
+# atá ar iarraidh nó ainm caighdeánach gutha OpenAI (alloy, nova, …) go "Adrian"
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
-# Eagarthóireacht íomhá (multipart)
+# Eagarthóireacht íomhá (ilpháirteach)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
 # Giniúint físe / ceoil (aitheantas samhla le réimír soláthraí)
@@ -516,27 +516,30 @@ POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **Nóid soláthraí athrangaithe:** treoraíonn `POST /v1/rerank` iarratais chuig nóid soláthraí atá comhoiriúnach le OpenAI freisin
-> (oMLX, vLLM, Infinity, TEI taobh thiar de gheata, …), agus tugtar aghaidh orthu mar `<node-prefix>/<model>`. Bíonn nóid
-> aisfhillte (`localhost`, `127.0.0.1`, `172.16.0.0/12`) incháilithe i gcónaí. Ní bhíonn nóid ar aon
+> **Nóid soláthraí athrangaithe:** Treoraíonn `POST /v1/rerank` iarratais freisin chuig nóid soláthraí atá comhoiriúnach le OpenAI
+> (oMLX, vLLM, Infinity, TEI taobh thiar de thairseach, …) agus a seoltar chucu mar `<node-prefix>/<model>`. Bíonn nóid
+> ais-lúbtha (`localhost`, `127.0.0.1`, `172.16.0.0/12`) incháilithe i gcónaí, mar a bhíonn óstainmneacha a
+> liostaíonn an t-oibreoir in `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` (m.sh. ainm seirbhíse Docker/Compose amhail
+> `http://reranker:8080/v1`; glaoitear orthu seo go díreach, agus ní trí `HTTP(S)_PROXY` ná trí
+> sheachfhreastalaí greamaithe naisc riamh). Ní bhíonn nóid ar aon
 > óstach eile — bosca LAN nó piara Tailscale — incháilithe ach amháin nuair a chumasaíonn an t-oibreoir
-> bratach ghné `RERANK_REMOTE_PROVIDER_NODES` **agus** nuair a éiríonn le bun-URL an nóid de réir bheartas URL
+> an bhratach ghné `RERANK_REMOTE_PROVIDER_NODES` **agus** nuair a chomhlíonann bun-URL an nóid polasaí URL
 > amach an tsoláthraí (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
 > Glaonn céim athrangaithe an innill chuimhne ar an mbealach seo thar
-> aisfhilleadh, mar sin rialaíonn an riail chéanna `rerankProviderModel` sna socruithe Cuimhne.
+> ais-lúbadh, mar sin rialaíonn an riail chéanna `rerankProviderModel` sna socruithe Cuimhne.
 >
-> **Struchtúir freastalaí áitiúil:** glaoitear ar an nód ag `<base>/v1/rerank` agus, i gcás 404, ag `<base>/rerank`
-> (Infinity, TEI). Bíonn litriú Cohere/OpenAI (`documents`,
-> `return_documents`) agus litriú TEI (`texts`, `return_text`) araon sa chorp réamhtheachtach, agus déantar an freagra réamhtheachtach a
-> normalú chuig clúdach Cohere: seoltar eagar lom TEI `[{index, score, text}]`, `{results: [{index, score}]}`
-> ó gheataí tanaí, agus `{data: [...]}` ar nós Voyage ar ais chuig an gcliant mar
+> **Cruthanna freastalaí áitiúil:** glaoitear ar an nód ag `<base>/v1/rerank` agus, i gcás 404, ag `<base>/rerank`
+> (Infinity, TEI). Bíonn idir litriú Cohere/OpenAI (`documents`,
+> `return_documents`) agus litriú TEI (`texts`, `return_text`) sa chorp réamhtheachtach, agus
+> normalófar an freagra réamhtheachtach go clúdach Cohere: tagann liosta lom TEI `[{index, score, text}]`,
+> `{results: [{index, score}]}` ó thairseacha tanaí, agus `{data: [...]}` ar nós Voyage ar ais chuig an gcliant mar
 > `{results: [{index, relevance_score, document?}]}`, sórtáilte de réir scóir agus teoranta ag `top_n`.
 
-> **Aimsiú nód soláthraí:** taispeántar samhlacha ar nód soláthraí atá comhoiriúnach le OpenAI in `GET /v1/models`
-> faoi réimír an nóid. Faigheann rónna nach bhfuil meiteashonraí críochphointe acu (mar is gnách i liostaí áitiúla `/v1/models`)
-> `apiType` an nóid le hoidhreacht, ionas gur `type: "embedding"` iad samhlacha nóid `embeddings` agus gur
-> `type: "rerank"` iad samhlacha nóid `rerank`, seachas comhrá a úsáid mar réamhshocrú; bíonn tosaíocht fós ag
-> `supportedEndpoints` sainráite ar ró sioncronaithe nó ar ró a cuireadh leis de láimh.
+> **Aimsiú nóid soláthraí:** feictear samhlacha ar nód soláthraí atá comhoiriúnach le OpenAI in `GET /v1/models`
+> faoi réimír an nóid. Faigheann sraitheanna nach bhfuil meiteashonraí críochphointe ar bith acu (mar is gnách i liostuithe áitiúla `/v1/models`)
+> `apiType` an nóid le hoidhreacht, mar sin bíonn `type: "embedding"` ag samhlacha nóid `embeddings` agus
+> `type: "rerank"` ag samhlacha nóid `rerank` seachas comhrá a úsáid mar réamhshocrú; bíonn tosaíocht fós ag
+> `supportedEndpoints` sainráite ar shraith shioncronaithe nó ar shraith a cuireadh leis de láimh.
 
 ### Bealaí Tiomnaithe Soláthraí
 
@@ -546,7 +549,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-Cuirtear réimír an tsoláthraí leis go huathoibríoch má tá sé ar iarraidh. Tugann samhlacha nach bhfuil ag teacht le chéile `400` ar ais.
+Cuirtear réimír an tsoláthraí leis go huathoibríoch má bhíonn sé ar iarraidh. Tugann samhlacha nach meaitseálann `400` ar ais.
 
 ---
 

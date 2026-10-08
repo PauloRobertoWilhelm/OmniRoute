@@ -457,7 +457,7 @@ sidecar ప్రక్రియ వెలుపల నడుస్తూ, `open
 | POST   | `/v1/music/generations`                   | OpenAI-శైలి సంగీత ఉత్పాదన             |
 | POST   | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                    |
 | POST   | `/v1/audio/speech`                        | OpenAI TTS (ఆడియో బాడీని అందిస్తుంది) |
-| POST   | `/v1/rerank`                              | Cohere/Voyage-శైలి రీర్యాంక్          |
+| POST   | `/v1/rerank`                              | Cohere/Voyage-శైలి రీరాంక్            |
 | POST   | `/v1/classify`                            | Jina వర్గీకరణ (`api.jina.ai`)         |
 | POST   | `/v1/segment`                             | Jina సెగ్మెంటర్ (`segment.jina.ai`)   |
 | POST   | `/v1/moderations`                         | OpenAI Moderations                    |
@@ -468,17 +468,17 @@ sidecar ప్రక్రియ వెలుపల నడుస్తూ, `open
 | POST   | `/v1/api/chat`                            | Ollama                                |
 | GET    | `/api/v1/vscode/{token}/`                 | OpenAI కేటలాగ్ అలియాస్                |
 | GET    | `/api/v1/vscode/{token}/models`           | OpenAI మోడల్స్ అలియాస్                |
-| POST   | `/api/v1/vscode/{token}/chat/completions` | OpenAI టోకనైజ్డ్ అలియాస్              |
-| POST   | `/api/v1/vscode/{token}/responses`        | OpenAI Responses టోకనైజ్డ్ అలియాస్    |
-| POST   | `/api/v1/vscode/{token}/api/chat`         | Ollama టోకనైజ్డ్ అలియాస్              |
-| GET    | `/api/v1/vscode/{token}/api/tags`         | Ollama ట్యాగ్స్ టోకనైజ్డ్ అలియాస్     |
+| POST   | `/api/v1/vscode/{token}/chat/completions` | OpenAI టోకెనైజ్డ్ అలియాస్             |
+| POST   | `/api/v1/vscode/{token}/responses`        | OpenAI Responses టోకెనైజ్డ్ అలియాస్   |
+| POST   | `/api/v1/vscode/{token}/api/chat`         | Ollama టోకెనైజ్డ్ అలియాస్             |
+| GET    | `/api/v1/vscode/{token}/api/tags`         | Ollama ట్యాగ్స్ టోకెనైజ్డ్ అలియాస్    |
 
-అన్ని POST రూట్లు ఒకే ఆకృతిని అనుసరిస్తాయి: `Bearer your-api-key` + Zod-ధృవీకరించిన JSON బాడీ (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, మొదలైనవి; `src/shared/validation/schemas.ts` చూడండి). స్కీమా ధృవీకరణ విఫలమైతే 4xx తిరిగి అందించబడుతుంది.
+అన్ని POST రూట్లు ఒకే ఆకృతిని అనుసరిస్తాయి: `Bearer your-api-key` + Zod-ధృవీకరించిన JSON బాడీ (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` మొదలైనవి; `src/shared/validation/schemas.ts` చూడండి). స్కీమా ధృవీకరణ విఫలమైతే 4xx తిరిగి ఇవ్వబడుతుంది.
 
-`Authorization: Bearer ...`ను జోడించలేని క్లయింట్ల కోసం, OmniRoute క్వెరీ-స్ట్రింగ్ అనుకూలత (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) ద్వారా లేదా దిగువ డాక్యుమెంట్ చేసిన ప్రత్యేక `/api/v1/vscode/{token}/...` ఎండ్పాయింట్ల ద్వారా URLలో API కీలను కూడా అంగీకరిస్తుంది.
+`Authorization: Bearer ...`ను జోడించలేని క్లయింట్ల కోసం, OmniRoute క్వెరీ-స్ట్రింగ్ అనుకూలత (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) లేదా దిగువ డాక్యుమెంట్ చేసిన ప్రత్యేక `/api/v1/vscode/{token}/...` ఎండ్పాయింట్ల ద్వారా URLలో API కీలను కూడా స్వీకరిస్తుంది.
 
 ```bash
-# రీర్యాంక్ (క్లౌడ్ రిజిస్ట్రీ ప్రొవైడర్ లేదా "<prefix>/<model>" రూపంలోని OpenAI-అనుకూల ప్రొవైడర్ నోడ్)
+# రీరాంక్ (క్లౌడ్ రిజిస్ట్రీ ప్రొవైడర్ లేదా "<prefix>/<model>"గా OpenAI-అనుకూల ప్రొవైడర్ నోడ్)
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
 # Jina వర్గీకరణ (Foundation API క్రెడెన్షియల్స్)
@@ -496,38 +496,40 @@ POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 # TTS — audio/mpeg (లేదా అభ్యర్థించిన ఫార్మాట్) బాడీని అందిస్తుంది
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTSకు ఒక భాష మరియు ఒక వాయిస్ అవసరం: `language` డిఫాల్ట్గా "en" అవుతుంది; వాయిస్ లేకపోయినా
-# లేదా OpenAI స్టాక్ వాయిస్ పేరు (alloy, nova, …) ఇచ్చినా అది "Adrian"గా మారుతుంది
+# Soniox TTSకు ఒక భాష మరియు ఒక వాయిస్ అవసరం: `language` డిఫాల్ట్గా "en" ఉంటుంది; వాయిస్ లేకపోతే
+# లేదా OpenAI స్టాక్ వాయిస్ పేరు (alloy, nova, …) ఉంటే, అది "Adrian"గా మారుతుంది
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # చిత్రం సవరణ (multipart)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# వీడియో / సంగీత ఉత్పాదన (ప్రొవైడర్-ప్రిఫిక్స్ కలిగిన మోడల్ ఐడి)
+# వీడియో / సంగీత ఉత్పాదన (ప్రొవైడర్-ప్రిఫిక్స్ చేసిన మోడల్ ID)
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **రీర్యాంక్ ప్రొవైడర్ నోడ్లు:** `POST /v1/rerank` అనేది `<node-prefix>/<model>`గా సూచించబడిన OpenAI-అనుకూల ప్రొవైడర్ నోడ్లకు
-> (గేట్వే వెనుక ఉన్న oMLX, vLLM, Infinity, TEI, …) కూడా రూట్ చేస్తుంది. లూప్బ్యాక్
-> నోడ్లు (`localhost`, `127.0.0.1`, `172.16.0.0/12`) ఎల్లప్పుడూ అర్హమైనవే. ఇతర
-> హోస్ట్లలోని నోడ్లు — LAN బాక్స్ లేదా Tailscale పీర్ — ఆపరేటర్
-> `RERANK_REMOTE_PROVIDER_NODES` ఫీచర్ ఫ్లాగ్ను ప్రారంభించినప్పుడు **మరియు** నోడ్ బేస్ URL, ప్రొవైడర్
-> అవుట్బౌండ్ URL విధానాన్ని (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`) ఆమోదించినప్పుడు మాత్రమే అర్హమవుతాయి.
-> మెమరీ ఇంజిన్ యొక్క రీర్యాంక్ దశ ఈ రూట్ను
+> **రీరాంక్ ప్రొవైడర్ నోడ్లు:** `POST /v1/rerank` OpenAI-అనుకూల ప్రొవైడర్ నోడ్లకు కూడా రూట్ చేస్తుంది
+> (గేట్వే వెనుకనున్న oMLX, vLLM, Infinity, TEI, …); వీటిని `<node-prefix>/<model>`గా సూచిస్తారు. లూప్బ్యాక్
+> నోడ్లు (`localhost`, `127.0.0.1`, `172.16.0.0/12`) ఎల్లప్పుడూ అర్హమైనవే; అలాగే ఆపరేటర్
+> `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS`లో జాబితా చేసే హోస్ట్నేమ్లు కూడా అర్హమైనవే (ఉదా. `http://reranker:8080/v1` వంటి
+> Docker/Compose సర్వీస్ పేరు; వీటిని `HTTP(S)_PROXY` లేదా కనెక్షన్కు పిన్ చేసిన ప్రాక్సీ ద్వారా కాకుండా నేరుగా కాల్ చేస్తారు). మరేదైనా
+> హోస్ట్లోని నోడ్లు — LAN బాక్స్ లేదా Tailscale పీర్ — ఆపరేటర్
+> `RERANK_REMOTE_PROVIDER_NODES` ఫీచర్ ఫ్లాగ్ను ప్రారంభించినప్పుడు **మరియు** నోడ్ బేస్ URL ప్రొవైడర్
+> అవుట్బౌండ్ URL పాలసీని (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`) పాస్ చేసినప్పుడు మాత్రమే అర్హమవుతాయి.
+> మెమరీ ఇంజిన్లోని రీరాంక్ దశ ఈ రూట్ను
 > లూప్బ్యాక్ ద్వారా కాల్ చేస్తుంది, కాబట్టి Memory సెట్టింగ్లలోని `rerankProviderModel`కు కూడా ఇదే నియమం వర్తిస్తుంది.
 >
-> **స్థానిక సర్వర్ ఆకృతులు:** నోడ్ను `<base>/v1/rerank` వద్ద కాల్ చేస్తారు; 404 వచ్చినప్పుడు `<base>/rerank`
-> (Infinity, TEI) వద్ద కాల్ చేస్తారు. అప్స్ట్రీమ్ బాడీలో Cohere/OpenAI స్పెల్లింగ్ (`documents`,
+> **లోకల్ సర్వర్ ఆకృతులు:** నోడ్ను `<base>/v1/rerank` వద్ద, 404 వచ్చినప్పుడు `<base>/rerank` వద్ద
+> (Infinity, TEI) కాల్ చేస్తారు. అప్స్ట్రీమ్ బాడీలో Cohere/OpenAI స్పెల్లింగ్ (`documents`,
 > `return_documents`) మరియు TEI స్పెల్లింగ్ (`texts`, `return_text`) రెండూ ఉంటాయి; అప్స్ట్రీమ్ ప్రతిస్పందన
-> Cohere ఎన్వలప్కు సాధారణీకరించబడుతుంది: TEI యొక్క ఎన్వలప్ లేని `[{index, score, text}]`, తేలికపాటి గేట్వేల నుంచి వచ్చే `{results: [{index, score}]}`
+> Cohere ఎన్వలప్కు సాధారణీకరించబడుతుంది: TEI యొక్క సాధారణ `[{index, score, text}]`, పలుచని గేట్వేల నుండి వచ్చే `{results: [{index, score}]}`
 > మరియు Voyage-శైలి `{data: [...]}` అన్నీ క్లయింట్కు
-> `{results: [{index, relevance_score, document?}]}` రూపంలో తిరిగి వస్తాయి; అవి స్కోర్ ఆధారంగా క్రమబద్ధీకరించబడి `top_n`కు పరిమితం చేయబడతాయి.
+> `{results: [{index, relevance_score, document?}]}`గా తిరిగి వస్తాయి; స్కోర్ ఆధారంగా క్రమబద్ధీకరించబడి, `top_n` వద్ద పరిమితం చేయబడతాయి.
 
-> **ప్రొవైడర్-నోడ్ అన్వేషణ:** OpenAI-అనుకూల ప్రొవైడర్ నోడ్లోని మోడళ్లు `GET /v1/models`
-> లో నోడ్ ప్రిఫిక్స్ కింద కనిపిస్తాయి. ఎండ్పాయింట్ మెటాడేటా లేని వరుసలు (స్థానిక `/v1/models` జాబితాల్లో సాధారణం)
-> నోడ్ యొక్క `apiType`ను వారసత్వంగా పొందుతాయి, కాబట్టి `embeddings` నోడ్ మోడళ్లు డిఫాల్ట్గా చాట్గా మారడానికి బదులుగా `type: "embedding"`గా, అలాగే
-> `rerank` నోడ్ మోడళ్లు `type: "rerank"`గా ఉంటాయి; సింక్ చేయబడిన లేదా మాన్యువల్గా జోడించిన వరుసలో స్పష్టంగా పేర్కొన్న
+> **ప్రొవైడర్-నోడ్ డిస్కవరీ:** OpenAI-అనుకూల ప్రొవైడర్ నోడ్లోని మోడళ్లు `GET /v1/models`లో
+> నోడ్ ప్రిఫిక్స్ కింద కనిపిస్తాయి. ఎండ్పాయింట్ మెటాడేటా లేని వరుసలు (స్థానిక `/v1/models` జాబితాల్లో సాధారణం)
+> నోడ్ యొక్క `apiType`ను వారసత్వంగా పొందుతాయి; అందువల్ల `embeddings` నోడ్ మోడళ్లకు `type: "embedding"` మరియు
+> `rerank` నోడ్ మోడళ్లకు చాట్ను డిఫాల్ట్గా ఉపయోగించడానికి బదులుగా `type: "rerank"` ఉంటుంది; సింక్ చేయబడిన లేదా మాన్యువల్గా జోడించిన వరుసలో స్పష్టంగా పేర్కొన్న
 > `supportedEndpoints`కు ఇప్పటికీ ప్రాధాన్యం ఉంటుంది.
 
 ### ప్రత్యేక ప్రొవైడర్ రూట్లు
@@ -538,7 +540,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-ప్రొవైడర్ ప్రిఫిక్స్ లేకపోతే అది స్వయంచాలకంగా జోడించబడుతుంది. సరిపోలని మోడళ్లు `400`ను తిరిగి ఇస్తాయి.
+ప్రొవైడర్ ప్రిఫిక్స్ లేకపోతే అది ఆటోమేటిక్గా జోడించబడుతుంది. సరిపోలని మోడళ్లు `400`ను తిరిగి ఇస్తాయి.
 
 ---
 

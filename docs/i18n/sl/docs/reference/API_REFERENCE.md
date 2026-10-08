@@ -453,18 +453,18 @@ To končno točko uporabite, ko se stranski proces izvaja zunaj glavnega procesa
 | ------ | ----------------------------------------- | ----------------------------------------- |
 | POST   | `/v1/chat/completions`                    | OpenAI                                    |
 | POST   | `/v1/messages`                            | Anthropic                                 |
-| POST   | `/v1/responses`                           | Odgovori OpenAI                           |
+| POST   | `/v1/responses`                           | OpenAI Responses                          |
 | POST   | `/v1/embeddings`                          | OpenAI                                    |
-| POST   | `/v1/images/generations`                  | Slike OpenAI                              |
-| POST   | `/v1/images/edits`                        | Slike OpenAI (urejanje/zapolnjevanje)     |
+| POST   | `/v1/images/generations`                  | OpenAI Images                             |
+| POST   | `/v1/images/edits`                        | OpenAI Images (urejanje/zapolnjevanje)    |
 | POST   | `/v1/videos/generations`                  | Ustvarjanje videoposnetkov v slogu OpenAI |
 | POST   | `/v1/music/generations`                   | Ustvarjanje glasbe v slogu OpenAI         |
-| POST   | `/v1/audio/transcriptions`                | Zvok OpenAI (STT)                         |
-| POST   | `/v1/audio/speech`                        | OpenAI TTS (vrne telo z zvokom)           |
-| POST   | `/v1/rerank`                              | Ponovno razvrščanje v slogu Cohere/Voyage |
+| POST   | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                        |
+| POST   | `/v1/audio/speech`                        | OpenAI TTS (vrne zvočno telo)             |
+| POST   | `/v1/rerank`                              | Prerazvrščanje v slogu Cohere/Voyage      |
 | POST   | `/v1/classify`                            | Razvrščanje Jina (`api.jina.ai`)          |
 | POST   | `/v1/segment`                             | Segmentator Jina (`segment.jina.ai`)      |
-| POST   | `/v1/moderations`                         | Moderiranje OpenAI                        |
+| POST   | `/v1/moderations`                         | OpenAI Moderations                        |
 | GET    | `/v1/models`                              | OpenAI                                    |
 | POST   | `/v1/messages/count_tokens`               | Anthropic                                 |
 | GET    | `/v1beta/models`                          | Gemini                                    |
@@ -472,20 +472,20 @@ To končno točko uporabite, ko se stranski proces izvaja zunaj glavnega procesa
 | POST   | `/v1/api/chat`                            | Ollama                                    |
 | GET    | `/api/v1/vscode/{token}/`                 | Vzdevek kataloga OpenAI                   |
 | GET    | `/api/v1/vscode/{token}/models`           | Vzdevek modelov OpenAI                    |
-| POST   | `/api/v1/vscode/{token}/chat/completions` | Tokenizirani vzdevek OpenAI               |
-| POST   | `/api/v1/vscode/{token}/responses`        | Tokenizirani vzdevek odgovorov OpenAI     |
-| POST   | `/api/v1/vscode/{token}/api/chat`         | Tokenizirani vzdevek Ollama               |
-| GET    | `/api/v1/vscode/{token}/api/tags`         | Tokenizirani vzdevek oznak Ollama         |
+| POST   | `/api/v1/vscode/{token}/chat/completions` | Žetonizirani vzdevek OpenAI               |
+| POST   | `/api/v1/vscode/{token}/responses`        | Žetonizirani vzdevek OpenAI Responses     |
+| POST   | `/api/v1/vscode/{token}/api/chat`         | Žetonizirani vzdevek Ollama               |
+| GET    | `/api/v1/vscode/{token}/api/tags`         | Žetonizirani vzdevek oznak Ollama         |
 
-Vse poti POST imajo enako obliko: `Bearer your-api-key` + telo JSON, preverjeno z Zod (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` itd.; glejte `src/shared/validation/schemas.ts`). Ob napaki sheme je vrnjena koda 4xx.
+Vse poti POST imajo enako obliko: `Bearer your-api-key` + telo JSON, preverjeno z Zod (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` itd.; glejte `src/shared/validation/schemas.ts`). Ob neuspešnem preverjanju sheme je vrnjena napaka 4xx.
 
-Za odjemalce, ki ne morejo dodati `Authorization: Bearer ...`, OmniRoute sprejema ključe API tudi v URL-ju, bodisi prek združljivih parametrov poizvedbenega niza (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) bodisi prek namenskih končnih točk `/api/v1/vscode/{token}/...`, dokumentiranih spodaj.
+Za odjemalce, ki ne morejo dodati `Authorization: Bearer ...`, OmniRoute sprejema tudi ključe API v URL-ju prek združljivih parametrov poizvedbenega niza (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) ali namenskih končnih točk `/api/v1/vscode/{token}/...`, dokumentiranih spodaj.
 
 ```bash
-# Ponovno razvrščanje (ponudnik iz registra v oblaku ali vozlišče ponudnika, združljivo z OpenAI, kot "<prefix>/<model>")
+# Prerazvrščanje (ponudnik registra v oblaku ali vozlišče ponudnika, združljivo z OpenAI, kot "<prefix>/<model>")
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
-# Razvrščanje Jina (poverilnice za Foundation API)
+# Razvrščanje Jina (poverilnice Foundation API)
 POST /v1/classify    { "model": "jina-embeddings-v5-text-small", "input": ["..."], "labels": ["a", "b"] }
 
 # Segmentator Jina
@@ -500,7 +500,7 @@ POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 # TTS — vrne telo audio/mpeg (ali zahtevano obliko)
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS zahteva jezik in glas: privzeta vrednost za `language` je "en"; manjkajoči
+# Soniox TTS zahteva jezik in glas: `language` ima privzeto vrednost "en"; manjkajoči
 # glas ali ime standardnega glasu OpenAI (alloy, nova, …) se spremeni v "Adrian"
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
@@ -512,29 +512,30 @@ POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **Vozlišča ponudnikov za ponovno razvrščanje:** `POST /v1/rerank` usmerja zahteve tudi v vozlišča
-> ponudnikov, združljiva z OpenAI (oMLX, vLLM, Infinity, TEI za prehodom, …), ki so naslovljena kot
-> `<node-prefix>/<model>`. Vozlišča povratne zanke (`localhost`, `127.0.0.1`, `172.16.0.0/12`) so
-> vedno upravičena. Vozlišča na katerem koli drugem gostitelju — naprava v omrežju LAN ali vrstnik
-> Tailscale — so upravičena samo, ko upravljavec omogoči funkcijsko zastavico
-> `RERANK_REMOTE_PROVIDER_NODES` **in** osnovni URL vozlišča prestane pravilnik ponudnika za
-> odhodne URL-je (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
-> Korak ponovnega razvrščanja mehanizma pomnilnika kliče to pot prek
-> povratne zanke, zato isto pravilo ureja `rerankProviderModel` v nastavitvah pomnilnika.
+> **Vozlišča ponudnikov za prerazvrščanje:** `POST /v1/rerank` usmerja zahteve tudi do vozlišč ponudnikov,
+> združljivih z OpenAI (oMLX, vLLM, Infinity, TEI za prehodom, …), ki so naslovljena kot
+> `<node-prefix>/<model>`. Vozlišča povratne zanke (`localhost`, `127.0.0.1`, `172.16.0.0/12`) so vedno
+> primerna, prav tako imena gostiteljev, ki jih upravljavec navede v `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS`
+> (npr. ime storitve Docker/Compose, kot je `http://reranker:8080/v1`; ta so klicana neposredno, nikoli
+> prek `HTTP(S)_PROXY` ali pripetega posredniškega strežnika povezave). Vozlišča na katerem koli drugem
+> gostitelju — napravi v omrežju LAN ali vrstniku Tailscale — so primerna samo, če upravljavec omogoči
+> funkcijsko zastavico `RERANK_REMOTE_PROVIDER_NODES` **in** osnovni URL vozlišča prestane pravilnik
+> izhodnih URL-jev ponudnika (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
+> Korak prerazvrščanja pomnilniškega mehanizma kliče to pot prek povratne zanke, zato isto pravilo
+> ureja `rerankProviderModel` v nastavitvah pomnilnika.
 >
-> **Oblike lokalnih strežnikov:** vozlišče je poklicano na `<base>/v1/rerank` in ob odgovoru 404 na
-> `<base>/rerank` (Infinity, TEI). Telo, poslano navzgor, vsebuje tako zapis Cohere/OpenAI
-> (`documents`, `return_documents`) kot zapis TEI (`texts`, `return_text`), odgovor iz nadrejene
-> storitve pa je normaliziran v ovojnico Cohere: goli odgovor TEI `[{index, score, text}]`,
-> `{results: [{index, score}]}` iz preprostih prehodov in odgovor v slogu Voyage `{data: [...]}` so
-> odjemalcu vsi vrnjeni kot `{results: [{index, relevance_score, document?}]}`, razvrščeni po oceni
-> in omejeni na `top_n`.
+> **Oblike lokalnih strežnikov:** vozlišče je klicano na `<base>/v1/rerank`, ob odgovoru 404 pa na
+> `<base>/rerank` (Infinity, TEI). Telo, poslano navzgor, vsebuje tako zapis Cohere/OpenAI (`documents`,
+> `return_documents`) kot zapis TEI (`texts`, `return_text`), odgovor od zgoraj pa je normaliziran
+> v ovojnico Cohere: goli odgovor TEI `[{index, score, text}]`, `{results: [{index, score}]}`
+> iz preprostih prehodov in odgovor v slogu Voyage `{data: [...]}` so odjemalcu vrnjeni kot
+> `{results: [{index, relevance_score, document?}]}`, razvrščeni po rezultatu in omejeni na `top_n`.
 
-> **Odkrivanje ponudnikovih vozlišč:** modeli v vozlišču ponudnika, združljivem z OpenAI, so prikazani v `GET /v1/models`
+> **Odkrivanje vozlišč ponudnikov:** modeli v vozlišču ponudnika, združljivem z OpenAI, so prikazani v `GET /v1/models`
 > pod predpono vozlišča. Vrstice brez metapodatkov o končni točki (kar je običajno za lokalne sezname `/v1/models`)
 > podedujejo `apiType` vozlišča, zato imajo modeli vozlišča `embeddings` vrednost `type: "embedding"`, modeli
-> vozlišča `rerank` pa vrednost `type: "rerank"`, namesto da bi privzeto uporabljali klepet; izrecno določena vrednost
-> `supportedEndpoints` v sinhronizirani ali ročno dodani vrstici ima še vedno prednost.
+> vozlišča `rerank` pa vrednost `type: "rerank"`, namesto da bi se privzeto obravnavali kot klepet; izrecno določeni
+> `supportedEndpoints` v sinhronizirani ali ročno dodani vrstici imajo še vedno prednost.
 
 ### Namenske poti ponudnikov
 

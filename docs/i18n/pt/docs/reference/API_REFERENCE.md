@@ -479,11 +479,11 @@ Utilize este endpoint quando um sidecar é executado fora do processo e não con
 | POST   | `/api/v1/vscode/{token}/chat/completions` | Alias OpenAI com token               |
 | POST   | `/api/v1/vscode/{token}/responses`        | Alias OpenAI Responses com token     |
 | POST   | `/api/v1/vscode/{token}/api/chat`         | Alias Ollama com token               |
-| GET    | `/api/v1/vscode/{token}/api/tags`         | Alias das etiquetas Ollama com token |
+| GET    | `/api/v1/vscode/{token}/api/tags`         | Alias de etiquetas Ollama com token  |
 
-Todas as rotas POST seguem a mesma estrutura: `Bearer your-api-key` + corpo JSON validado pelo Zod (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, etc.; consulte `src/shared/validation/schemas.ts`). É devolvido um erro 4xx em caso de falha na validação do esquema.
+Todas as rotas POST seguem a mesma estrutura: `Bearer your-api-key` + corpo JSON validado pelo Zod (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, etc.; consulte `src/shared/validation/schemas.ts`). É devolvido um erro 4xx se a validação do esquema falhar.
 
-Para clientes que não consigam anexar `Authorization: Bearer ...`, o OmniRoute também aceita chaves de API no URL, através da compatibilidade com parâmetros de consulta (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) ou dos endpoints dedicados `/api/v1/vscode/{token}/...` documentados abaixo.
+Para clientes que não conseguem anexar `Authorization: Bearer ...`, o OmniRoute também aceita chaves de API no URL, através da compatibilidade com parâmetros de consulta (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) ou dos endpoints dedicados `/api/v1/vscode/{token}/...` documentados abaixo.
 
 ```bash
 # Reordenação (fornecedor do registo na nuvem ou nó de fornecedor compatível com OpenAI como "<prefix>/<model>")
@@ -504,36 +504,39 @@ POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 # TTS — devolve um corpo audio/mpeg (ou no formato solicitado)
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# O TTS da Soniox requer um idioma e uma voz: o valor predefinido de `language` é "en"; uma voz
-# em falta ou um nome de voz padrão da OpenAI (alloy, nova, …) é convertido em "Adrian"
+# O TTS da Soniox requer um idioma e uma voz: `language` assume "en" por predefinição; uma voz em falta
+# ou o nome de uma voz padrão da OpenAI (alloy, nova, …) passa a ser "Adrian"
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # Edição de imagem (multipart)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# Geração de vídeo/música (ID de modelo com prefixo do fornecedor)
+# Geração de vídeo/música (ID de modelo prefixado pelo fornecedor)
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **Nós de fornecedores de reordenação:** `POST /v1/rerank` também encaminha pedidos para nós de fornecedores compatíveis com OpenAI
-> (oMLX, vLLM, Infinity, TEI por detrás de um gateway, …), endereçados como `<node-prefix>/<model>`. Os nós de
-> loopback (`localhost`, `127.0.0.1`, `172.16.0.0/12`) são sempre elegíveis. Os nós em qualquer outro
+> **Nós de fornecedores de reordenação:** `POST /v1/rerank` também encaminha para nós de fornecedores compatíveis com OpenAI
+> (oMLX, vLLM, Infinity, TEI atrás de um gateway, …), identificados como `<node-prefix>/<model>`. Os nós de loopback
+> (`localhost`, `127.0.0.1`, `172.16.0.0/12`) são sempre elegíveis, tal como os nomes de anfitrião que o
+> operador indicar em `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` (por exemplo, o nome de um serviço Docker/Compose,
+> como `http://reranker:8080/v1`; estes são contactados diretamente, nunca através de `HTTP(S)_PROXY` nem do
+> proxy fixado de uma ligação). Os nós em qualquer outro
 > anfitrião — uma máquina na LAN ou um par Tailscale — só são elegíveis quando o operador ativa o
-> sinalizador de funcionalidade `RERANK_REMOTE_PROVIDER_NODES` **e** o URL base do nó cumpre a política
-> de URLs de saída do fornecedor (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
+> sinalizador de funcionalidade `RERANK_REMOTE_PROVIDER_NODES` **e** o URL base do nó cumpre a política de
+> URLs de saída do fornecedor (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
 > O passo de reordenação do motor de memória chama esta rota através de
 > loopback, pelo que a mesma regra se aplica a `rerankProviderModel` nas definições de Memória.
 >
-> **Estruturas de servidores locais:** o nó é chamado em `<base>/v1/rerank` e, em caso de 404, em `<base>/rerank`
+> **Estruturas dos servidores locais:** o nó é chamado em `<base>/v1/rerank` e, em caso de 404, em `<base>/rerank`
 > (Infinity, TEI). O corpo enviado ao serviço a montante inclui tanto a nomenclatura Cohere/OpenAI (`documents`,
 > `return_documents`) como a nomenclatura TEI (`texts`, `return_text`), e a resposta do serviço a montante é
-> normalizada para o envelope Cohere: o formato simples do TEI `[{index, score, text}]`, o formato `{results: [{index, score}]}`
-> de gateways simples e o formato ao estilo Voyage `{data: [...]}` são todos devolvidos ao cliente como
+> normalizada para o envelope Cohere: o array simples `[{index, score, text}]` do TEI, `{results: [{index, score}]}`
+> de gateways simples e `{data: [...]}` ao estilo Voyage são todos devolvidos ao cliente como
 > `{results: [{index, relevance_score, document?}]}`, ordenados por pontuação e limitados a `top_n`.
 
-> **Descoberta de nós de fornecedor:** os modelos num nó de fornecedor compatível com a OpenAI aparecem em `GET /v1/models`
-> sob o prefixo do nó. As linhas sem metadados de endpoint (típicas das listagens locais de `/v1/models`)
+> **Descoberta de nós de fornecedor:** os modelos num nó de fornecedor compatível com OpenAI aparecem em `GET /v1/models`
+> sob o prefixo do nó. As linhas que não contêm metadados de endpoint (habitual nas listagens locais de `/v1/models`)
 > herdam o `apiType` do nó, pelo que os modelos de um nó `embeddings` têm `type: "embedding"` e os
 > modelos de um nó `rerank` têm `type: "rerank"`, em vez de assumirem chat por predefinição; um
 > `supportedEndpoints` explícito numa linha sincronizada ou adicionada manualmente continua a ter precedência.
@@ -546,7 +549,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-O prefixo do fornecedor é adicionado automaticamente se estiver em falta. Modelos não correspondentes devolvem `400`.
+O prefixo do fornecedor é adicionado automaticamente caso esteja em falta. Modelos não correspondentes devolvem `400`.
 
 ---
 

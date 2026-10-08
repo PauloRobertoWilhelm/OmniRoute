@@ -449,7 +449,7 @@ Bifrost, CLIProxyAPI आणि भविष्यातील साइडका
 
 ## सुसंगतता एंडपॉइंट्स
 
-| पद्धत | पाथ                                       | स्वरूप                              |
+| पद्धत | पथ                                        | स्वरूप                              |
 | ----- | ----------------------------------------- | ----------------------------------- |
 | POST  | `/v1/chat/completions`                    | OpenAI                              |
 | POST  | `/v1/messages`                            | Anthropic                           |
@@ -471,15 +471,15 @@ Bifrost, CLIProxyAPI आणि भविष्यातील साइडका
 | POST  | `/v1beta/models/{...path}`                | Gemini generateContent              |
 | POST  | `/v1/api/chat`                            | Ollama                              |
 | GET   | `/api/v1/vscode/{token}/`                 | OpenAI कॅटलॉग उपनाम                 |
-| GET   | `/api/v1/vscode/{token}/models`           | OpenAI मॉडेल्सचे उपनाम              |
+| GET   | `/api/v1/vscode/{token}/models`           | OpenAI मॉडेल्स उपनाम                |
 | POST  | `/api/v1/vscode/{token}/chat/completions` | OpenAI टोकनयुक्त उपनाम              |
 | POST  | `/api/v1/vscode/{token}/responses`        | OpenAI Responses टोकनयुक्त उपनाम    |
 | POST  | `/api/v1/vscode/{token}/api/chat`         | Ollama टोकनयुक्त उपनाम              |
-| GET   | `/api/v1/vscode/{token}/api/tags`         | Ollama टॅग्सचे टोकनयुक्त उपनाम      |
+| GET   | `/api/v1/vscode/{token}/api/tags`         | Ollama टॅग्ज टोकनयुक्त उपनाम        |
 
-सर्व POST रूट्स समान संरचनेचे पालन करतात: `Bearer your-api-key` + Zod-द्वारे प्रमाणित JSON बॉडी (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, इत्यादी; `src/shared/validation/schemas.ts` पहा). स्कीमा पडताळणी अयशस्वी झाल्यास 4xx परत केला जातो.
+सर्व POST मार्ग समान संरचना वापरतात: `Bearer your-api-key` + Zod-सत्यापित JSON बॉडी (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, इत्यादी; `src/shared/validation/schemas.ts` पाहा). स्कीमा सत्यापन अयशस्वी झाल्यास 4xx परत केला जातो.
 
-`Authorization: Bearer ...` जोडू न शकणाऱ्या क्लायंट्ससाठी, OmniRoute क्वेरी-स्ट्रिंग सुसंगततेद्वारे (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) किंवा खाली दस्तऐवजीकरण केलेल्या समर्पित `/api/v1/vscode/{token}/...` एंडपॉइंट्सद्वारे URL मध्ये API कीदेखील स्वीकारते.
+जे क्लायंट `Authorization: Bearer ...` जोडू शकत नाहीत, त्यांच्यासाठी OmniRoute क्वेरी-स्ट्रिंग सुसंगततेद्वारे (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) किंवा खाली दस्तऐवजीकरण केलेल्या समर्पित `/api/v1/vscode/{token}/...` एंडपॉइंट्सद्वारे URL मधील API की देखील स्वीकारते.
 
 ```bash
 # पुनर्क्रमांकन (क्लाउड रजिस्ट्री प्रदाता किंवा "<prefix>/<model>" स्वरूपातील OpenAI-सुसंगत प्रदाता नोड)
@@ -491,7 +491,7 @@ POST /v1/classify    { "model": "jina-embeddings-v5-text-small", "input": ["..."
 # Jina सेगमेंटर
 POST /v1/segment     { "content": "...", "return_chunks": true }
 
-# Jina शोध (s.jina.ai; प्रदाता उपनावे: jina-search, jina-ai, jina)
+# Jina शोध (s.jina.ai; प्रदाता उपनाम: jina-search, jina-ai, jina)
 POST /v1/search      { "query": "...", "provider": "jina-search" }
 
 # मॉडरेशन्स
@@ -500,8 +500,8 @@ POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 # TTS — audio/mpeg (किंवा विनंती केलेल्या स्वरूपाची) बॉडी परत करते
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS साठी भाषा आणि आवाज आवश्यक आहेत: `language` चे डीफॉल्ट मूल्य "en" आहे; आवाज दिलेला नसल्यास
-# किंवा OpenAI च्या मानक आवाजाचे नाव (alloy, nova, …) असल्यास ते "Adrian" बनते
+# Soniox TTS साठी भाषा आणि आवाज आवश्यक आहेत: `language` चे डीफॉल्ट मूल्य "en" आहे; आवाज
+# दिला नसल्यास किंवा OpenAI च्या मानक आवाजाचे नाव (alloy, nova, …) दिल्यास ते "Adrian" होते
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # प्रतिमा संपादन (multipart)
@@ -512,29 +512,32 @@ POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **पुनर्क्रमांकन प्रदाता नोड्स:** `POST /v1/rerank` हे `<node-prefix>/<model>` म्हणून संबोधित केलेल्या OpenAI-सुसंगत प्रदाता नोड्सकडेही
-> (oMLX, vLLM, Infinity, गेटवेमागील TEI, …) रूट करते. लूपबॅक
-> नोड्स (`localhost`, `127.0.0.1`, `172.16.0.0/12`) नेहमीच पात्र असतात. इतर कोणत्याही
-> होस्टवरील नोड्स — LAN बॉक्स किंवा Tailscale पीअर — केवळ ऑपरेटरने
-> `RERANK_REMOTE_PROVIDER_NODES` फीचर फ्लॅग सक्षम केला असेल **आणि** नोडचा बेस URL प्रदात्याचे
-> आउटबाउंड URL धोरण (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`) पूर्ण करत असेल, तेव्हाच पात्र असतात.
-> मेमरी इंजिनची पुनर्क्रमांकन पायरी या रूटला
-> लूपबॅकद्वारे कॉल करते, त्यामुळे हाच नियम Memory सेटिंग्जमधील `rerankProviderModel` वर लागू होतो.
+> **पुनर्क्रमांकन प्रदाता नोड्स:** `POST /v1/rerank` विनंत्या `<node-prefix>/<model>` म्हणून संबोधित केलेल्या OpenAI-सुसंगत प्रदाता नोड्सकडेही
+> (oMLX, vLLM, Infinity, गेटवेमागील TEI, …) मार्गित करते. लूपबॅक
+> नोड्स (`localhost`, `127.0.0.1`, `172.16.0.0/12`) नेहमीच पात्र असतात, तसेच ऑपरेटरने
+> `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` मध्ये सूचीबद्ध केलेली होस्टनावेही पात्र असतात (उदा. `http://reranker:8080/v1`
+> सारखे Docker/Compose सेवा नाव; यांना थेट कॉल केला जातो, `HTTP(S)_PROXY` किंवा कनेक्शनच्या
+> पिन केलेल्या प्रॉक्सीद्वारे कधीही नाही). इतर कोणत्याही
+> होस्टवरील नोड्स — LAN मशीन किंवा Tailscale पीअर — केवळ ऑपरेटरने
+> `RERANK_REMOTE_PROVIDER_NODES` फीचर फ्लॅग सक्षम केला असेल **आणि** नोडचा बेस URL प्रदात्याच्या
+> आउटबाउंड URL धोरणात बसत असेल (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`) तरच पात्र ठरतात.
+> मेमरी इंजिनची पुनर्क्रमांकन पायरी या मार्गाला
+> लूपबॅकवरून कॉल करते, त्यामुळे हाच नियम Memory सेटिंग्जमधील `rerankProviderModel` वर लागू होतो.
 >
-> **स्थानिक सर्व्हर संरचना:** नोडला `<base>/v1/rerank` वर आणि 404 आल्यास `<base>/rerank`
-> (Infinity, TEI) वर कॉल केला जातो. अपस्ट्रीम बॉडीमध्ये Cohere/OpenAI स्पेलिंग (`documents`,
+> **स्थानिक सर्व्हर संरचना:** नोडला `<base>/v1/rerank` येथे आणि 404 आल्यास `<base>/rerank`
+> (Infinity, TEI) येथे कॉल केला जातो. अपस्ट्रीम बॉडीमध्ये Cohere/OpenAI स्पेलिंग (`documents`,
 > `return_documents`) आणि TEI स्पेलिंग (`texts`, `return_text`) दोन्ही असतात आणि अपस्ट्रीम प्रतिसाद
-> Cohere एन्व्हलपमध्ये सामान्यीकृत केला जातो: TEI चे थेट `[{index, score, text}]`, हलक्या गेटवेजमधून आलेले
-> `{results: [{index, score}]}` आणि Voyage-शैलीतील `{data: [...]}` हे सर्व क्लायंटकडे
-> `{results: [{index, relevance_score, document?}]}` या स्वरूपात, स्कोअरनुसार क्रमबद्ध करून आणि `top_n` पर्यंत मर्यादित करून परत येतात.
+> Cohere एन्व्हलपमध्ये सामान्यीकृत केला जातो: TEI चे साधे `[{index, score, text}]`, हलक्या गेटवेजकडून
+> मिळणारे `{results: [{index, score}]}` आणि Voyage-शैलीतील `{data: [...]}` हे सर्व क्लायंटकडे
+> `{results: [{index, relevance_score, document?}]}` म्हणून परत येतात, गुणांनुसार क्रमबद्ध केले जातात आणि `top_n` पर्यंत मर्यादित केले जातात.
 
-> **प्रदाता-नोड शोध:** OpenAI-सुसंगत प्रदाता नोडवरील मॉडेल्स `GET /v1/models` मध्ये
-> नोड उपसर्गाखाली दिसतात. एंडपॉइंट मेटाडेटा नसलेल्या नोंदी (स्थानिक `/v1/models` सूचींसाठी सामान्य)
-> नोडचा `apiType` वारशाने घेतात, त्यामुळे `embeddings` नोडची मॉडेल्स डीफॉल्टनुसार चॅट प्रकार घेण्याऐवजी `type: "embedding"` असतात आणि
-> `rerank` नोडची मॉडेल्स `type: "rerank"` असतात; सिंक केलेल्या किंवा व्यक्तिचलितपणे जोडलेल्या नोंदीवरील स्पष्ट
-> `supportedEndpoints` ला तरीही प्राधान्य असते.
+> **प्रोव्हायडर-नोड शोध:** OpenAI-सुसंगत प्रोव्हायडर नोडवरील मॉडेल्स `GET /v1/models` मध्ये
+> नोड प्रीफिक्सअंतर्गत दिसतात. एंडपॉइंट मेटाडेटा नसलेल्या रकाना (स्थानिक `/v1/models` सूचींसाठी सामान्य)
+> नोडचा `apiType` वारशाने घेतात, त्यामुळे `embeddings` नोडची मॉडेल्स डीफॉल्टनुसार चॅट प्रकाराची होण्याऐवजी `type: "embedding"` असतात आणि
+> `rerank` नोडची मॉडेल्स `type: "rerank"` असतात; तरीही सिंक केलेल्या किंवा व्यक्तिचलितपणे जोडलेल्या रकान्यावरील स्पष्ट
+> `supportedEndpoints` ला प्राधान्य दिले जाते.
 
-### समर्पित प्रदाता मार्ग
+### समर्पित प्रोव्हायडर रूट्स
 
 ```bash
 POST /v1/providers/{provider}/chat/completions
@@ -542,7 +545,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-प्रदाता उपसर्ग नसल्यास तो आपोआप जोडला जातो. न जुळणाऱ्या मॉडेल्ससाठी `400` परत केले जाते.
+प्रोव्हायडर प्रीफिक्स नसल्यास तो आपोआप जोडला जातो. न जुळणाऱ्या मॉडेल्ससाठी `400` परत केला जातो.
 
 ---
 

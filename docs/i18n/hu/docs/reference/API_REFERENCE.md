@@ -460,8 +460,8 @@ Ezt a végpontot akkor használja, ha egy sidecar folyamaton kívül fut, és ne
 | POST    | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                    |
 | POST    | `/v1/audio/speech`                        | OpenAI TTS (hangtörzset ad vissza)    |
 | POST    | `/v1/rerank`                              | Cohere/Voyage-stílusú újrarangsorolás |
-| POST    | `/v1/classify`                            | Jina osztályozás (`api.jina.ai`)      |
-| POST    | `/v1/segment`                             | Jina szegmentáló (`segment.jina.ai`)  |
+| POST    | `/v1/classify`                            | Jina-osztályozás (`api.jina.ai`)      |
+| POST    | `/v1/segment`                             | Jina-szegmentáló (`segment.jina.ai`)  |
 | POST    | `/v1/moderations`                         | OpenAI Moderations                    |
 | GET     | `/v1/models`                              | OpenAI                                |
 | POST    | `/v1/messages/count_tokens`               | Anthropic                             |
@@ -470,26 +470,26 @@ Ezt a végpontot akkor használja, ha egy sidecar folyamaton kívül fut, és ne
 | POST    | `/v1/api/chat`                            | Ollama                                |
 | GET     | `/api/v1/vscode/{token}/`                 | OpenAI-katalógus aliasa               |
 | GET     | `/api/v1/vscode/{token}/models`           | OpenAI-modellek aliasa                |
-| POST    | `/api/v1/vscode/{token}/chat/completions` | OpenAI tokenizált aliasa              |
-| POST    | `/api/v1/vscode/{token}/responses`        | OpenAI Responses tokenizált aliasa    |
-| POST    | `/api/v1/vscode/{token}/api/chat`         | Ollama tokenizált aliasa              |
-| GET     | `/api/v1/vscode/{token}/api/tags`         | Ollama-címkék tokenizált aliasa       |
+| POST    | `/api/v1/vscode/{token}/chat/completions` | Tokenizált OpenAI-alias               |
+| POST    | `/api/v1/vscode/{token}/responses`        | Tokenizált OpenAI Responses-alias     |
+| POST    | `/api/v1/vscode/{token}/api/chat`         | Tokenizált Ollama-alias               |
+| GET     | `/api/v1/vscode/{token}/api/tags`         | Tokenizált Ollama-címkealias          |
 
-Minden POST-útvonal ugyanazt a formát követi: `Bearer your-api-key` + Zod által ellenőrzött JSON-törzs (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` stb.; lásd: `src/shared/validation/schemas.ts`). A sémaellenőrzés sikertelensége esetén 4xx válasz érkezik.
+Minden POST-útvonal ugyanazt a formát követi: `Bearer your-api-key` + Zod által validált JSON-törzs (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` stb.; lásd: `src/shared/validation/schemas.ts`). A séma ellenőrzésének sikertelensége esetén 4xx válasz érkezik.
 
-Azoknál a klienseknél, amelyek nem tudják csatolni az `Authorization: Bearer ...` fejlécet, az OmniRoute az API-kulcsokat az URL-ben is elfogadja, akár lekérdezési karakterlánccal való kompatibilitáson keresztül (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`), akár az alább dokumentált, erre kijelölt `/api/v1/vscode/{token}/...` végpontokon keresztül.
+Azoknál a klienseknél, amelyek nem tudják csatolni az `Authorization: Bearer ...` fejlécet, az OmniRoute az API-kulcsokat az URL-ben is elfogadja, akár lekérdezésikarakterlánc-kompatibilitással (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`), akár az alább dokumentált, erre szolgáló `/api/v1/vscode/{token}/...` végpontokon keresztül.
 
 ```bash
-# Újrarangsorolás (felhőalapú regisztrációs szolgáltató vagy OpenAI-kompatibilis szolgáltatócsomópont "<prefix>/<model>" formában)
+# Újrarangsorolás (felhőalapú regisztrációs szolgáltató vagy OpenAI-kompatibilis szolgáltatói csomópont „<prefix>/<model>” formában)
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
-# Jina-osztályozás (Foundation API-hitelesítő adatok)
+# Jina-osztályozás (Foundation API hitelesítő adatok)
 POST /v1/classify    { "model": "jina-embeddings-v5-text-small", "input": ["..."], "labels": ["a", "b"] }
 
 # Jina-szegmentáló
 POST /v1/segment     { "content": "...", "return_chunks": true }
 
-# Jina-keresés (s.jina.ai; szolgáltatói aliasok: jina-search, jina-ai, jina)
+# Jina-keresés (s.jina.ai; szolgáltatóaliasok: jina-search, jina-ai, jina)
 POST /v1/search      { "query": "...", "provider": "jina-search" }
 
 # Moderálás
@@ -498,8 +498,8 @@ POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 # TTS — audio/mpeg (vagy a kért formátumú) törzset ad vissza
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# A Soniox TTS nyelvet és hangot igényel: a `language` alapértelmezett értéke "en"; hiányzó
-# hang vagy egy szabványos OpenAI-hangnév (alloy, nova, …) esetén az érték "Adrian" lesz
+# A Soniox TTS használatához nyelv és hang szükséges: a `language` alapértelmezett értéke „en”; a hiányzó
+# hang vagy egy szabványos OpenAI-hangnév (alloy, nova, …) helyett az „Adrian” lesz használva
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # Képszerkesztés (multipart)
@@ -510,26 +510,29 @@ POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **Újrarangsorolási szolgáltatócsomópontok:** A `POST /v1/rerank` az OpenAI-kompatibilis szolgáltatócsomópontokhoz
-> (oMLX, vLLM, Infinity, átjáró mögötti TEI, …) is továbbít, amelyek címzése `<node-prefix>/<model>` formájú. A visszacsatolási
-> csomópontok (`localhost`, `127.0.0.1`, `172.16.0.0/12`) mindig használhatók. Bármely más
-> gazdagépen lévő csomópont — legyen az egy LAN-gép vagy Tailscale-partner — csak akkor használható, ha az üzemeltető engedélyezi a
+> **Újrarangsorolási szolgáltatói csomópontok:** A `POST /v1/rerank` az OpenAI-kompatibilis szolgáltatói csomópontokhoz
+> (oMLX, vLLM, Infinity, átjáró mögötti TEI, …) is továbbítja a kéréseket, amelyek címzése `<node-prefix>/<model>` formában történik. A visszacsatolási
+> csomópontok (`localhost`, `127.0.0.1`, `172.16.0.0/12`) mindig használhatók, csakúgy, mint azok az állomásnevek, amelyeket az
+> üzemeltető felsorol az `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` változóban (például egy Docker/Compose-szolgáltatás neve,
+> mint a `http://reranker:8080/v1`; ezek közvetlenül lesznek meghívva, soha nem a `HTTP(S)_PROXY` változón vagy egy
+> kapcsolat rögzített proxyján keresztül). A bármely más
+> állomáson — például egy LAN-gépen vagy Tailscale-társon — található csomópontok csak akkor használhatók, ha az üzemeltető engedélyezi a
 > `RERANK_REMOTE_PROVIDER_NODES` funkciójelzőt, **és** a csomópont alap-URL-je megfelel a szolgáltató
 > kimenő URL-ekre vonatkozó szabályzatának (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
-> A memóriamotor újrarangsorolási lépése a visszacsatolási interfészen keresztül hívja meg ezt az útvonalat,
-> ezért ugyanez a szabály vonatkozik a Memória beállításaiban található `rerankProviderModel` értékre is.
+> A memóriamotor újrarangsorolási lépése a visszacsatolási címen keresztül hívja meg ezt az útvonalat,
+> így ugyanez a szabály vonatkozik a Memória beállításaiban található `rerankProviderModel` értékre is.
 >
-> **Helyi kiszolgálói formátumok:** A csomópont meghívása a `<base>/v1/rerank` címen történik, 404 esetén pedig a `<base>/rerank`
-> címen (Infinity, TEI). A felsőbb rétegnek küldött törzs a Cohere/OpenAI-féle elnevezéseket (`documents`,
-> `return_documents`) és a TEI-féle elnevezéseket (`texts`, `return_text`) egyaránt tartalmazza, a felsőbb réteg válasza pedig
-> a Cohere-borítékra lesz normalizálva: a TEI egyszerű `[{index, score, text}]` válasza, a vékony átjárók
-> `{results: [{index, score}]}` válasza és a Voyage-stílusú `{data: [...]}` válasz egyaránt
-> `{results: [{index, relevance_score, document?}]}` formában jut vissza a klienshez, pontszám szerint rendezve és `top_n` elemszámra korlátozva.
+> **Helyi kiszolgálói formátumok:** A csomópont meghívása a `<base>/v1/rerank`, 404 esetén pedig a `<base>/rerank`
+> címen történik (Infinity, TEI). A továbbított törzs a Cohere/OpenAI-féle elnevezéseket (`documents`,
+> `return_documents`) és a TEI-féle elnevezéseket (`texts`, `return_text`) egyaránt tartalmazza, a külső szolgáltatás válasza pedig
+> a Cohere-burkolóformátumra lesz normalizálva: a TEI önálló `[{index, score, text}]` formátuma, a vékony átjáróktól származó
+> `{results: [{index, score}]}`, valamint a Voyage-stílusú `{data: [...]}` egyaránt
+> `{results: [{index, relevance_score, document?}]}` formában kerül vissza a klienshez, pontszám szerint rendezve és `top_n` számú elemre korlátozva.
 
-> **Szolgáltatói csomópont felderítése:** az OpenAI-kompatibilis szolgáltatói csomóponton található modellek a `GET /v1/models`
-> válaszában a csomópont előtagja alatt jelennek meg. A végpont-metaadatokat nem tartalmazó sorok (ami a helyi `/v1/models` listákra jellemző)
+> **Szolgáltatói csomópontok felderítése:** az OpenAI-kompatibilis szolgáltatói csomópontokon található modellek a `GET /v1/models`
+> végponton, a csomópont előtagja alatt jelennek meg. A végpont-metaadatokat nem tartalmazó sorok (ami jellemző a helyi `/v1/models` listákra)
 > öröklik a csomópont `apiType` értékét, így egy `embeddings` csomópont modelljei `type: "embedding"`, egy
-> `rerank` csomópont modelljei pedig `type: "rerank"` típusúak lesznek ahelyett, hogy alapértelmezetten csevegési típusúak lennének; a szinkronizált vagy manuálisan hozzáadott soron explicit módon megadott
+> `rerank` csomópont modelljei pedig `type: "rerank"` típusúak lesznek ahelyett, hogy alapértelmezetten csevegési típusúak lennének; a szinkronizált vagy kézzel hozzáadott soron explicit módon megadott
 > `supportedEndpoints` továbbra is elsőbbséget élvez.
 
 ### Dedikált szolgáltatói útvonalak
@@ -540,7 +543,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-A szolgáltatói előtag automatikusan hozzáadódik, ha hiányzik. A nem egyező modellek esetén a válasz `400`.
+A szolgáltatói előtag automatikusan hozzáadódik, ha hiányzik. A nem egyező modellek `400` választ eredményeznek.
 
 ---
 

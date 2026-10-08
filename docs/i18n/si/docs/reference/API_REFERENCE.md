@@ -446,7 +446,7 @@ sidecar එකක් ක්රියාවලියෙන් පිටත ධා
 
 ---
 
-## ගැළපුම් අන්ත ලක්ෂ්ය
+## අනුකූලතා අන්ත ලක්ෂ්ය
 
 | ක්රමය | මාර්ගය                                    | ආකෘතිය                                   |
 | ----- | ----------------------------------------- | ---------------------------------------- |
@@ -456,8 +456,8 @@ sidecar එකක් ක්රියාවලියෙන් පිටත ධා
 | POST  | `/v1/embeddings`                          | OpenAI                                   |
 | POST  | `/v1/images/generations`                  | OpenAI Images                            |
 | POST  | `/v1/images/edits`                        | OpenAI Images (සංස්කරණය/inpaint)         |
-| POST  | `/v1/videos/generations`                  | OpenAI-ආකාරයේ වීඩියෝ උත්පාදනය            |
-| POST  | `/v1/music/generations`                   | OpenAI-ආකාරයේ සංගීත උත්පාදනය             |
+| POST  | `/v1/videos/generations`                  | OpenAI-ආකාරයේ වීඩියෝ ජනනය                |
+| POST  | `/v1/music/generations`                   | OpenAI-ආකාරයේ සංගීත ජනනය                 |
 | POST  | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                       |
 | POST  | `/v1/audio/speech`                        | OpenAI TTS (ශ්රව්ය body එක ලබා දෙයි)     |
 | POST  | `/v1/rerank`                              | Cohere/Voyage-ආකාරයේ නැවත ශ්රේණිගත කිරීම |
@@ -470,18 +470,18 @@ sidecar එකක් ක්රියාවලියෙන් පිටත ධා
 | POST  | `/v1beta/models/{...path}`                | Gemini generateContent                   |
 | POST  | `/v1/api/chat`                            | Ollama                                   |
 | GET   | `/api/v1/vscode/{token}/`                 | OpenAI නාමාවලි අන්වර්ථය                  |
-| GET   | `/api/v1/vscode/{token}/models`           | OpenAI ආකෘති අන්වර්ථය                    |
-| POST  | `/api/v1/vscode/{token}/chat/completions` | OpenAI token සහිත අන්වර්ථය               |
-| POST  | `/api/v1/vscode/{token}/responses`        | OpenAI Responses token සහිත අන්වර්ථය     |
-| POST  | `/api/v1/vscode/{token}/api/chat`         | Ollama token සහිත අන්වර්ථය               |
-| GET   | `/api/v1/vscode/{token}/api/tags`         | Ollama tags token සහිත අන්වර්ථය          |
+| GET   | `/api/v1/vscode/{token}/models`           | OpenAI මාදිලි අන්වර්ථය                   |
+| POST  | `/api/v1/vscode/{token}/chat/completions` | OpenAI ටෝකනීකෘත අන්වර්ථය                 |
+| POST  | `/api/v1/vscode/{token}/responses`        | OpenAI Responses ටෝකනීකෘත අන්වර්ථය       |
+| POST  | `/api/v1/vscode/{token}/api/chat`         | Ollama ටෝකනීකෘත අන්වර්ථය                 |
+| GET   | `/api/v1/vscode/{token}/api/tags`         | Ollama ටැග් සඳහා ටෝකනීකෘත අන්වර්ථය       |
 
-සියලුම POST මාර්ග එකම හැඩය අනුගමනය කරයි: `Bearer your-api-key` + Zod මඟින් වලංගු කරන ලද JSON body එකක් (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, ආදිය; `src/shared/validation/schemas.ts` බලන්න). schema එක අසමත් වුවහොත් 4xx ආපසු ලබා දෙයි.
+සියලුම POST මාර්ග එකම ව්යුහය අනුගමනය කරයි: `Bearer your-api-key` + Zod මඟින් වලංගු කළ JSON body එකක් (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, ආදිය; `src/shared/validation/schemas.ts` බලන්න). Schema වලංගුකරණය අසාර්ථක වූ විට 4xx ලබා දෙයි.
 
-`Authorization: Bearer ...` ඇමිණිය නොහැකි සේවාලාභීන් සඳහා, පහත ලේඛනගත කර ඇති කැපවූ `/api/v1/vscode/{token}/...` අන්ත ලක්ෂ්ය හෝ query-string ගැළපුම (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) හරහා URL එක තුළ API යතුරුද OmniRoute පිළිගනී.
+`Authorization: Bearer ...` අමුණා යැවිය නොහැකි සේවාලාභීන් සඳහා, OmniRoute විසින් query-string අනුකූලතාව (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) හෝ පහත ලේඛනගත කර ඇති විශේෂිත `/api/v1/vscode/{token}/...` අන්ත ලක්ෂ්ය හරහා URL එක තුළ API යතුරු ද පිළිගනී.
 
 ```bash
-# නැවත ශ්රේණිගත කිරීම (cloud registry සැපයුම්කරු, හෝ "<prefix>/<model>" ලෙස OpenAI-ගැළපෙන සැපයුම්කරු node එකක්)
+# නැවත ශ්රේණිගත කිරීම (වලාකුළු රෙජිස්ට්රි සැපයුම්කරුවෙකු, හෝ "<prefix>/<model>" ලෙස OpenAI-අනුකූල සැපයුම්කරු node එකක්)
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
 # Jina වර්ගීකරණය (Foundation API අක්තපත්ර)
@@ -496,44 +496,47 @@ POST /v1/search      { "query": "...", "provider": "jina-search" }
 # අන්තර්ගත පාලන
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
-# TTS — audio/mpeg (හෝ ඉල්ලූ ආකෘතියේ) body එකක් ලබා දෙයි
+# TTS — audio/mpeg body එකක් (හෝ ඉල්ලා ඇති ආකෘතිය) ලබා දෙයි
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS සඳහා භාෂාවක් සහ හඬක් අවශ්ය වේ: `language` හි පෙරනිමි අගය "en" වේ; නැති
+# Soniox TTS සඳහා භාෂාවක් සහ හඬක් අවශ්ය වේ: `language` හි පෙරනිමිය "en" වේ; නොමැති
 # හඬක් හෝ OpenAI හි සම්මත හඬ නාමයක් (alloy, nova, …) "Adrian" බවට පත් වේ
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # රූප සංස්කරණය (multipart)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# වීඩියෝ / සංගීත උත්පාදනය (සැපයුම්කරු prefix එක සහිත model id එක)
+# වීඩියෝ / සංගීත ජනනය (සැපයුම්කරු උපසර්ගය සහිත මාදිලි හැඳුනුම්කාරකය)
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **නැවත ශ්රේණිගත කිරීමේ සැපයුම්කරු nodes:** `<node-prefix>/<model>` ලෙස යොමු කරන ලද OpenAI-ගැළපෙන සැපයුම්කරු nodes
-> (oMLX, vLLM, Infinity, gateway එකක් පිටුපස ඇති TEI, …) වෙතද `POST /v1/rerank` මාර්ගගත කරයි. Loopback
-> nodes (`localhost`, `127.0.0.1`, `172.16.0.0/12`) සැමවිටම සුදුසුකම් ලබයි. වෙනත් ඕනෑම
-> host එකක ඇති nodes — LAN යන්ත්රයක් හෝ Tailscale peer එකක් — සුදුසුකම් ලබන්නේ මෙහෙයුම්කරු
-> `RERANK_REMOTE_PROVIDER_NODES` විශේෂාංග flag එක සක්රීය කරන **සහ** node එකේ මූලික URL එක සැපයුම්කරුගේ
+> **නැවත ශ්රේණිගත කිරීමේ සැපයුම්කරු nodes:** `POST /v1/rerank` මඟින් `<node-prefix>/<model>` ලෙස යොමු කර ඇති OpenAI-අනුකූල සැපයුම්කරු nodes
+> (oMLX, vLLM, Infinity, ද්වාරයක් පිටුපස ඇති TEI, …) වෙත ද ඉල්ලීම් මාර්ගගත කරයි. Loopback
+> nodes (`localhost`, `127.0.0.1`, `172.16.0.0/12`) සැමවිටම සුදුසුකම් ලබන අතර, ක්රියාකරු
+> `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` තුළ ලැයිස්තුගත කරන සත්කාරක නාම ද සුදුසුකම් ලබයි (උදා. `http://reranker:8080/v1` වැනි
+> Docker/Compose සේවා නාමයක්; මේවා `HTTP(S)_PROXY` හෝ සම්බන්ධතාවයකට නියම කළ proxy එකක් හරහා කිසිවිටෙක නොයවා
+> සෘජුවම අමතනු ලැබේ). වෙනත් ඕනෑම
+> සත්කාරකයක ඇති nodes — LAN යන්ත්රයක් හෝ Tailscale සමපාර්ශ්විකයක් — සුදුසුකම් ලබන්නේ ක්රියාකරු
+> `RERANK_REMOTE_PROVIDER_NODES` විශේෂාංග ධජය සක්රීය කර ඇති **සහ** node එකේ මූලික URL එක සැපයුම්කරුගේ
 > පිටතට යන URL ප්රතිපත්තිය (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`) සමත් වන විට පමණි.
-> memory engine එකේ නැවත ශ්රේණිගත කිරීමේ පියවර loopback හරහා මෙම මාර්ගය අමතන බැවින්,
-> Memory සැකසුම්වල `rerankProviderModel` සඳහාද එම නියමයම අදාළ වේ.
+> මතක එන්ජිමේ නැවත ශ්රේණිගත කිරීමේ පියවර මෙම මාර්ගය
+> loopback හරහා අමතන බැවින්, Memory සැකසුම් තුළ `rerankProviderModel` සඳහා ද එම රීතියම අදාළ වේ.
 >
-> **දේශීය server හැඩ:** node එක `<base>/v1/rerank` හිදීත්, 404 ලැබුණහොත් `<base>/rerank`
-> (Infinity, TEI) හිදීත් අමතනු ලැබේ. upstream body එක Cohere/OpenAI අක්ෂර වින්යාසය (`documents`,
-> `return_documents`) සහ TEI අක්ෂර වින්යාසය (`texts`, `return_text`) යන දෙකම රැගෙන යන අතර, upstream ප්රතිචාරය
-> Cohere envelope එකට සාමාන්යකරණය කරයි: TEI හි සෘජු `[{index, score, text}]`, සරල gateways වෙතින්
+> **දේශීය සේවාදායක ව්යුහ:** node එක `<base>/v1/rerank` හිදී ද, 404 ලැබුණු විට `<base>/rerank`
+> (Infinity, TEI) හිදී ද අමතනු ලැබේ. Upstream body එක තුළ Cohere/OpenAI අක්ෂර වින්යාසය (`documents`,
+> `return_documents`) සහ TEI අක්ෂර වින්යාසය (`texts`, `return_text`) යන දෙකම අඩංගු වන අතර, upstream ප්රතිචාරය
+> Cohere envelope එකට සාමාන්යකරණය කෙරේ: TEI හි සෘජු `[{index, score, text}]`, සැහැල්ලු ද්වාරවලින් ලැබෙන
 > `{results: [{index, score}]}`, සහ Voyage-ආකාරයේ `{data: [...]}` යන සියල්ලම සේවාලාභියා වෙත
-> `{results: [{index, relevance_score, document?}]}` ලෙස, score අනුව අනුපිළිවෙළට සකසා `top_n` දක්වා සීමා කර ආපසු ලබා දෙයි.
+> `{results: [{index, relevance_score, document?}]}` ලෙස, ලකුණු අනුව අනුපිළිවෙළට සකසා `top_n` ට සීමා කර ආපසු ලැබේ.
 
-> **සපයන්නා-නෝඩ් සොයාගැනීම:** OpenAI-අනුකූල සපයන්නා නෝඩයක ඇති ආකෘති, නෝඩ් උපසර්ගය යටතේ `GET /v1/models`
-> තුළ දිස්වේ. අන්ත ලක්ෂ්ය පාරදත්ත නොමැති පේළි (දේශීය `/v1/models` ලැයිස්තු සඳහා සාමාන්ය)
-> නෝඩයේ `apiType` උරුම කරගනී. එබැවින්, පෙරනිමියෙන් කතාබස් වර්ගයට පත් වීම වෙනුවට `embeddings` නෝඩයක ආකෘති `type: "embedding"` වන අතර
-> `rerank` නෝඩයක ආකෘති `type: "rerank"` වේ; සමමුහුර්ත කළ හෝ අතින් එක් කළ පේළියක පැහැදිලිව සඳහන් කර ඇති
+> **සපයන්නා-නෝඩ් සොයාගැනීම:** OpenAI-අනුකූල සපයන්නා නෝඩයක ඇති ආකෘති, නෝඩ් උපසර්ගය යටතේ `GET /v1/models` තුළ දිස් වේ.
+> අන්ත ලක්ෂ්ය පාරදත්ත නොමැති පේළි (දේශීය `/v1/models` ලැයිස්තු සඳහා සාමාන්ය වේ)
+> නෝඩයේ `apiType` උරුම කරගනී. එබැවින් `embeddings` නෝඩයක ආකෘති පෙරනිමියෙන් සංවාද ආකෘති බවට පත්වීම වෙනුවට `type: "embedding"` වන අතර,
+> `rerank` නෝඩයක ආකෘති `type: "rerank"` වේ; සමමුහුර්ත කළ හෝ අතින් එක් කළ පේළියක පැහැදිලිව දක්වා ඇති
 > `supportedEndpoints` අගයක් තවමත් ප්රමුඛත්වය ගනී.
 
-### වෙන් කළ සපයන්නා මාර්ග
+### කැපවූ සපයන්නා මාර්ග
 
 ```bash
 POST /v1/providers/{provider}/chat/completions

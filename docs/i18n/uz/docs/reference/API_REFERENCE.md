@@ -429,40 +429,40 @@ Sidecar jarayondan tashqarida ishlaganda va `open-sse/config/providerPluginManif
 
 ## Moslik endpointlari
 
-| Usul | Yoʻl                                      | Format                                         |
-| ---- | ----------------------------------------- | ---------------------------------------------- |
-| POST | `/v1/chat/completions`                    | OpenAI                                         |
-| POST | `/v1/messages`                            | Anthropic                                      |
-| POST | `/v1/responses`                           | OpenAI Responses                               |
-| POST | `/v1/embeddings`                          | OpenAI                                         |
-| POST | `/v1/images/generations`                  | OpenAI Images                                  |
-| POST | `/v1/images/edits`                        | OpenAI Images (tahrirlash/inpaint)             |
-| POST | `/v1/videos/generations`                  | OpenAI uslubidagi video yaratish               |
-| POST | `/v1/music/generations`                   | OpenAI uslubidagi musiqa yaratish              |
-| POST | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                             |
-| POST | `/v1/audio/speech`                        | OpenAI TTS (audio tanasini qaytaradi)          |
-| POST | `/v1/rerank`                              | Cohere/Voyage uslubidagi qayta tartiblash      |
-| POST | `/v1/classify`                            | Jina tasniflash (`api.jina.ai`)                |
-| POST | `/v1/segment`                             | Jina segmentatori (`segment.jina.ai`)          |
-| POST | `/v1/moderations`                         | OpenAI Moderations                             |
-| GET  | `/v1/models`                              | OpenAI                                         |
-| POST | `/v1/messages/count_tokens`               | Anthropic                                      |
-| GET  | `/v1beta/models`                          | Gemini                                         |
-| POST | `/v1beta/models/{...path}`                | Gemini generateContent                         |
-| POST | `/v1/api/chat`                            | Ollama                                         |
-| GET  | `/api/v1/vscode/{token}/`                 | OpenAI katalog taxallusi                       |
-| GET  | `/api/v1/vscode/{token}/models`           | OpenAI modellar taxallusi                      |
-| POST | `/api/v1/vscode/{token}/chat/completions` | OpenAI tokenlashtirilgan taxallusi             |
-| POST | `/api/v1/vscode/{token}/responses`        | OpenAI Responses tokenlashtirilgan taxallusi   |
-| POST | `/api/v1/vscode/{token}/api/chat`         | Ollama tokenlashtirilgan taxallusi             |
-| GET  | `/api/v1/vscode/{token}/api/tags`         | Ollama teglarining tokenlashtirilgan taxallusi |
+| Metod | Yoʻl                                      | Format                                         |
+| ----- | ----------------------------------------- | ---------------------------------------------- |
+| POST  | `/v1/chat/completions`                    | OpenAI                                         |
+| POST  | `/v1/messages`                            | Anthropic                                      |
+| POST  | `/v1/responses`                           | OpenAI Responses                               |
+| POST  | `/v1/embeddings`                          | OpenAI                                         |
+| POST  | `/v1/images/generations`                  | OpenAI Images                                  |
+| POST  | `/v1/images/edits`                        | OpenAI Images (tahrirlash/inpaint)             |
+| POST  | `/v1/videos/generations`                  | OpenAI uslubidagi video yaratish               |
+| POST  | `/v1/music/generations`                   | OpenAI uslubidagi musiqa yaratish              |
+| POST  | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                             |
+| POST  | `/v1/audio/speech`                        | OpenAI TTS (audio tanasini qaytaradi)          |
+| POST  | `/v1/rerank`                              | Cohere/Voyage uslubida qayta tartiblash        |
+| POST  | `/v1/classify`                            | Jina tasniflash (`api.jina.ai`)                |
+| POST  | `/v1/segment`                             | Jina segmentatori (`segment.jina.ai`)          |
+| POST  | `/v1/moderations`                         | OpenAI Moderations                             |
+| GET   | `/v1/models`                              | OpenAI                                         |
+| POST  | `/v1/messages/count_tokens`               | Anthropic                                      |
+| GET   | `/v1beta/models`                          | Gemini                                         |
+| POST  | `/v1beta/models/{...path}`                | Gemini generateContent                         |
+| POST  | `/v1/api/chat`                            | Ollama                                         |
+| GET   | `/api/v1/vscode/{token}/`                 | OpenAI katalog taxallusi                       |
+| GET   | `/api/v1/vscode/{token}/models`           | OpenAI modellar taxallusi                      |
+| POST  | `/api/v1/vscode/{token}/chat/completions` | OpenAI tokenlashtirilgan taxallusi             |
+| POST  | `/api/v1/vscode/{token}/responses`        | OpenAI Responses tokenlashtirilgan taxallusi   |
+| POST  | `/api/v1/vscode/{token}/api/chat`         | Ollama tokenlashtirilgan taxallusi             |
+| GET   | `/api/v1/vscode/{token}/api/tags`         | Ollama teglarining tokenlashtirilgan taxallusi |
 
-Barcha POST yoʻnalishlari bir xil shaklga amal qiladi: `Bearer your-api-key` + Zod yordamida tekshirilgan JSON tanasi (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` va boshqalar; `src/shared/validation/schemas.ts` fayliga qarang). Sxema tekshiruvi muvaffaqiyatsiz boʻlsa, 4xx qaytariladi.
+Barcha POST yoʻnalishlari bir xil tuzilishga amal qiladi: `Bearer your-api-key` + Zod tomonidan tekshirilgan JSON tanasi (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` va boshqalar, `src/shared/validation/schemas.ts` fayliga qarang). Sxema tekshiruvi muvaffaqiyatsiz boʻlsa, 4xx qaytariladi.
 
-`Authorization: Bearer ...` sarlavhasini biriktira olmaydigan mijozlar uchun OmniRoute API kalitlarini URL ichida ham qabul qiladi: soʻrov satri bilan moslik (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) yoki quyida hujjatlashtirilgan maxsus `/api/v1/vscode/{token}/...` endpointlari orqali.
+`Authorization: Bearer ...` biriktira olmaydigan mijozlar uchun OmniRoute URL ichidagi API kalitlarini ham qabul qiladi: query-string mosligi (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) yoki quyida hujjatlashtirilgan maxsus `/api/v1/vscode/{token}/...` endpointlari orqali.
 
 ```bash
-# Qayta tartiblash (bulutli reyestr provayderi yoki "<prefix>/<model>" koʻrinishidagi OpenAI bilan mos provayder tuguni)
+# Qayta tartiblash (bulutli reyestr provayderi yoki "<prefix>/<model>" koʻrinishidagi OpenAI-ga mos provayder tuguni)
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
 # Jina tasniflash (Foundation API hisob maʼlumotlari)
@@ -474,17 +474,17 @@ POST /v1/segment     { "content": "...", "return_chunks": true }
 # Jina qidiruvi (s.jina.ai; provayder taxalluslari: jina-search, jina-ai, jina)
 POST /v1/search      { "query": "...", "provider": "jina-search" }
 
-# Moderatsiyalar
+# Moderatsiya
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
 # TTS — audio/mpeg (yoki soʻralgan formatdagi) tanani qaytaradi
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS til va ovozni talab qiladi: `language` standart boʻyicha "en"; koʻrsatilmagan
+# Soniox TTS til va ovozni talab qiladi: `language` standart qiymati "en"; koʻrsatilmagan
 # ovoz yoki OpenAI standart ovoz nomi (alloy, nova, …) "Adrian"ga aylantiriladi
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
-# Tasvirni tahrirlash (multipart)
+# Rasmni tahrirlash (multipart)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
 # Video / musiqa yaratish (provayder prefiksli model identifikatori)
@@ -492,29 +492,34 @@ POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **Qayta tartiblash provayder tugunlari:** `POST /v1/rerank` soʻrovlarni `<node-prefix>/<model>` sifatida manzillangan OpenAI bilan mos provayder tugunlariga
-> (oMLX, vLLM, Infinity, shlyuz ortidagi TEI va boshqalar) ham yoʻnaltiradi. Loopback
-> tugunlar (`localhost`, `127.0.0.1`, `172.16.0.0/12`) har doim foydalanishga yaroqli. Boshqa
-> xostdagi tugunlardan — LAN qurilmasi yoki Tailscale tugunidan — faqat operator
-> `RERANK_REMOTE_PROVIDER_NODES` funksiya bayrogʻini yoqqanida **va** tugunning asosiy URL manzili provayderning
-> chiquvchi URL siyosatidan (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`) oʻtganida foydalanish mumkin.
+> **Qayta tartiblash provayder tugunlari:** `POST /v1/rerank` soʻrovlari `<node-prefix>/<model>` koʻrinishida manzillangan OpenAI-ga mos provayder tugunlariga
+> (oMLX, vLLM, Infinity, shlyuz ortidagi TEI, …) ham yoʻnaltiriladi. Loopback
+> tugunlari (`localhost`, `127.0.0.1`, `172.16.0.0/12`) har doim mos hisoblanadi; operator
+> `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` ichida koʻrsatgan xost nomlari ham shunday (masalan,
+> `http://reranker:8080/v1` kabi Docker/Compose xizmat nomi; ularga doimo bevosita murojaat qilinadi,
+> hech qachon `HTTP(S)_PROXY` yoki ulanishga biriktirilgan proksi orqali emas). Boshqa har qanday
+> xostdagi tugunlar — LAN qurilmasi yoki Tailscale peeri — faqat operator
+> `RERANK_REMOTE_PROVIDER_NODES` funksiya bayrogʻini yoqqanida **va** tugunning asosiy URL manzili
+> provayderning tashqi URL siyosatidan (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` /
+> `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`) oʻtganida mos hisoblanadi.
 > Xotira mexanizmining qayta tartiblash bosqichi ushbu yoʻnalishni
-> loopback orqali chaqiradi, shuning uchun Xotira sozlamalaridagi `rerankProviderModel` uchun ham ayni qoida amal qiladi.
+> loopback orqali chaqiradi, shuning uchun ayni qoida Memory sozlamalaridagi `rerankProviderModel`ga ham tatbiq etiladi.
 >
-> **Mahalliy server shakllari:** tugun avval `<base>/v1/rerank` manzilida, 404 holatida esa `<base>/rerank`
-> (Infinity, TEI) manzilida chaqiriladi. Yuqori oqim tanasi Cohere/OpenAI yozilishini (`documents`,
-> `return_documents`) ham, TEI yozilishini (`texts`, `return_text`) ham oʻz ichiga oladi va yuqori oqim javobi
-> Cohere konvertiga meʼyorlashtiriladi: TEI’ning oddiy `[{index, score, text}]`, yupqa shlyuzlardan keladigan `{results: [{index, score}]}`
-> va Voyage uslubidagi `{data: [...]}` javoblarining barchasi mijozga
-> `{results: [{index, relevance_score, document?}]}` koʻrinishida, ball boʻyicha saralangan va `top_n` bilan cheklangan holda qaytariladi.
+> **Mahalliy server tuzilmalari:** tugun avval `<base>/v1/rerank` manzilida, 404 holatida esa
+> `<base>/rerank` manzilida chaqiriladi (Infinity, TEI). Yuqori oqim tanasi Cohere/OpenAI yozilishini
+> (`documents`, `return_documents`) ham, TEI yozilishini (`texts`, `return_text`) ham oʻz ichiga oladi;
+> yuqori oqim javobi esa Cohere konvertiga meʼyorlashtiriladi: TEI taqdim etadigan oddiy
+> `[{index, score, text}]`, yupqa shlyuzlardan keladigan `{results: [{index, score}]}` va Voyage uslubidagi
+> `{data: [...]}` javoblarining barchasi mijozga `{results: [{index, relevance_score, document?}]}`
+> koʻrinishida, ball boʻyicha saralangan va `top_n` bilan cheklangan holda qaytariladi.
 
-> **Provayder tugunini aniqlash:** OpenAI bilan mos provayder tugunidagi modellar `GET /v1/models`
-> so‘rovida tugun prefiksi ostida ko‘rinadi. Endpoint metamaʼlumotlariga ega bo‘lmagan qatorlar (odatda mahalliy `/v1/models` ro‘yxatlarida)
-> tugunning `apiType` qiymatini meros qilib oladi, shuning uchun `embeddings` tugunining modellari standart ravishda chat turiga o‘tish o‘rniga `type: "embedding"`,
-> `rerank` tugunining modellari esa `type: "rerank"` bo‘ladi; sinxronlangan yoki qo‘lda qo‘shilgan qatorda aniq ko‘rsatilgan
-> `supportedEndpoints` hali ham ustuvor hisoblanadi.
+> **Provayder tugunini aniqlash:** OpenAI bilan mos keluvchi provayder tugunidagi modellar `GET /v1/models`
+> ichida tugun prefiksi ostida ko‘rinadi. Endpoint metama’lumotlariga ega bo‘lmagan qatorlar (odatda mahalliy `/v1/models` ro‘yxatlarida)
+> tugunning `apiType` qiymatini meros qilib oladi, shu sababli `embeddings` tugunining modellari standart ravishda chat turiga o‘tish o‘rniga `type: "embedding"`, `rerank` tugunining modellari esa
+> `type: "rerank"` bo‘ladi; sinxronlangan yoki qo‘lda qo‘shilgan qatorda aniq ko‘rsatilgan
+> `supportedEndpoints` hali ham ustunlikka ega.
 
-### Maxsus provayder marshrutlari
+### Maxsus provayder yo‘nalishlari
 
 ```bash
 POST /v1/providers/{provider}/chat/completions

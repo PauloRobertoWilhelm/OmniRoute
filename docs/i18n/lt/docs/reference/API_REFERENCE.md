@@ -486,7 +486,7 @@ Naudokite šį galinį tašką, kai pagalbinis procesas vykdomas atskirai ir neg
 | POST    | `/v1/responses`                           | OpenAI Responses                                         |
 | POST    | `/v1/embeddings`                          | OpenAI                                                   |
 | POST    | `/v1/images/generations`                  | OpenAI Images                                            |
-| POST    | `/v1/images/edits`                        | OpenAI Images (redagavimas / užpildymas)                 |
+| POST    | `/v1/images/edits`                        | OpenAI Images (redagavimas / atkūrimas)                  |
 | POST    | `/v1/videos/generations`                  | OpenAI stiliaus vaizdo įrašų generavimas                 |
 | POST    | `/v1/music/generations`                   | OpenAI stiliaus muzikos generavimas                      |
 | POST    | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                                       |
@@ -507,12 +507,12 @@ Naudokite šį galinį tašką, kai pagalbinis procesas vykdomas atskirai ir neg
 | POST    | `/api/v1/vscode/{token}/api/chat`         | Ollama alternatyvusis vardas su prieigos raktu           |
 | GET     | `/api/v1/vscode/{token}/api/tags`         | Ollama žymų alternatyvusis vardas su prieigos raktu      |
 
-Visi POST maršrutai yra tokios pačios struktūros: `Bearer your-api-key` ir Zod patikrintas JSON turinys (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` ir kt.; žr. `src/shared/validation/schemas.ts`). Jei schemos patikra nepavyksta, grąžinamas 4xx.
+Visi POST maršrutai yra tos pačios formos: `Bearer your-api-key` + naudojant Zod patikrintas JSON turinys (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` ir kt.; žr. `src/shared/validation/schemas.ts`). Jei schemos patikra nepavyksta, grąžinamas 4xx atsakymas.
 
-Klientams, kurie negali pridėti `Authorization: Bearer ...`, OmniRoute taip pat leidžia perduoti API raktus URL naudojant suderinamumo užklausos eilutę (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) arba toliau aprašytus specialiuosius `/api/v1/vscode/{token}/...` galinius taškus.
+Klientams, kurie negali pridėti `Authorization: Bearer ...`, OmniRoute taip pat leidžia API raktus pateikti URL naudojant užklausos eilutės suderinamumą (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) arba toliau aprašytus specialiuosius `/api/v1/vscode/{token}/...` galinius taškus.
 
 ```bash
-# Perrikiavimas (debesijos registro teikėjas arba su OpenAI suderinamas teikėjo mazgas kaip "<prefix>/<model>")
+# Perrikiavimas (debesijos registro teikėjas arba su OpenAI suderinamas teikėjo mazgas kaip „<prefix>/<model>“)
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
 # Jina klasifikavimas (Foundation API prisijungimo duomenys)
@@ -530,41 +530,44 @@ POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 # TTS — grąžinamas audio/mpeg (arba prašomo formato) turinys
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS būtina nurodyti kalbą ir balsą: numatytoji `language` reikšmė yra "en"; jei
-# balsas nenurodytas arba naudojamas standartinis OpenAI balso pavadinimas (alloy, nova, …), jis pakeičiamas į "Adrian"
+# Soniox TTS reikia kalbos ir balso: numatytoji `language` reikšmė yra „en“; jei
+# balsas nenurodytas arba nurodytas standartinis OpenAI balso pavadinimas (alloy, nova, …), naudojamas „Adrian“
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # Vaizdo redagavimas (multipart)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# Vaizdo įrašų / muzikos generavimas (modelio ID su teikėjo priešdėliu)
+# Vaizdo įrašų / muzikos generavimas (modelio ID su teikėjo prefiksu)
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
 > **Perrikiavimo teikėjo mazgai:** `POST /v1/rerank` taip pat nukreipia užklausas į su OpenAI suderinamus teikėjo mazgus
-> (oMLX, vLLM, Infinity, TEI už tinklų sietuvo, …), nurodomus kaip `<node-prefix>/<model>`. Grįžtamojo ryšio
-> mazgai (`localhost`, `127.0.0.1`, `172.16.0.0/12`) visada yra tinkami. Mazgai bet kuriame kitame
-> pagrindiniame kompiuteryje — LAN įrenginyje ar Tailscale lygiarangiame mazge — tinkami tik tada, kai operatorius įjungia
+> (oMLX, vLLM, Infinity, TEI už šliuzo, …), adresuojamus kaip `<node-prefix>/<model>`. Grįžtamojo ryšio
+> mazgai (`localhost`, `127.0.0.1`, `172.16.0.0/12`) visada yra tinkami, kaip ir pagrindinių kompiuterių vardai, kuriuos
+> operatorius nurodo `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` (pvz., Docker/Compose paslaugos pavadinimas,
+> toks kaip `http://reranker:8080/v1`; į juos kreipiamasi tiesiogiai, niekada per `HTTP(S)_PROXY` ar
+> ryšiui priskirtą tarpinį serverį). Bet kuriame kitame
+> pagrindiniame kompiuteryje esantys mazgai — LAN įrenginys ar Tailscale lygiavertis mazgas — yra tinkami tik tada, kai operatorius įjungia
 > `RERANK_REMOTE_PROVIDER_NODES` funkcijos vėliavėlę **ir** mazgo bazinis URL atitinka teikėjo
-> išeinančių URL politiką (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
-> Atminties modulio perrikiavimo veiksmas šį maršrutą iškviečia per
-> grįžtamąjį ryšį, todėl ta pati taisyklė taikoma `rerankProviderModel` atminties nustatymuose.
+> išsiunčiamų URL politiką (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
+> Atminties variklio perrikiavimo veiksmas iškviečia šį maršrutą per
+> grįžtamąjį ryšį, todėl ta pati taisyklė taikoma `rerankProviderModel` Atminties nustatymuose.
 >
-> **Vietinių serverių struktūros:** mazgas iškviečiamas adresu `<base>/v1/rerank`, o gavus 404 — adresu `<base>/rerank`
-> (Infinity, TEI). Aukštesniojo serverio užklausos turinyje pateikiama ir Cohere/OpenAI rašyba (`documents`,
-> `return_documents`), ir TEI rašyba (`texts`, `return_text`), o aukštesniojo serverio atsakymas
-> normalizuojamas į Cohere apvalkalą: TEI paprastasis `[{index, score, text}]`, plonųjų tinklų sietuvų
+> **Vietinio serverio formos:** į mazgą kreipiamasi adresu `<base>/v1/rerank`, o gavus 404 — adresu `<base>/rerank`
+> (Infinity, TEI). Į aukštesnio lygmens paslaugą siunčiamame turinyje pateikiami ir Cohere/OpenAI variantai (`documents`,
+> `return_documents`), ir TEI variantai (`texts`, `return_text`), o aukštesnio lygmens paslaugos atsakymas
+> normalizuojamas į Cohere apvalkalą: TEI neapgaubtas `[{index, score, text}]`, plonųjų šliuzų
 > `{results: [{index, score}]}` ir Voyage stiliaus `{data: [...]}` klientui grąžinami kaip
 > `{results: [{index, relevance_score, document?}]}`, surikiuoti pagal įvertį ir apriboti iki `top_n`.
 
-> **Teikėjo mazgo aptikimas:** su OpenAI suderinamame teikėjo mazge esantys modeliai rodomi `GET /v1/models`
+> **Teikėjo mazgų aptikimas:** su OpenAI suderinamo teikėjo mazgo modeliai rodomi `GET /v1/models`
 > po mazgo prefiksu. Eilutės, kuriose nėra galinio taško metaduomenų (tai būdinga vietiniams `/v1/models` sąrašams),
-> paveldi mazgo `apiType`, todėl `embeddings` mazgo modelių tipas yra `type: "embedding"`, o
-> `rerank` mazgo modelių – `type: "rerank"`, užuot pagal numatytąją nuostatą naudojus pokalbių tipą; sinchronizuotoje arba rankiniu būdu pridėtoje eilutėje aiškiai nurodytas
+> perima mazgo `apiType`, todėl `embeddings` mazgo modelių tipas yra `type: "embedding"`, o
+> `rerank` mazgo modelių tipas yra `type: "rerank"`, užuot pagal numatytąją nuostatą naudojus pokalbių tipą; sinchronizuotoje arba rankiniu būdu pridėtoje eilutėje aiškiai nurodytas
 > `supportedEndpoints` vis tiek turi pirmenybę.
 
-### Specialieji teikėjo maršrutai
+### Specialieji teikėjų maršrutai
 
 ```bash
 POST /v1/providers/{provider}/chat/completions

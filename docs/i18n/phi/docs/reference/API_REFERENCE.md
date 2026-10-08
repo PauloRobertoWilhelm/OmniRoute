@@ -471,19 +471,19 @@ Gamitin ang endpoint na ito kapag tumatakbo ang isang sidecar nang out-of-proces
 | GET    | `/v1beta/models`                          | Gemini                                  |
 | POST   | `/v1beta/models/{...path}`                | Gemini generateContent                  |
 | POST   | `/v1/api/chat`                            | Ollama                                  |
-| GET    | `/api/v1/vscode/{token}/`                 | Alyas ng catalog ng OpenAI              |
-| GET    | `/api/v1/vscode/{token}/models`           | Alyas ng mga model ng OpenAI            |
-| POST   | `/api/v1/vscode/{token}/chat/completions` | Alyas ng OpenAI na may token            |
-| POST   | `/api/v1/vscode/{token}/responses`        | Alyas ng OpenAI Responses na may token  |
-| POST   | `/api/v1/vscode/{token}/api/chat`         | Alyas ng Ollama na may token            |
-| GET    | `/api/v1/vscode/{token}/api/tags`         | Alyas ng mga tag ng Ollama na may token |
+| GET    | `/api/v1/vscode/{token}/`                 | Alias ng katalogo ng OpenAI             |
+| GET    | `/api/v1/vscode/{token}/models`           | Alias ng mga modelo ng OpenAI           |
+| POST   | `/api/v1/vscode/{token}/chat/completions` | Tokenized na alias ng OpenAI            |
+| POST   | `/api/v1/vscode/{token}/responses`        | Tokenized na alias ng OpenAI Responses  |
+| POST   | `/api/v1/vscode/{token}/api/chat`         | Tokenized na alias ng Ollama            |
+| GET    | `/api/v1/vscode/{token}/api/tags`         | Tokenized na alias ng mga tag ng Ollama |
 
-Pare-pareho ang anyo ng lahat ng POST route: `Bearer your-api-key` + JSON body na bina-validate ng Zod (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, atbp., tingnan ang `src/shared/validation/schemas.ts`). Ibinabalik ang 4xx kapag nabigo ang schema validation.
+Iisa ang sinusunod na anyo ng lahat ng POST route: `Bearer your-api-key` + JSON body na na-validate ng Zod (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, atbp.; tingnan ang `src/shared/validation/schemas.ts`). Ibinabalik ang 4xx kapag nabigo ang schema validation.
 
-Para sa mga client na hindi makapaglakip ng `Authorization: Bearer ...`, tumatanggap din ang OmniRoute ng mga API key sa URL sa pamamagitan ng query-string compatibility (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) o ng mga nakalaang `/api/v1/vscode/{token}/...` endpoint na nakadokumento sa ibaba.
+Para sa mga client na hindi makapaglakip ng `Authorization: Bearer ...`, tumatanggap din ang OmniRoute ng mga API key sa URL sa pamamagitan ng compatibility sa query string (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) o ng mga nakalaang endpoint na `/api/v1/vscode/{token}/...` na nakadokumento sa ibaba.
 
 ```bash
-# Rerank (provider mula sa cloud registry, o OpenAI-compatible na provider node bilang "<prefix>/<model>")
+# Rerank (provider ng cloud registry, o provider node na compatible sa OpenAI bilang "<prefix>/<model>")
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
 # Pag-uuri ng Jina (mga kredensyal ng Foundation API)
@@ -492,47 +492,54 @@ POST /v1/classify    { "model": "jina-embeddings-v5-text-small", "input": ["..."
 # Segmenter ng Jina
 POST /v1/segment     { "content": "...", "return_chunks": true }
 
-# Paghahanap ng Jina (s.jina.ai; mga alyas ng provider: jina-search, jina-ai, jina)
+# Paghahanap ng Jina (s.jina.ai; mga alias ng provider: jina-search, jina-ai, jina)
 POST /v1/search      { "query": "...", "provider": "jina-search" }
 
 # Mga moderation
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
-# TTS — nagbabalik ng audio/mpeg (o hiniling na format) na body
+# TTS — nagbabalik ng audio/mpeg body (o hiniling na format)
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Nangangailangan ang Soniox TTS ng wika at boses: nagde-default ang `language` sa "en"; ang nawawalang
-# boses o pangalan ng stock voice ng OpenAI (alloy, nova, …) ay nagiging "Adrian"
+# Nangangailangan ang Soniox TTS ng wika at boses: ang default ng `language` ay "en"; ang nawawalang
+# voice o karaniwang pangalan ng boses ng OpenAI (alloy, nova, …) ay nagiging "Adrian"
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # Pag-edit ng larawan (multipart)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# Pagbuo ng video / musika (ID ng model na may prefix ng provider)
+# Pagbuo ng video / musika (model id na may prefix ng provider)
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **Mga rerank provider node:** Niru-route din ng `POST /v1/rerank` sa mga OpenAI-compatible na provider node
-> (oMLX, vLLM, Infinity, TEI sa likod ng isang gateway, …) na tinutukoy bilang `<node-prefix>/<model>`. Palaging
-> maaaring gamitin ang mga loopback node (`localhost`, `127.0.0.1`, `172.16.0.0/12`). Ang mga node sa alinmang ibang
-> host — isang LAN box o Tailscale peer — ay maaari lamang gamitin kapag pinagana ng tagapangasiwa ang
-> `RERANK_REMOTE_PROVIDER_NODES` feature flag **at** pumasa ang base URL ng node sa outbound URL policy ng provider
-> (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
-> Tinatawag ng hakbang sa rerank ng memory engine ang route na ito sa pamamagitan ng
-> loopback, kaya ang parehong panuntunan ang namamahala sa `rerankProviderModel` sa mga setting ng Memory.
+> **Mga provider node para sa rerank:** Nagru-route din ang `POST /v1/rerank` sa mga provider node
+> na compatible sa OpenAI (oMLX, vLLM, Infinity, TEI sa likod ng gateway, …) na tinutukoy bilang
+> `<node-prefix>/<model>`. Palaging kuwalipikado ang mga loopback node (`localhost`, `127.0.0.1`,
+> `172.16.0.0/12`), gayundin ang mga hostname na inililista ng operator sa
+> `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` (hal. pangalan ng serbisyo ng Docker/Compose gaya ng
+> `http://reranker:8080/v1`; direktang tinatawag ang mga ito, at hindi kailanman sa pamamagitan ng
+> `HTTP(S)_PROXY` o ng naka-pin na proxy ng isang koneksyon). Ang mga node sa anumang ibang
+> host — isang LAN box o Tailscale peer — ay kuwalipikado lamang kapag pinagana ng operator ang
+> feature flag na `RERANK_REMOTE_PROVIDER_NODES` **at** pumasa ang base URL ng node sa patakaran
+> sa outbound URL ng provider (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` /
+> `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`). Tinatawag ng hakbang sa pag-rerank ng memory engine
+> ang route na ito sa pamamagitan ng loopback, kaya ang parehong panuntunan ang namamahala sa
+> `rerankProviderModel` sa mga setting ng Memory.
 >
-> **Mga anyo ng local server:** Tinatawag ang node sa `<base>/v1/rerank` at, kapag 404, sa `<base>/rerank`
-> (Infinity, TEI). Parehong kasama sa upstream body ang baybay ng Cohere/OpenAI (`documents`,
-> `return_documents`) at ang baybay ng TEI (`texts`, `return_text`), at ginagawang normal ang upstream response
-> sa Cohere envelope: ang hubad na `[{index, score, text}]` ng TEI, `{results: [{index, score}]}`
-> mula sa mga manipis na gateway, at ang istilong Voyage na `{data: [...]}` ay pawang ibinabalik sa client bilang
-> `{results: [{index, relevance_score, document?}]}`, inayos ayon sa score at nilimitahan sa `top_n`.
+> **Mga anyo ng lokal na server:** Tinatawag ang node sa `<base>/v1/rerank` at, kapag 404, sa
+> `<base>/rerank` (Infinity, TEI). Taglay ng upstream body ang parehong baybay ng Cohere/OpenAI
+> (`documents`, `return_documents`) at baybay ng TEI (`texts`, `return_text`), at ginagawang
+> pamantayan ang upstream response ayon sa Cohere envelope: ang bare na
+> `[{index, score, text}]` ng TEI, `{results: [{index, score}]}` mula sa mga manipis na gateway,
+> at `{data: [...]}` na istilong Voyage ay ibinabalik lahat sa client bilang
+> `{results: [{index, relevance_score, document?}]}`, na nakaayos ayon sa score at nililimitahan
+> sa `top_n`.
 
-> **Pagtuklas ng provider-node:** lumilitaw sa `GET /v1/models` ang mga model sa isang provider node na compatible sa OpenAI
-> sa ilalim ng prefix ng node. Ang mga row na walang endpoint metadata (karaniwan sa mga lokal na listing ng `/v1/models`)
+> **Pagtuklas ng provider node:** lumilitaw sa `GET /v1/models` ang mga model sa isang provider node na compatible sa OpenAI
+> sa ilalim ng prefix ng node. Ang mga row na walang metadata ng endpoint (karaniwan sa mga lokal na listing ng `/v1/models`)
 > ay nagmamana ng `apiType` ng node, kaya ang mga model ng isang `embeddings` node ay `type: "embedding"` at ang mga
-> model ng isang `rerank` node ay `type: "rerank"` sa halip na mag-default sa chat; nananaig pa rin ang tahasang
+> model ng isang `rerank` node ay `type: "rerank"` sa halip na mag-default sa chat; nauuna pa rin ang isang tahasang
 > `supportedEndpoints` sa isang naka-sync o manu-manong idinagdag na row.
 
 ### Mga Nakalaang Route ng Provider
@@ -543,7 +550,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-Awtomatikong idinaragdag ang provider prefix kung wala ito. Nagbabalik ng `400` ang mga model na hindi tumutugma.
+Awtomatikong idinaragdag ang prefix ng provider kung wala ito. Nagbabalik ng `400` ang mga model na hindi tumutugma.
 
 ---
 

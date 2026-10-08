@@ -503,12 +503,12 @@ Koristite ovaj endpoint kada sidecar radi izvan procesa (out-of-process) i ne mo
 | POST  | `/api/v1/vscode/{token}/api/chat`         | Ollama алијас са токеном             |
 | GET   | `/api/v1/vscode/{token}/api/tags`         | Ollama алијас ознака са токеном      |
 
-Све POST руте имају исти облик: `Bearer your-api-key` + JSON тело валидирано помоћу Zod-а (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` итд.; погледајте `src/shared/validation/schemas.ts`). У случају неуспешне валидације шеме враћа се 4xx.
+Све POST руте имају исти облик: `Bearer your-api-key` + JSON тело валидирано помоћу Zod-а (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` итд.; погледајте `src/shared/validation/schemas.ts`). При неуспешној валидацији шеме враћа се 4xx.
 
-За клијенте који не могу да приложе `Authorization: Bearer ...`, OmniRoute такође прихвата API кључеве у URL-у, било путем компатибилних параметара упита (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) или преко наменских крајњих тачака `/api/v1/vscode/{token}/...` документованих у наставку.
+За клијенте који не могу да додају `Authorization: Bearer ...`, OmniRoute такође прихвата API кључеве у URL-у, било путем компатибилних параметара упитног низа (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`), било путем наменских крајњих тачака `/api/v1/vscode/{token}/...` документованих у наставку.
 
 ```bash
-# Рерангирање (добављач из регистра у облаку или чвор добављача компатибилан са OpenAI-јем у облику "<prefix>/<model>")
+# Рерангирање (добављач из регистра у облаку или чвор добављача компатибилан са OpenAI-јем као "<prefix>/<model>")
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
 # Jina класификација (акредитиви за Foundation API)
@@ -520,14 +520,14 @@ POST /v1/segment     { "content": "...", "return_chunks": true }
 # Jina претрага (s.jina.ai; алијаси добављача: jina-search, jina-ai, jina)
 POST /v1/search      { "query": "...", "provider": "jina-search" }
 
-# Модерације
+# Модерација
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
 # TTS — враћа тело у формату audio/mpeg (или у захтеваном формату)
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS захтева језик и глас: подразумевана вредност за `language` је "en"; ако
-# глас недостаје или је наведен стандардни назив OpenAI гласа (alloy, nova, …), користи се "Adrian"
+# Soniox TTS захтева језик и глас: `language` подразумевано има вредност "en"; ако глас
+# недостаје или је наведен назив стандардног OpenAI гласа (alloy, nova, …), користи се "Adrian"
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # Уређивање слике (multipart)
@@ -538,29 +538,32 @@ POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **Чворови добављача за рерангирање:** `POST /v1/rerank` такође усмерава захтеве ка чворовима добављача компатибилним са OpenAI-јем
-> (oMLX, vLLM, Infinity, TEI иза мрежног пролаза, …), којима се приступа као `<node-prefix>/<model>`. Чворови повратне
-> петље (`localhost`, `127.0.0.1`, `172.16.0.0/12`) увек испуњавају услове. Чворови на било ком другом
-> хосту — рачунару у LAN-у или Tailscale чвору — испуњавају услове само када оператер омогући
-> функцијску заставицу `RERANK_REMOTE_PROVIDER_NODES` **и** основни URL чвора прође смернице добављача
+> **Чворови добављача за рерангирање:** `POST /v1/rerank` такође усмерава захтеве ка чворовима добављача
+> компатибилним са OpenAI-јем (oMLX, vLLM, Infinity, TEI иза мрежног пролаза, …), адресираним као `<node-prefix>/<model>`. Чворови
+> повратне петље (`localhost`, `127.0.0.1`, `172.16.0.0/12`) увек испуњавају услове, као и имена хостова која
+> оператор наведе у `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` (нпр. назив Docker/Compose сервиса као што је
+> `http://reranker:8080/v1`; они се позивају директно, никада преко `HTTP(S)_PROXY` нити преко
+> проксија фиксно везаног за везу). Чворови на било ком другом
+> хосту — рачунару у LAN-у или Tailscale равноправном чвору — испуњавају услове само када оператор омогући
+> заставицу функције `RERANK_REMOTE_PROVIDER_NODES` **и** основни URL чвора прође смернице добављача
 > за одлазне URL адресе (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
-> Корак рерангирања механизма меморије позива ову руту преко
-> повратне петље, тако да исто правило управља поставком `rerankProviderModel` у подешавањима меморије.
+> Корак рерангирања механизма за меморију позива ову руту преко
+> повратне петље, па исто правило одређује и понашање `rerankProviderModel` у подешавањима меморије.
 >
-> **Облици локалног сервера:** чвор се позива на `<base>/v1/rerank`, а у случају одговора 404, на `<base>/rerank`
+> **Облици локалног сервера:** чвор се позива на `<base>/v1/rerank`, а у случају одговора 404 на `<base>/rerank`
 > (Infinity, TEI). Тело узводног захтева садржи и Cohere/OpenAI називе (`documents`,
 > `return_documents`) и TEI називе (`texts`, `return_text`), док се узводни одговор
-> нормализује у Cohere омотач: TEI-јев сирови `[{index, score, text}]`, `{results: [{index, score}]}`
-> из једноставних мрежних пролаза и Voyage облик `{data: [...]}` враћају се клијенту као
-> `{results: [{index, relevance_score, document?}]}`, сортирани према резултату и ограничени вредношћу `top_n`.
+> нормализује у Cohere омотач: TEI-јев непосредни `[{index, score, text}]`, `{results: [{index, score}]}`
+> из једноставних мрежних пролаза и Voyage-ов облик `{data: [...]}` враћају се клијенту као
+> `{results: [{index, relevance_score, document?}]}`, сортирани по резултату и ограничени на `top_n`.
 
-> **Откривање чворова провајдера:** модели на чвору провајдера компатибилном са OpenAI-јем појављују се у `GET /v1/models`
-> под префиксом чвора. Редови који не садрже метаподатке о крајњој тачки (што је типично за локалне `/v1/models` листе)
-> наслеђују `apiType` чвора, тако да су модели чвора `embeddings` типа `type: "embedding"`, а модели
-> чвора `rerank` типа `type: "rerank"`, уместо да се подразумевано третирају као ћаскање; експлицитни
+> **Откривање чворова добављача:** модели на чвору добављача компатибилном са OpenAI-јем појављују се у `GET /v1/models`
+> под префиксом чвора. Редови који не садрже метаподатке о крајњој тачки (што је типично за локалне `/v1/models` листинге)
+> наслеђују `apiType` чвора, тако да модели `embeddings` чвора имају `type: "embedding"`, а модели
+> `rerank` чвора имају `type: "rerank"` уместо да подразумевано буду подешени за ћаскање; експлицитни
 > `supportedEndpoints` у синхронизованом или ручно додатом реду и даље има предност.
 
-### Наменске руте провајдера
+### Наменске руте добављача
 
 ```bash
 POST /v1/providers/{provider}/chat/completions
@@ -568,7 +571,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-Префикс провајдера се аутоматски додаје ако недостаје. Неусклађени модели враћају `400`.
+Префикс добављача се аутоматски додаје ако недостаје. Неусклађени модели враћају `400`.
 
 ---
 

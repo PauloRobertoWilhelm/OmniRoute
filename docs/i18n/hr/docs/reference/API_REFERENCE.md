@@ -444,10 +444,10 @@ direktno importirati `open-sse/config/providerPluginManifestRegistry.ts`.
 | POST   | `/v1/videos/generations`                  | Generiranje videozapisa u stilu OpenAI-ja |
 | POST   | `/v1/music/generations`                   | Generiranje glazbe u stilu OpenAI-ja      |
 | POST   | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                        |
-| POST   | `/v1/audio/speech`                        | OpenAI TTS (vraća tijelo sa zvukom)       |
+| POST   | `/v1/audio/speech`                        | OpenAI TTS (vraća tijelo zvučnog zapisa)  |
 | POST   | `/v1/rerank`                              | Ponovno rangiranje u stilu Cohere/Voyage  |
 | POST   | `/v1/classify`                            | Jina klasifikacija (`api.jina.ai`)        |
-| POST   | `/v1/segment`                             | Jina segmentator (`segment.jina.ai`)      |
+| POST   | `/v1/segment`                             | Jina segmenter (`segment.jina.ai`)        |
 | POST   | `/v1/moderations`                         | OpenAI Moderations                        |
 | GET    | `/v1/models`                              | OpenAI                                    |
 | POST   | `/v1/messages/count_tokens`               | Anthropic                                 |
@@ -456,23 +456,23 @@ direktno importirati `open-sse/config/providerPluginManifestRegistry.ts`.
 | POST   | `/v1/api/chat`                            | Ollama                                    |
 | GET    | `/api/v1/vscode/{token}/`                 | Alias OpenAI kataloga                     |
 | GET    | `/api/v1/vscode/{token}/models`           | Alias OpenAI modela                       |
-| POST   | `/api/v1/vscode/{token}/chat/completions` | OpenAI alias s tokenom                    |
-| POST   | `/api/v1/vscode/{token}/responses`        | OpenAI Responses alias s tokenom          |
-| POST   | `/api/v1/vscode/{token}/api/chat`         | Ollama alias s tokenom                    |
-| GET    | `/api/v1/vscode/{token}/api/tags`         | Ollama alias oznaka s tokenom             |
+| POST   | `/api/v1/vscode/{token}/chat/completions` | Tokenizirani OpenAI alias                 |
+| POST   | `/api/v1/vscode/{token}/responses`        | Tokenizirani alias OpenAI Responses       |
+| POST   | `/api/v1/vscode/{token}/api/chat`         | Tokenizirani Ollama alias                 |
+| GET    | `/api/v1/vscode/{token}/api/tags`         | Tokenizirani alias Ollama oznaka          |
 
-Sve POST rute imaju istu strukturu: `Bearer your-api-key` + JSON tijelo provjereno Zodom (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` itd.; pogledajte `src/shared/validation/schemas.ts`). U slučaju neuspješne provjere sheme vraća se 4xx.
+Sve POST rute slijede isti oblik: `Bearer your-api-key` + JSON tijelo provjereno Zodom (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` itd.; pogledajte `src/shared/validation/schemas.ts`). U slučaju neuspješne provjere sheme vraća se 4xx.
 
-Za klijente koji ne mogu priložiti `Authorization: Bearer ...`, OmniRoute prihvaća API ključeve i u URL-u, bilo putem kompatibilnih parametara niza upita (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) ili putem namjenskih krajnjih točaka `/api/v1/vscode/{token}/...` dokumentiranih u nastavku.
+Za klijente koji ne mogu priložiti `Authorization: Bearer ...`, OmniRoute također prihvaća API ključeve u URL-u putem kompatibilnosti s parametrima upita (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) ili namjenskih krajnjih točaka `/api/v1/vscode/{token}/...` dokumentiranih u nastavku.
 
 ```bash
-# Ponovno rangiranje (pružatelj iz registra u oblaku ili čvor pružatelja kompatibilan s OpenAI-jem kao "<prefix>/<model>")
+# Ponovno rangiranje (pružatelj iz registra u oblaku ili čvor kompatibilan s OpenAI-jem kao "<prefix>/<model>")
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
 # Jina klasifikacija (vjerodajnice za Foundation API)
 POST /v1/classify    { "model": "jina-embeddings-v5-text-small", "input": ["..."], "labels": ["a", "b"] }
 
-# Jina segmentator
+# Jina segmenter
 POST /v1/segment     { "content": "...", "return_chunks": true }
 
 # Jina pretraživanje (s.jina.ai; aliasi pružatelja: jina-search, jina-ai, jina)
@@ -481,42 +481,45 @@ POST /v1/search      { "query": "...", "provider": "jina-search" }
 # Moderiranje
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
-# TTS — vraća tijelo audio/mpeg (ili tijelo u zatraženom formatu)
+# TTS — vraća tijelo audio/mpeg (ili zatraženog formata)
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS zahtijeva jezik i glas: zadana vrijednost za `language` jest "en"; glas koji nedostaje
-# ili naziv standardnog OpenAI glasa (alloy, nova, …) postaje "Adrian"
+# Soniox TTS zahtijeva jezik i glas: zadana vrijednost za `language` jest "en"; nedostajući
+# glas ili naziv standardnog OpenAI glasa (alloy, nova, …) postaje "Adrian"
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # Uređivanje slike (multipart)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# Generiranje videozapisa/glazbe (ID modela s prefiksom pružatelja)
+# Generiranje videozapisa / glazbe (ID modela s prefiksom pružatelja)
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
 > **Čvorovi pružatelja za ponovno rangiranje:** `POST /v1/rerank` također usmjerava zahtjeve prema čvorovima pružatelja kompatibilnima s OpenAI-jem
-> (oMLX, vLLM, Infinity, TEI iza pristupnika, …), kojima se pristupa kao `<node-prefix>/<model>`. Čvorovi povratne petlje
-> (`localhost`, `127.0.0.1`, `172.16.0.0/12`) uvijek su prihvatljivi. Čvorovi na bilo kojem drugom
-> hostu — računalu u LAN-u ili Tailscale ravnopravnom članu — prihvatljivi su samo kada operater omogući
-> zastavicu značajke `RERANK_REMOTE_PROVIDER_NODES` **i** osnovni URL čvora prođe pravila za izlazne URL-ove pružatelja
+> (oMLX, vLLM, Infinity, TEI iza pristupnika, …) adresiranima kao `<node-prefix>/<model>`. Čvorovi povratne petlje
+> (`localhost`, `127.0.0.1`, `172.16.0.0/12`) uvijek su dopušteni, kao i nazivi računala koje
+> operator navede u `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` (npr. naziv usluge Docker/Compose poput
+> `http://reranker:8080/v1`; pozivaju se izravno, nikada putem `HTTP(S)_PROXY` ni
+> fiksiranog proxyja veze). Čvorovi na bilo kojem drugom
+> računalu — uređaju u LAN-u ili Tailscale čvoru — dopušteni su samo kada operator omogući zastavicu značajke
+> `RERANK_REMOTE_PROVIDER_NODES` **i** osnovni URL čvora zadovoljava pravila za izlazne URL-ove pružatelja
 > (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
-> Korak ponovnog rangiranja mehanizma memorije poziva ovu rutu preko
-> povratne petlje, pa isto pravilo upravlja postavkom `rerankProviderModel` u postavkama memorije.
+> Korak ponovnog rangiranja mehanizma memorije poziva ovu rutu putem
+> povratne petlje, pa isto pravilo određuje i `rerankProviderModel` u postavkama memorije.
 >
 > **Oblici lokalnog poslužitelja:** čvor se poziva na `<base>/v1/rerank`, a u slučaju odgovora 404 na `<base>/rerank`
-> (Infinity, TEI). Tijelo uzvodnog zahtjeva sadrži i Cohere/OpenAI nazive (`documents`,
-> `return_documents`) i TEI nazive (`texts`, `return_text`), a uzvodni odgovor
-> normalizira se u Cohere omotnicu: TEI-jev goli `[{index, score, text}]`, `{results: [{index, score}]}`
-> iz jednostavnih pristupnika i Voyageov `{data: [...]}` klijentu se vraćaju kao
-> `{results: [{index, relevance_score, document?}]}`, razvrstani prema rezultatu i ograničeni na `top_n`.
+> (Infinity, TEI). Tijelo uzvodnog zahtjeva sadrži i način zapisa Cohere/OpenAI (`documents`,
+> `return_documents`) i način zapisa TEI (`texts`, `return_text`), dok se uzvodni odgovor
+> normalizira u Cohere omotnicu: TEI-jev čisti `[{index, score, text}]`, `{results: [{index, score}]}`
+> iz jednostavnih pristupnika i Voyageov `{data: [...]}` vraćaju se klijentu kao
+> `{results: [{index, relevance_score, document?}]}`, sortirani prema rezultatu i ograničeni na `top_n`.
 
 > **Otkrivanje čvorova pružatelja:** modeli na čvoru pružatelja kompatibilnom s OpenAI-jem pojavljuju se u `GET /v1/models`
-> pod prefiksom čvora. Retci bez metapodataka krajnje točke (što je uobičajeno za lokalne popise `/v1/models`)
+> pod prefiksom čvora. Retci bez metapodataka o krajnjoj točki (što je uobičajeno za lokalne popise `/v1/models`)
 > nasljeđuju `apiType` čvora, pa modeli čvora `embeddings` imaju `type: "embedding"`, a modeli
-> čvora `rerank` imaju `type: "rerank"` umjesto da se zadano postave na chat; eksplicitni
-> `supportedEndpoints` u sinkroniziranom ili ručno dodanom retku i dalje ima prednost.
+> čvora `rerank` imaju `type: "rerank"` umjesto da se zadano postave na razgovor; izričito navedeni
+> `supportedEndpoints` u sinkroniziranom ili ručno dodanom retku i dalje imaju prednost.
 
 ### Namjenske rute pružatelja
 

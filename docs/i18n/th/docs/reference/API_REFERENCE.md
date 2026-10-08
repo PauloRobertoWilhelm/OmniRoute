@@ -465,7 +465,7 @@ GET /api/v1/provider-plugin-manifest
 | POST  | `/v1/music/generations`                   | การสร้างเพลงในรูปแบบ OpenAI             |
 | POST  | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                      |
 | POST  | `/v1/audio/speech`                        | OpenAI TTS (ส่งคืนเนื้อหาเสียง)         |
-| POST  | `/v1/rerank`                              | การจัดอันดับใหม่ในรูปแบบ Cohere/Voyage  |
+| POST  | `/v1/rerank`                              | การจัดอันดับใหม่แบบ Cohere/Voyage       |
 | POST  | `/v1/classify`                            | การจำแนกประเภทของ Jina (`api.jina.ai`)  |
 | POST  | `/v1/segment`                             | ตัวแบ่งส่วนของ Jina (`segment.jina.ai`) |
 | POST  | `/v1/moderations`                         | OpenAI Moderations                      |
@@ -476,14 +476,14 @@ GET /api/v1/provider-plugin-manifest
 | POST  | `/v1/api/chat`                            | Ollama                                  |
 | GET   | `/api/v1/vscode/{token}/`                 | นามแฝงแค็ตตาล็อก OpenAI                 |
 | GET   | `/api/v1/vscode/{token}/models`           | นามแฝงโมเดล OpenAI                      |
-| POST  | `/api/v1/vscode/{token}/chat/completions` | นามแฝง OpenAI แบบมีโทเค็น               |
-| POST  | `/api/v1/vscode/{token}/responses`        | นามแฝง OpenAI Responses แบบมีโทเค็น     |
-| POST  | `/api/v1/vscode/{token}/api/chat`         | นามแฝง Ollama แบบมีโทเค็น               |
-| GET   | `/api/v1/vscode/{token}/api/tags`         | นามแฝงแท็ก Ollama แบบมีโทเค็น           |
+| POST  | `/api/v1/vscode/{token}/chat/completions` | นามแฝง OpenAI ที่ใช้โทเค็น              |
+| POST  | `/api/v1/vscode/{token}/responses`        | นามแฝง OpenAI Responses ที่ใช้โทเค็น    |
+| POST  | `/api/v1/vscode/{token}/api/chat`         | นามแฝง Ollama ที่ใช้โทเค็น              |
+| GET   | `/api/v1/vscode/{token}/api/tags`         | นามแฝงแท็ก Ollama ที่ใช้โทเค็น          |
 
-เส้นทาง POST ทั้งหมดใช้โครงสร้างเดียวกัน: `Bearer your-api-key` + เนื้อหา JSON ที่ผ่านการตรวจสอบด้วย Zod (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` ฯลฯ โปรดดู `src/shared/validation/schemas.ts`) ระบบจะส่งคืน 4xx เมื่อการตรวจสอบสคีมาล้มเหลว
+เส้นทาง POST ทั้งหมดใช้โครงสร้างเดียวกัน: `Bearer your-api-key` + เนื้อหา JSON ที่ตรวจสอบด้วย Zod (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` ฯลฯ ดูที่ `src/shared/validation/schemas.ts`) ระบบจะส่งคืน 4xx เมื่อการตรวจสอบสคีมาล้มเหลว
 
-สำหรับไคลเอนต์ที่ไม่สามารถแนบ `Authorization: Bearer ...` ได้ OmniRoute ยังรองรับคีย์ API ใน URL ผ่านทั้งรูปแบบที่เข้ากันได้ด้วยสตริงคำค้นหา (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) หรือเอนด์พอยต์เฉพาะ `/api/v1/vscode/{token}/...` ที่อธิบายไว้ด้านล่าง
+สำหรับไคลเอนต์ที่ไม่สามารถแนบ `Authorization: Bearer ...` ได้ OmniRoute ยังรองรับคีย์ API ใน URL ผ่านทั้งรูปแบบคิวรีสตริงที่เข้ากันได้ (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) หรือเอนด์พอยต์เฉพาะ `/api/v1/vscode/{token}/...` ที่อธิบายไว้ด้านล่าง
 
 ```bash
 # จัดอันดับใหม่ (ผู้ให้บริการจากรีจิสทรีบนคลาวด์ หรือโหนดผู้ให้บริการที่เข้ากันได้กับ OpenAI ในรูปแบบ "<prefix>/<model>")
@@ -498,47 +498,50 @@ POST /v1/segment     { "content": "...", "return_chunks": true }
 # การค้นหาของ Jina (s.jina.ai; นามแฝงผู้ให้บริการ: jina-search, jina-ai, jina)
 POST /v1/search      { "query": "...", "provider": "jina-search" }
 
-# การกลั่นกรอง
+# การกลั่นกรองเนื้อหา
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
 # TTS — ส่งคืนเนื้อหา audio/mpeg (หรือรูปแบบที่ร้องขอ)
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS ต้องระบุภาษาและเสียง: `language` มีค่าเริ่มต้นเป็น "en"; หากไม่ระบุ
-# voice หรือใช้ชื่อเสียงมาตรฐานของ OpenAI (alloy, nova, …) ระบบจะเปลี่ยนเป็น "Adrian"
+# Soniox TTS ต้องระบุภาษาและเสียง: `language` มีค่าเริ่มต้นเป็น "en"; หากไม่มี
+# เสียงหรือใช้ชื่อเสียงมาตรฐานของ OpenAI (alloy, nova, …) ระบบจะใช้ "Adrian"
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
-# การแก้ไขรูปภาพ (multipart)
+# แก้ไขรูปภาพ (multipart)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# การสร้างวิดีโอ / เพลง (รหัสโมเดลที่นำหน้าด้วยชื่อผู้ให้บริการ)
+# การสร้างวิดีโอ / เพลง (รหัสโมเดลที่มีคำนำหน้าผู้ให้บริการ)
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **โหนดผู้ให้บริการสำหรับการจัดอันดับใหม่:** `POST /v1/rerank` ยังส่งต่อคำขอไปยังโหนดผู้ให้บริการที่เข้ากันได้กับ OpenAI
-> (oMLX, vLLM, Infinity, TEI หลังเกตเวย์, …) ซึ่งระบุด้วย `<node-prefix>/<model>` โหนดลูปแบ็ก
-> (`localhost`, `127.0.0.1`, `172.16.0.0/12`) มีสิทธิ์ใช้งานเสมอ ส่วนโหนดบน
-> โฮสต์อื่นใด ไม่ว่าจะเป็นเครื่องใน LAN หรือเพียร์ Tailscale จะมีสิทธิ์ใช้งานก็ต่อเมื่อผู้ดำเนินการเปิดใช้
+> **โหนดผู้ให้บริการสำหรับการจัดอันดับใหม่:** `POST /v1/rerank` ยังส่งต่อไปยังโหนดผู้ให้บริการ
+> ที่เข้ากันได้กับ OpenAI (oMLX, vLLM, Infinity, TEI ที่อยู่หลังเกตเวย์, …) ซึ่งระบุในรูปแบบ `<node-prefix>/<model>` อีกด้วย โหนดลูปแบ็ก
+> (`localhost`, `127.0.0.1`, `172.16.0.0/12`) ใช้งานได้เสมอ เช่นเดียวกับชื่อโฮสต์ที่
+> ผู้ดำเนินการระบุไว้ใน `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` (เช่น ชื่อบริการ Docker/Compose
+> อย่าง `http://reranker:8080/v1`; ระบบจะเรียกโหนดเหล่านี้โดยตรง โดยไม่ผ่าน `HTTP(S)_PROXY` หรือ
+> พร็อกซีที่ตรึงไว้กับการเชื่อมต่อ) โหนดบนโฮสต์อื่น
+> — เช่น เครื่องใน LAN หรือเพียร์ Tailscale — จะใช้งานได้เฉพาะเมื่อผู้ดำเนินการเปิดใช้งาน
 > แฟล็กฟีเจอร์ `RERANK_REMOTE_PROVIDER_NODES` **และ** URL ฐานของโหนดผ่านนโยบาย URL ขาออกของผู้ให้บริการ
 > (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`)
-> ขั้นตอนการจัดอันดับใหม่ของกลไกหน่วยความจำเรียกเส้นทางนี้ผ่าน
-> ลูปแบ็ก ดังนั้นกฎเดียวกันนี้จึงควบคุม `rerankProviderModel` ในการตั้งค่าหน่วยความจำด้วย
+> ขั้นตอนการจัดอันดับใหม่ของเอนจินหน่วยความจำจะเรียกเส้นทางนี้ผ่าน
+> ลูปแบ็ก ดังนั้นกฎเดียวกันนี้จึงใช้ควบคุม `rerankProviderModel` ในการตั้งค่าหน่วยความจำ
 >
-> **โครงสร้างเซิร์ฟเวอร์ภายใน:** ระบบจะเรียกโหนดที่ `<base>/v1/rerank` และหากได้รับ 404 จะเรียกที่ `<base>/rerank`
-> (Infinity, TEI) เนื้อหาคำขอขาออกมีทั้งรูปแบบการสะกดของ Cohere/OpenAI (`documents`,
-> `return_documents`) และรูปแบบการสะกดของ TEI (`texts`, `return_text`) และการตอบกลับขาออกจะถูก
-> ปรับให้อยู่ในเอนเวโลปของ Cohere: อาร์เรย์เปล่าของ TEI `[{index, score, text}]`, `{results: [{index, score}]}`
-> จากเกตเวย์แบบบาง และรูปแบบ Voyage `{data: [...]}` ทั้งหมดจะถูกส่งกลับไปยังไคลเอนต์ในรูปแบบ
+> **รูปแบบเซิร์ฟเวอร์ภายในเครื่อง:** ระบบจะเรียกโหนดที่ `<base>/v1/rerank` และหากได้รับ 404 จะเรียกที่ `<base>/rerank`
+> (Infinity, TEI) เนื้อหาที่ส่งไปยังต้นทางจะมีทั้งรูปแบบการสะกดของ Cohere/OpenAI (`documents`,
+> `return_documents`) และรูปแบบการสะกดของ TEI (`texts`, `return_text`) และการตอบกลับจากต้นทางจะถูก
+> ปรับให้อยู่ในเอนเวโลปของ Cohere: ทั้งอาร์เรย์เปล่าของ TEI `[{index, score, text}]`, `{results: [{index, score}]}`
+> จากเกตเวย์แบบบาง และรูปแบบ Voyage `{data: [...]}` จะถูกส่งกลับไปยังไคลเอนต์ในรูปแบบ
 > `{results: [{index, relevance_score, document?}]}` โดยเรียงตามคะแนนและจำกัดจำนวนไว้ที่ `top_n`
 
-> **การค้นหาโมเดลจากโหนดผู้ให้บริการ:** โมเดลบนโหนดผู้ให้บริการที่เข้ากันได้กับ OpenAI จะปรากฏใน `GET /v1/models`
-> ภายใต้คำนำหน้าของโหนด แถวที่ไม่มีข้อมูลเมตาของปลายทาง (ซึ่งพบได้ทั่วไปในรายการ `/v1/models` ภายในเครื่อง)
-> จะสืบทอด `apiType` ของโหนด ดังนั้นโมเดลของโหนด `embeddings` จะมี `type: "embedding"` และโมเดลของ
-> โหนด `rerank` จะมี `type: "rerank"` แทนที่จะใช้แชตเป็นค่าเริ่มต้น ทั้งนี้ `supportedEndpoints`
-> ที่ระบุไว้อย่างชัดเจนในแถวที่ซิงค์หรือเพิ่มด้วยตนเองจะยังคงมีลำดับความสำคัญสูงกว่า
+> **การค้นหาโหนดผู้ให้บริการ:** โมเดลบนโหนดผู้ให้บริการที่เข้ากันได้กับ OpenAI จะปรากฏใน `GET /v1/models`
+> ภายใต้คำนำหน้าของโหนด แถวที่ไม่มีข้อมูลเมตาของเอนด์พอยต์ (ซึ่งพบได้ทั่วไปในรายการ `/v1/models` ภายในเครื่อง)
+> จะสืบทอด `apiType` ของโหนด ดังนั้นโมเดลของโหนด `embeddings` จะมี `type: "embedding"` และ
+> โมเดลของโหนด `rerank` จะมี `type: "rerank"` แทนที่จะกำหนดค่าเริ่มต้นเป็นแชต ทั้งนี้ `supportedEndpoints`
+> ที่ระบุไว้อย่างชัดเจนในแถวที่ซิงค์หรือเพิ่มด้วยตนเองจะยังคงมีลำดับความสำคัญเหนือกว่า
 
-### เส้นทางเฉพาะสำหรับผู้ให้บริการ
+### เส้นทางเฉพาะของผู้ให้บริการ
 
 ```bash
 POST /v1/providers/{provider}/chat/completions

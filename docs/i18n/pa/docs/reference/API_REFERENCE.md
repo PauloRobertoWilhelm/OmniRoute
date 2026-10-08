@@ -476,9 +476,9 @@ Bifrost, CLIProxyAPI ਅਤੇ ਭਵਿੱਖ ਦੇ sidecar ਰਾਊਟਰਾ
 | POST | `/api/v1/vscode/{token}/api/chat`         | Ollama ਟੋਕਨਾਈਜ਼ਡ ਉਪਨਾਮ              |
 | GET  | `/api/v1/vscode/{token}/api/tags`         | Ollama ਟੈਗ ਟੋਕਨਾਈਜ਼ਡ ਉਪਨਾਮ          |
 
-ਸਾਰੇ POST ਰੂਟ ਇੱਕੋ ਸੰਰਚਨਾ ਦੀ ਪਾਲਣਾ ਕਰਦੇ ਹਨ: `Bearer your-api-key` + Zod-ਪ੍ਰਮਾਣਿਤ JSON ਬਾਡੀ (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, ਆਦਿ, `src/shared/validation/schemas.ts` ਵੇਖੋ)। ਸਕੀਮਾ ਅਸਫਲ ਹੋਣ 'ਤੇ 4xx ਵਾਪਸ ਕੀਤਾ ਜਾਂਦਾ ਹੈ।
+ਸਾਰੇ POST ਰੂਟ ਇੱਕੋ ਢਾਂਚੇ ਦੀ ਪਾਲਣਾ ਕਰਦੇ ਹਨ: `Bearer your-api-key` + Zod-ਪ੍ਰਮਾਣਿਤ JSON ਬਾਡੀ (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, ਆਦਿ, `src/shared/validation/schemas.ts` ਵੇਖੋ)। ਸਕੀਮਾ ਅਸਫਲ ਹੋਣ 'ਤੇ 4xx ਵਾਪਸ ਕੀਤਾ ਜਾਂਦਾ ਹੈ।
 
-ਜਿਹੜੇ ਕਲਾਇੰਟ `Authorization: Bearer ...` ਸ਼ਾਮਲ ਨਹੀਂ ਕਰ ਸਕਦੇ, ਉਨ੍ਹਾਂ ਲਈ OmniRoute URL ਵਿੱਚ ਵੀ API ਕੁੰਜੀਆਂ ਸਵੀਕਾਰ ਕਰਦਾ ਹੈ—ਜਾਂ ਕਵੇਰੀ-ਸਟ੍ਰਿੰਗ ਅਨੁਕੂਲਤਾ (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) ਰਾਹੀਂ, ਜਾਂ ਹੇਠਾਂ ਦਸਤਾਵੇਜ਼ਬੱਧ ਸਮਰਪਿਤ `/api/v1/vscode/{token}/...` ਐਂਡਪੌਇੰਟਾਂ ਰਾਹੀਂ।
+ਜਿਹੜੇ ਕਲਾਇੰਟ `Authorization: Bearer ...` ਜੋੜ ਨਹੀਂ ਸਕਦੇ, ਉਨ੍ਹਾਂ ਲਈ OmniRoute ਕਵੇਰੀ-ਸਟ੍ਰਿੰਗ ਅਨੁਕੂਲਤਾ (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) ਜਾਂ ਹੇਠਾਂ ਦਸਤਾਵੇਜ਼ਬੱਧ ਸਮਰਪਿਤ `/api/v1/vscode/{token}/...` ਐਂਡਪੌਇੰਟਾਂ ਰਾਹੀਂ URL ਵਿੱਚ API ਕੁੰਜੀਆਂ ਵੀ ਸਵੀਕਾਰ ਕਰਦਾ ਹੈ।
 
 ```bash
 # ਰੀਰੈਂਕ (ਕਲਾਉਡ ਰਜਿਸਟਰੀ ਪ੍ਰਦਾਤਾ, ਜਾਂ "<prefix>/<model>" ਵਜੋਂ ਇੱਕ OpenAI-ਅਨੁਕੂਲ ਪ੍ਰਦਾਤਾ ਨੋਡ)
@@ -493,47 +493,50 @@ POST /v1/segment     { "content": "...", "return_chunks": true }
 # Jina ਖੋਜ (s.jina.ai; ਪ੍ਰਦਾਤਾ ਉਪਨਾਮ: jina-search, jina-ai, jina)
 POST /v1/search      { "query": "...", "provider": "jina-search" }
 
-# ਮੋਡਰੇਸ਼ਨ
+# ਮਾਡਰੇਸ਼ਨ
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
 # TTS — audio/mpeg (ਜਾਂ ਬੇਨਤੀ ਕੀਤਾ ਫਾਰਮੈਟ) ਬਾਡੀ ਵਾਪਸ ਕਰਦਾ ਹੈ
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS ਲਈ ਇੱਕ ਭਾਸ਼ਾ ਅਤੇ ਇੱਕ ਆਵਾਜ਼ ਲੋੜੀਂਦੀ ਹੈ: `language` ਦਾ ਡਿਫਾਲਟ "en" ਹੈ; ਗੁੰਮ
-# ਆਵਾਜ਼ ਜਾਂ OpenAI ਦੀ ਮਿਆਰੀ ਆਵਾਜ਼ ਦਾ ਨਾਮ (alloy, nova, …) "Adrian" ਬਣ ਜਾਂਦਾ ਹੈ
+# Soniox TTS ਲਈ ਇੱਕ ਭਾਸ਼ਾ ਅਤੇ ਇੱਕ ਆਵਾਜ਼ ਲੋੜੀਂਦੀ ਹੈ: `language` ਦਾ ਮੂਲ ਮੁੱਲ "en" ਹੈ; ਗੈਰ-ਮੌਜੂਦ
+# ਆਵਾਜ਼ ਜਾਂ OpenAI ਦੀ ਸਟਾਕ ਆਵਾਜ਼ ਦਾ ਨਾਮ (alloy, nova, …) "Adrian" ਬਣ ਜਾਂਦਾ ਹੈ
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # ਚਿੱਤਰ ਸੰਪਾਦਨ (multipart)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# ਵੀਡੀਓ / ਸੰਗੀਤ ਜਨਰੇਸ਼ਨ (ਪ੍ਰਦਾਤਾ-ਅਗੇਤਰ ਵਾਲੀ ਮਾਡਲ ਆਈਡੀ)
+# ਵੀਡੀਓ / ਸੰਗੀਤ ਜਨਰੇਸ਼ਨ (ਪ੍ਰਦਾਤਾ-ਪ੍ਰੀਫਿਕਸ ਵਾਲੀ ਮਾਡਲ id)
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
 > **ਰੀਰੈਂਕ ਪ੍ਰਦਾਤਾ ਨੋਡ:** `POST /v1/rerank` OpenAI-ਅਨੁਕੂਲ ਪ੍ਰਦਾਤਾ ਨੋਡਾਂ ਵੱਲ ਵੀ ਰੂਟ ਕਰਦਾ ਹੈ
 > (oMLX, vLLM, Infinity, ਗੇਟਵੇ ਦੇ ਪਿੱਛੇ TEI, …), ਜਿਨ੍ਹਾਂ ਨੂੰ `<node-prefix>/<model>` ਵਜੋਂ ਸੰਬੋਧਿਤ ਕੀਤਾ ਜਾਂਦਾ ਹੈ। ਲੂਪਬੈਕ
-> ਨੋਡ (`localhost`, `127.0.0.1`, `172.16.0.0/12`) ਹਮੇਸ਼ਾ ਯੋਗ ਹੁੰਦੇ ਹਨ। ਕਿਸੇ ਹੋਰ
-> ਹੋਸਟ ਉੱਤੇ ਨੋਡ—ਇੱਕ LAN ਮਸ਼ੀਨ ਜਾਂ Tailscale ਪੀਅਰ—ਕੇਵਲ ਉਦੋਂ ਹੀ ਯੋਗ ਹੁੰਦੇ ਹਨ ਜਦੋਂ ਓਪਰੇਟਰ
-> `RERANK_REMOTE_PROVIDER_NODES` ਫੀਚਰ ਫਲੈਗ ਸਮਰੱਥ ਕਰਦਾ ਹੈ **ਅਤੇ** ਨੋਡ ਦਾ ਬੇਸ URL ਪ੍ਰਦਾਤਾ
-> ਆਉਟਬਾਊਂਡ URL ਨੀਤੀ (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`) ਨੂੰ ਪਾਸ ਕਰਦਾ ਹੈ।
-> ਮੈਮੋਰੀ ਇੰਜਣ ਦਾ ਰੀਰੈਂਕ ਪੜਾਅ ਲੂਪਬੈਕ ਰਾਹੀਂ ਇਸ ਰੂਟ ਨੂੰ ਕਾਲ ਕਰਦਾ ਹੈ,
-> ਇਸ ਲਈ ਇਹੀ ਨਿਯਮ Memory ਸੈਟਿੰਗਾਂ ਵਿੱਚ `rerankProviderModel` ਨੂੰ ਨਿਯੰਤਰਿਤ ਕਰਦਾ ਹੈ।
+> ਨੋਡ (`localhost`, `127.0.0.1`, `172.16.0.0/12`) ਹਮੇਸ਼ਾ ਯੋਗ ਹੁੰਦੇ ਹਨ, ਅਤੇ ਉਹ ਹੋਸਟਨੇਮ ਵੀ ਯੋਗ ਹਨ ਜਿਨ੍ਹਾਂ ਨੂੰ
+> ਓਪਰੇਟਰ `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` ਵਿੱਚ ਸੂਚੀਬੱਧ ਕਰਦਾ ਹੈ (ਉਦਾਹਰਨ ਲਈ Docker/Compose ਸੇਵਾ ਨਾਮ
+> ਜਿਵੇਂ `http://reranker:8080/v1`; ਇਨ੍ਹਾਂ ਨੂੰ ਸਿੱਧੇ ਕਾਲ ਕੀਤਾ ਜਾਂਦਾ ਹੈ, ਕਦੇ ਵੀ `HTTP(S)_PROXY` ਜਾਂ ਕਿਸੇ
+> ਕਨੈਕਸ਼ਨ ਦੇ ਪਿੰਨ ਕੀਤੇ ਪ੍ਰੌਕਸੀ ਰਾਹੀਂ ਨਹੀਂ)। ਕਿਸੇ ਹੋਰ
+> ਹੋਸਟ ਉੱਤੇ ਨੋਡ — LAN ਬਾਕਸ ਜਾਂ Tailscale ਪੀਅਰ — ਸਿਰਫ਼ ਉਦੋਂ ਹੀ ਯੋਗ ਹੁੰਦੇ ਹਨ ਜਦੋਂ ਓਪਰੇਟਰ
+> `RERANK_REMOTE_PROVIDER_NODES` ਫੀਚਰ ਫਲੈਗ ਸਮਰੱਥ ਕਰਦਾ ਹੈ **ਅਤੇ** ਨੋਡ ਦਾ ਬੇਸ URL ਪ੍ਰਦਾਤਾ ਦੀ
+> ਆਊਟਬਾਊਂਡ URL ਨੀਤੀ (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`) ਨੂੰ ਪਾਸ ਕਰਦਾ ਹੈ।
+> ਮੈਮੋਰੀ ਇੰਜਣ ਦਾ ਰੀਰੈਂਕ ਪੜਾਅ ਇਸ ਰੂਟ ਨੂੰ
+> ਲੂਪਬੈਕ ਉੱਤੇ ਕਾਲ ਕਰਦਾ ਹੈ, ਇਸ ਲਈ ਇਹੀ ਨਿਯਮ Memory ਸੈਟਿੰਗਾਂ ਵਿੱਚ `rerankProviderModel` ਨੂੰ ਨਿਯੰਤਰਿਤ ਕਰਦਾ ਹੈ।
 >
-> **ਸਥਾਨਕ ਸਰਵਰ ਸੰਰਚਨਾਵਾਂ:** ਨੋਡ ਨੂੰ `<base>/v1/rerank` 'ਤੇ ਅਤੇ 404 ਆਉਣ 'ਤੇ `<base>/rerank`
-> (Infinity, TEI) 'ਤੇ ਕਾਲ ਕੀਤਾ ਜਾਂਦਾ ਹੈ। ਅੱਪਸਟ੍ਰੀਮ ਬਾਡੀ Cohere/OpenAI ਸਪੈਲਿੰਗ (`documents`,
-> `return_documents`) ਅਤੇ TEI ਸਪੈਲਿੰਗ (`texts`, `return_text`) ਦੋਵੇਂ ਲੈ ਕੇ ਜਾਂਦੀ ਹੈ, ਅਤੇ ਅੱਪਸਟ੍ਰੀਮ ਜਵਾਬ ਨੂੰ
-> Cohere ਇਨਵੈਲਪ ਅਨੁਸਾਰ ਸਧਾਰਨ ਕੀਤਾ ਜਾਂਦਾ ਹੈ: TEI ਦਾ ਸਿੱਧਾ `[{index, score, text}]`, ਪਤਲੇ ਗੇਟਵੇਆਂ ਤੋਂ
-> `{results: [{index, score}]}`, ਅਤੇ Voyage-ਸ਼ੈਲੀ `{data: [...]}`—ਇਹ ਸਾਰੇ ਕਲਾਇੰਟ ਨੂੰ
+> **ਸਥਾਨਕ ਸਰਵਰ ਢਾਂਚੇ:** ਨੋਡ ਨੂੰ `<base>/v1/rerank` ਉੱਤੇ ਅਤੇ, 404 ਆਉਣ 'ਤੇ, `<base>/rerank`
+> (Infinity, TEI) ਉੱਤੇ ਕਾਲ ਕੀਤਾ ਜਾਂਦਾ ਹੈ। ਅੱਪਸਟ੍ਰੀਮ ਬਾਡੀ ਵਿੱਚ Cohere/OpenAI ਸ਼ਬਦ-ਜੋੜ (`documents`,
+> `return_documents`) ਅਤੇ TEI ਸ਼ਬਦ-ਜੋੜ (`texts`, `return_text`) ਦੋਵੇਂ ਹੁੰਦੇ ਹਨ, ਅਤੇ ਅੱਪਸਟ੍ਰੀਮ ਜਵਾਬ ਨੂੰ
+> Cohere ਐਨਵਲਪ ਅਨੁਸਾਰ ਨਾਰਮਲਾਈਜ਼ ਕੀਤਾ ਜਾਂਦਾ ਹੈ: TEI ਦਾ ਸਿੱਧਾ `[{index, score, text}]`, ਪਤਲੇ ਗੇਟਵੇਆਂ ਤੋਂ
+> `{results: [{index, score}]}`, ਅਤੇ Voyage-ਸ਼ੈਲੀ `{data: [...]}` ਸਾਰੇ ਕਲਾਇੰਟ ਨੂੰ
 > `{results: [{index, relevance_score, document?}]}` ਵਜੋਂ ਵਾਪਸ ਮਿਲਦੇ ਹਨ, ਸਕੋਰ ਅਨੁਸਾਰ ਕ੍ਰਮਬੱਧ ਅਤੇ `top_n` ਤੱਕ ਸੀਮਿਤ।
 
-> **ਪ੍ਰਦਾਤਾ-ਨੋਡ ਖੋਜ:** ਕਿਸੇ OpenAI-ਅਨੁਕੂਲ ਪ੍ਰਦਾਤਾ ਨੋਡ ਉੱਤੇ ਮਾਡਲ `GET /v1/models`
-> ਵਿੱਚ ਨੋਡ ਪ੍ਰੀਫਿਕਸ ਦੇ ਅਧੀਨ ਦਿਖਾਈ ਦਿੰਦੇ ਹਨ। ਜਿਨ੍ਹਾਂ ਕਤਾਰਾਂ ਵਿੱਚ ਕੋਈ ਐਂਡਪੌਇੰਟ ਮੈਟਾਡਾਟਾ ਨਹੀਂ ਹੁੰਦਾ (ਸਥਾਨਕ `/v1/models` ਸੂਚੀਆਂ ਲਈ ਆਮ)
-> ਉਹ ਨੋਡ ਦਾ `apiType` ਵਿਰਾਸਤ ਵਿੱਚ ਲੈਂਦੀਆਂ ਹਨ, ਇਸ ਲਈ ਕਿਸੇ `embeddings` ਨੋਡ ਦੇ ਮਾਡਲ ਚੈਟ ਨੂੰ ਡਿਫੌਲਟ ਮੰਨਣ ਦੀ ਬਜਾਏ `type: "embedding"` ਹੁੰਦੇ ਹਨ ਅਤੇ
-> ਕਿਸੇ `rerank` ਨੋਡ ਦੇ ਮਾਡਲ `type: "rerank"` ਹੁੰਦੇ ਹਨ; ਸਿੰਕ ਕੀਤੀ ਜਾਂ ਹੱਥੀਂ ਜੋੜੀ ਗਈ ਕਤਾਰ ਉੱਤੇ ਸਪਸ਼ਟ
+> **ਪ੍ਰੋਵਾਈਡਰ-ਨੋਡ ਖੋਜ:** OpenAI-ਅਨੁਕੂਲ ਪ੍ਰੋਵਾਈਡਰ ਨੋਡ ਉੱਤੇ ਮਾਡਲ `GET /v1/models`
+> ਵਿੱਚ ਨੋਡ ਪ੍ਰੀਫਿਕਸ ਹੇਠ ਦਿਖਾਈ ਦਿੰਦੇ ਹਨ। ਜਿਹੜੀਆਂ ਕਤਾਰਾਂ ਵਿੱਚ ਕੋਈ ਐਂਡਪੌਇੰਟ ਮੈਟਾਡਾਟਾ ਨਹੀਂ ਹੁੰਦਾ (ਸਥਾਨਕ `/v1/models` ਸੂਚੀਆਂ ਲਈ ਆਮ)
+> ਉਹ ਨੋਡ ਦਾ `apiType` ਵਿਰਾਸਤ ਵਿੱਚ ਲੈਂਦੀਆਂ ਹਨ, ਇਸ ਲਈ `embeddings` ਨੋਡ ਦੇ ਮਾਡਲ ਚੈਟ ਨੂੰ ਡਿਫੌਲਟ ਬਣਾਉਣ ਦੀ ਬਜਾਏ `type: "embedding"` ਹੁੰਦੇ ਹਨ ਅਤੇ
+> `rerank` ਨੋਡ ਦੇ ਮਾਡਲ `type: "rerank"` ਹੁੰਦੇ ਹਨ; ਸਿੰਕ ਕੀਤੀ ਜਾਂ ਹੱਥੀਂ ਜੋੜੀ ਗਈ ਕਤਾਰ ਉੱਤੇ ਸਪਸ਼ਟ
 > `supportedEndpoints` ਨੂੰ ਫਿਰ ਵੀ ਤਰਜੀਹ ਮਿਲਦੀ ਹੈ।
 
-### ਸਮਰਪਿਤ ਪ੍ਰਦਾਤਾ ਰੂਟ
+### ਸਮਰਪਿਤ ਪ੍ਰੋਵਾਈਡਰ ਰੂਟ
 
 ```bash
 POST /v1/providers/{provider}/chat/completions
@@ -541,7 +544,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-ਜੇ ਪ੍ਰਦਾਤਾ ਪ੍ਰੀਫਿਕਸ ਮੌਜੂਦ ਨਾ ਹੋਵੇ, ਤਾਂ ਇਹ ਆਪਣੇ ਆਪ ਜੋੜ ਦਿੱਤਾ ਜਾਂਦਾ ਹੈ। ਮੇਲ ਨਾ ਖਾਂਦੇ ਮਾਡਲ `400` ਵਾਪਸ ਕਰਦੇ ਹਨ।
+ਜੇ ਪ੍ਰੋਵਾਈਡਰ ਪ੍ਰੀਫਿਕਸ ਮੌਜੂਦ ਨਾ ਹੋਵੇ, ਤਾਂ ਇਹ ਆਪਣੇ ਆਪ ਜੋੜ ਦਿੱਤਾ ਜਾਂਦਾ ਹੈ। ਮੇਲ ਨਾ ਖਾਂਦੇ ਮਾਡਲ `400` ਵਾਪਸ ਕਰਦੇ ਹਨ।
 
 ---
 

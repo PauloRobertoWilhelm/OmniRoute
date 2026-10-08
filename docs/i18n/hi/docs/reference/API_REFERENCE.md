@@ -450,7 +450,7 @@ Bifrost, CLIProxyAPI और भविष्य के साइडकार र�
 
 ## संगतता एंडपॉइंट
 
-| विधि | पथ                                        | प्रारूप                           |
+| विधि | पाथ                                       | फ़ॉर्मेट                          |
 | ---- | ----------------------------------------- | --------------------------------- |
 | POST | `/v1/chat/completions`                    | OpenAI                            |
 | POST | `/v1/messages`                            | Anthropic                         |
@@ -478,7 +478,7 @@ Bifrost, CLIProxyAPI और भविष्य के साइडकार र�
 | POST | `/api/v1/vscode/{token}/api/chat`         | Ollama टोकनयुक्त उपनाम            |
 | GET  | `/api/v1/vscode/{token}/api/tags`         | Ollama टैग टोकनयुक्त उपनाम        |
 
-सभी POST रूट समान संरचना का पालन करते हैं: `Bearer your-api-key` + Zod द्वारा सत्यापित JSON बॉडी (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, आदि; `src/shared/validation/schemas.ts` देखें)। स्कीमा सत्यापन विफल होने पर 4xx लौटाया जाता है।
+सभी POST रूट समान संरचना का पालन करते हैं: `Bearer your-api-key` + Zod द्वारा सत्यापित JSON बॉडी (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, आदि, `src/shared/validation/schemas.ts` देखें)। स्कीमा विफल होने पर 4xx लौटाया जाता है।
 
 जो क्लाइंट `Authorization: Bearer ...` संलग्न नहीं कर सकते, उनके लिए OmniRoute क्वेरी-स्ट्रिंग संगतता (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) या नीचे प्रलेखित समर्पित `/api/v1/vscode/{token}/...` एंडपॉइंट के माध्यम से URL में API कुंजियाँ भी स्वीकार करता है।
 
@@ -498,44 +498,47 @@ POST /v1/search      { "query": "...", "provider": "jina-search" }
 # मॉडरेशन
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
-# TTS — audio/mpeg (या अनुरोधित प्रारूप) बॉडी लौटाता है
+# TTS — audio/mpeg (या अनुरोधित फ़ॉर्मेट) बॉडी लौटाता है
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS के लिए भाषा और वॉइस आवश्यक हैं: `language` का डिफ़ॉल्ट "en" है; अनुपस्थित
-# वॉइस या OpenAI की स्टॉक वॉइस का नाम (alloy, nova, …) "Adrian" बन जाता है
+# Soniox TTS के लिए भाषा और वॉइस आवश्यक हैं: `language` डिफ़ॉल्ट रूप से "en" होता है; अनुपस्थित
+# वॉइस या OpenAI के स्टॉक वॉइस नाम (alloy, nova, …) को "Adrian" में बदल दिया जाता है
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
-# छवि संपादन (multipart)
+# इमेज संपादन (मल्टीपार्ट)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# वीडियो / संगीत जनरेशन (प्रदाता-उपसर्गयुक्त मॉडल आईडी)
+# वीडियो / संगीत जनरेशन (प्रदाता-प्रीफ़िक्स वाला मॉडल ID)
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **रीरैंक प्रदाता नोड:** `POST /v1/rerank` को `<node-prefix>/<model>` के रूप में संबोधित OpenAI-संगत प्रदाता नोड
-> (oMLX, vLLM, Infinity, किसी गेटवे के पीछे TEI, …) पर भी रूट किया जाता है। लूपबैक
-> नोड (`localhost`, `127.0.0.1`, `172.16.0.0/12`) हमेशा पात्र होते हैं। किसी अन्य
-> होस्ट — LAN बॉक्स या Tailscale पीयर — पर मौजूद नोड केवल तभी पात्र होते हैं, जब ऑपरेटर
+> **रीरैंक प्रदाता नोड:** `POST /v1/rerank` उन OpenAI-संगत प्रदाता नोड पर भी रूट करता है
+> (oMLX, vLLM, Infinity, किसी गेटवे के पीछे TEI, …) जिन्हें `<node-prefix>/<model>` के रूप में संबोधित किया जाता है। लूपबैक
+> नोड (`localhost`, `127.0.0.1`, `172.16.0.0/12`) हमेशा पात्र होते हैं, और वे होस्टनाम भी पात्र होते हैं जिन्हें
+> ऑपरेटर `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` में सूचीबद्ध करता है (उदाहरण के लिए Docker/Compose सेवा का नाम, जैसे
+> `http://reranker:8080/v1`; इन्हें सीधे कॉल किया जाता है, कभी भी `HTTP(S)_PROXY` या किसी
+> कनेक्शन के पिन किए गए प्रॉक्सी के माध्यम से नहीं)। किसी अन्य
+> होस्ट पर स्थित नोड — कोई LAN बॉक्स या Tailscale पीयर — केवल तभी पात्र होते हैं, जब ऑपरेटर
 > `RERANK_REMOTE_PROVIDER_NODES` फ़ीचर फ़्लैग सक्षम करता है **और** नोड का बेस URL प्रदाता की
-> आउटबाउंड URL नीति (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`) को पार करता है।
+> आउटबाउंड URL नीति (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`) को पास करता है।
 > मेमोरी इंजन का रीरैंक चरण इस रूट को
-> लूपबैक के माध्यम से कॉल करता है, इसलिए यही नियम Memory सेटिंग में `rerankProviderModel` को नियंत्रित करता है।
+> लूपबैक के माध्यम से कॉल करता है, इसलिए यही नियम Memory सेटिंग्स में `rerankProviderModel` को नियंत्रित करता है।
 >
 > **स्थानीय सर्वर संरचनाएँ:** नोड को `<base>/v1/rerank` पर और 404 मिलने पर `<base>/rerank`
 > (Infinity, TEI) पर कॉल किया जाता है। अपस्ट्रीम बॉडी में Cohere/OpenAI वर्तनी (`documents`,
 > `return_documents`) और TEI वर्तनी (`texts`, `return_text`) दोनों होती हैं, और अपस्ट्रीम प्रतिक्रिया को
-> Cohere एनवेलप में सामान्यीकृत किया जाता है: TEI का मूल `[{index, score, text}]`, हल्के गेटवे से प्राप्त
+> Cohere एनवेलप में सामान्यीकृत किया जाता है: TEI का साधारण `[{index, score, text}]`, पतले गेटवे से प्राप्त
 > `{results: [{index, score}]}`, और Voyage-शैली `{data: [...]}`—सभी क्लाइंट को
 > `{results: [{index, relevance_score, document?}]}` के रूप में लौटते हैं, स्कोर के अनुसार क्रमबद्ध और `top_n` तक सीमित।
 
-> **प्रदाता-नोड खोज:** OpenAI-संगत प्रदाता नोड के मॉडल `GET /v1/models` में
-> नोड प्रीफ़िक्स के अंतर्गत दिखाई देते हैं। जिन पंक्तियों में एंडपॉइंट मेटाडेटा नहीं होता (स्थानीय `/v1/models` सूचियों में सामान्य)
-> वे नोड का `apiType` इनहेरिट करती हैं, इसलिए `embeddings` नोड के मॉडल डिफ़ॉल्ट रूप से चैट बनने के बजाय `type: "embedding"` और
-> `rerank` नोड के मॉडल `type: "rerank"` होते हैं; सिंक की गई या मैन्युअल रूप से जोड़ी गई पंक्ति पर स्पष्ट
-> `supportedEndpoints` को फिर भी प्राथमिकता मिलती है।
+> **प्रोवाइडर-नोड खोज:** OpenAI-संगत प्रोवाइडर नोड पर मौजूद मॉडल `GET /v1/models` में
+> नोड प्रीफ़िक्स के अंतर्गत दिखाई देते हैं। जिन पंक्तियों में एंडपॉइंट मेटाडेटा नहीं होता (स्थानीय `/v1/models` सूचियों में सामान्य),
+> वे नोड का `apiType` इनहेरिट करती हैं, इसलिए किसी `embeddings` नोड के मॉडल डिफ़ॉल्ट रूप से चैट बनने के बजाय `type: "embedding"` होते हैं और
+> किसी `rerank` नोड के मॉडल `type: "rerank"` होते हैं; सिंक की गई या मैन्युअल रूप से जोड़ी गई पंक्ति पर स्पष्ट रूप से दिया गया
+> `supportedEndpoints` फिर भी प्राथमिकता रखता है।
 
-### समर्पित प्रदाता रूट
+### समर्पित प्रोवाइडर रूट
 
 ```bash
 POST /v1/providers/{provider}/chat/completions
@@ -543,7 +546,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-यदि प्रदाता प्रीफ़िक्स मौजूद नहीं है, तो वह अपने-आप जोड़ दिया जाता है। मेल न खाने वाले मॉडल `400` लौटाते हैं।
+यदि प्रोवाइडर प्रीफ़िक्स मौजूद नहीं है, तो वह स्वतः जोड़ दिया जाता है। मेल न खाने वाले मॉडल `400` लौटाते हैं।
 
 ---
 

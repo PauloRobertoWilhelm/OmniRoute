@@ -447,7 +447,7 @@ GET /api/v1/provider-plugin-manifest
 
 ---
 
-## مطابقتی اینڈ پوائنٹس
+## مطابقتی اینڈپوائنٹس
 
 | طریقہ | راستہ                                     | فارمیٹ                                |
 | ----- | ----------------------------------------- | ------------------------------------- |
@@ -456,14 +456,14 @@ GET /api/v1/provider-plugin-manifest
 | POST  | `/v1/responses`                           | OpenAI Responses                      |
 | POST  | `/v1/embeddings`                          | OpenAI                                |
 | POST  | `/v1/images/generations`                  | OpenAI Images                         |
-| POST  | `/v1/images/edits`                        | OpenAI Images (ترمیم/اِن پینٹ)        |
-| POST  | `/v1/videos/generations`                  | OpenAI طرز کی ویڈیو تخلیق             |
-| POST  | `/v1/music/generations`                   | OpenAI طرز کی موسیقی کی تخلیق         |
-| POST  | `/v1/audio/transcriptions`                | OpenAI Audio (تقریر سے متن)           |
+| POST  | `/v1/images/edits`                        | OpenAI Images (ترمیم/inpaint)         |
+| POST  | `/v1/videos/generations`                  | OpenAI طرز کی ویڈیو جنریشن            |
+| POST  | `/v1/music/generations`                   | OpenAI طرز کی موسیقی جنریشن           |
+| POST  | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                    |
 | POST  | `/v1/audio/speech`                        | OpenAI TTS (آڈیو باڈی لوٹاتا ہے)      |
 | POST  | `/v1/rerank`                              | Cohere/Voyage طرز کی دوبارہ درجہ بندی |
 | POST  | `/v1/classify`                            | Jina درجہ بندی (`api.jina.ai`)        |
-| POST  | `/v1/segment`                             | Jina سیگمینٹر (`segment.jina.ai`)     |
+| POST  | `/v1/segment`                             | Jina سیگمنٹر (`segment.jina.ai`)      |
 | POST  | `/v1/moderations`                         | OpenAI Moderations                    |
 | GET   | `/v1/models`                              | OpenAI                                |
 | POST  | `/v1/messages/count_tokens`               | Anthropic                             |
@@ -477,9 +477,9 @@ GET /api/v1/provider-plugin-manifest
 | POST  | `/api/v1/vscode/{token}/api/chat`         | Ollama ٹوکنائزڈ عرف                   |
 | GET   | `/api/v1/vscode/{token}/api/tags`         | Ollama ٹیگز ٹوکنائزڈ عرف              |
 
-تمام POST روٹس ایک ہی ساخت کی پیروی کرتے ہیں: `Bearer your-api-key` + Zod سے توثیق شدہ JSON باڈی (`v1RerankSchema`، `v1ModerationSchema`، `v1AudioSpeechSchema` وغیرہ، `src/shared/validation/schemas.ts` دیکھیں)۔ اسکیما کی ناکامی پر 4xx لوٹایا جاتا ہے۔
+تمام POST روٹس ایک ہی ساخت کی پیروی کرتے ہیں: `Bearer your-api-key` + Zod سے توثیق شدہ JSON باڈی (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` وغیرہ، `src/shared/validation/schemas.ts` دیکھیں)۔ اسکیما کی ناکامی پر 4xx واپس کیا جاتا ہے۔
 
-ان کلائنٹس کے لیے جو `Authorization: Bearer ...` منسلک نہیں کر سکتے، OmniRoute استفساری اسٹرنگ مطابقت (`?token=...`، `?apiKey=...`، `?api_key=...`، `?key=...`) یا ذیل میں دستاویزی مخصوص `/api/v1/vscode/{token}/...` اینڈ پوائنٹس کے ذریعے URL میں API کلیدیں بھی قبول کرتا ہے۔
+جو کلائنٹس `Authorization: Bearer ...` منسلک نہیں کر سکتے، ان کے لیے OmniRoute یو آر ایل میں API کلیدیں بھی قبول کرتا ہے، یا تو کوئری اسٹرنگ مطابقت (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) کے ذریعے، یا ذیل میں دستاویزی مخصوص `/api/v1/vscode/{token}/...` اینڈپوائنٹس کے ذریعے۔
 
 ```bash
 # دوبارہ درجہ بندی (کلاؤڈ رجسٹری فراہم کنندہ، یا "<prefix>/<model>" کی صورت میں OpenAI سے مطابقت رکھنے والا فراہم کنندہ نوڈ)
@@ -488,7 +488,7 @@ POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "d
 # Jina درجہ بندی (Foundation API اسناد)
 POST /v1/classify    { "model": "jina-embeddings-v5-text-small", "input": ["..."], "labels": ["a", "b"] }
 
-# Jina سیگمینٹر
+# Jina سیگمنٹر
 POST /v1/segment     { "content": "...", "return_chunks": true }
 
 # Jina تلاش (s.jina.ai؛ فراہم کنندہ کے عرف: jina-search, jina-ai, jina)
@@ -497,42 +497,45 @@ POST /v1/search      { "query": "...", "provider": "jina-search" }
 # مواد کی نگرانی
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
-# TTS — آڈیو/mpeg (یا مطلوبہ فارمیٹ) باڈی لوٹاتا ہے
+# TTS — audio/mpeg (یا مطلوبہ فارمیٹ) باڈی لوٹاتا ہے
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS کے لیے زبان اور آواز درکار ہیں: `language` کی طے شدہ قدر "en" ہے؛ غائب
-# آواز یا OpenAI کی معیاری آواز کا نام (alloy, nova, …) "Adrian" بن جاتا ہے
+# Soniox TTS کے لیے زبان اور آواز درکار ہیں: `language` کی ڈیفالٹ قدر "en" ہے؛ غائب
+# آواز یا OpenAI کی اسٹاک آواز کا نام (alloy, nova, …) "Adrian" بن جاتا ہے
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
-# تصویر میں ترمیم (ملٹی پارٹ)
+# تصویر میں ترمیم (multipart)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# ویڈیو / موسیقی کی تخلیق (فراہم کنندہ کے سابقے والی ماڈل آئی ڈی)
+# ویڈیو / موسیقی جنریشن (فراہم کنندہ کے سابقے والی ماڈل آئی ڈی)
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **دوبارہ درجہ بندی کے فراہم کنندہ نوڈز:** `POST /v1/rerank`، `<node-prefix>/<model>` کے طور پر مخاطب کیے گئے OpenAI سے مطابقت رکھنے والے فراہم کنندہ نوڈز
-> (oMLX، vLLM، Infinity، گیٹ وے کے پیچھے TEI، …) کی طرف بھی روٹ کرتا ہے۔ لوپ بیک
-> نوڈز (`localhost`، `127.0.0.1`، `172.16.0.0/12`) ہمیشہ اہل ہوتے ہیں۔ کسی دوسرے
-> ہوسٹ پر موجود نوڈز — LAN مشین یا Tailscale پیر — صرف اس وقت اہل ہوتے ہیں جب آپریٹر
-> `RERANK_REMOTE_PROVIDER_NODES` فیچر فلیگ فعال کرے **اور** نوڈ کا بنیادی URL فراہم کنندہ کی
-> آؤٹ باؤنڈ URL پالیسی (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`) پر پورا اترے۔
+> **دوبارہ درجہ بندی کے فراہم کنندہ نوڈز:** `POST /v1/rerank` درخواستوں کو OpenAI سے مطابقت رکھنے والے فراہم کنندہ نوڈز
+> (گیٹ وے کے پیچھے oMLX، vLLM، Infinity، TEI، …) تک بھی روٹ کرتا ہے، جنہیں `<node-prefix>/<model>` سے مخاطب کیا جاتا ہے۔ لوپ بیک
+> نوڈز (`localhost`, `127.0.0.1`, `172.16.0.0/12`) ہمیشہ اہل ہوتے ہیں، اور وہ ہوسٹ نام بھی اہل ہوتے ہیں جنہیں
+> آپریٹر `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` میں درج کرتا ہے (مثلاً Docker/Compose سروس کا نام، جیسے
+> `http://reranker:8080/v1`؛ انہیں براہ راست کال کیا جاتا ہے، کبھی بھی `HTTP(S)_PROXY` یا کسی
+> کنکشن کے پن شدہ پراکسی کے ذریعے نہیں)۔ کسی دوسرے
+> ہوسٹ پر موجود نوڈز — جیسے LAN مشین یا Tailscale پیئر — صرف اسی وقت اہل ہوتے ہیں جب آپریٹر
+> `RERANK_REMOTE_PROVIDER_NODES` فیچر فلیگ فعال کرے **اور** نوڈ کا بنیادی یو آر ایل فراہم کنندہ کی
+> آؤٹ باؤنڈ یو آر ایل پالیسی (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`) پر پورا اترے۔
 > میموری انجن کا دوبارہ درجہ بندی کا مرحلہ اس روٹ کو
 > لوپ بیک کے ذریعے کال کرتا ہے، لہٰذا یہی اصول Memory کی ترتیبات میں `rerankProviderModel` پر لاگو ہوتا ہے۔
 >
-> **مقامی سرور کی ساختیں:** نوڈ کو `<base>/v1/rerank` پر اور 404 کی صورت میں `<base>/rerank`
-> (Infinity، TEI) پر کال کیا جاتا ہے۔ اپ اسٹریم باڈی میں Cohere/OpenAI املا (`documents`،
-> `return_documents`) اور TEI املا (`texts`، `return_text`) دونوں شامل ہوتے ہیں، اور اپ اسٹریم جواب کو
-> Cohere اینویلپ کے مطابق معمول پر لایا جاتا ہے: TEI کا سادہ `[{index, score, text}]`، ہلکے گیٹ ویز سے
-> `{results: [{index, score}]}`، اور Voyage طرز کا `{data: [...]}`، سب کلائنٹ کو
+> **مقامی سرور کی ساختیں:** نوڈ کو `<base>/v1/rerank` پر، اور 404 آنے کی صورت میں `<base>/rerank`
+> (Infinity, TEI) پر کال کیا جاتا ہے۔ اپ اسٹریم باڈی Cohere/OpenAI املا (`documents`,
+> `return_documents`) اور TEI املا (`texts`, `return_text`) دونوں رکھتی ہے، اور اپ اسٹریم جواب کو
+> Cohere لفافے کے مطابق معمول پر لایا جاتا ہے: TEI کا سادہ `[{index, score, text}]`، باریک گیٹ ویز سے آنے والا `{results: [{index, score}]}`
+> اور Voyage طرز کا `{data: [...]}`، سب کلائنٹ کو
 > `{results: [{index, relevance_score, document?}]}` کی صورت میں واپس ملتے ہیں، اسکور کے لحاظ سے مرتب اور `top_n` تک محدود۔
 
-> **پرووائیڈر نوڈ کی دریافت:** کسی OpenAI-مطابقت پذیر پرووائیڈر نوڈ پر موجود ماڈلز `GET /v1/models`
-> میں نوڈ کے سابقے کے تحت ظاہر ہوتے ہیں۔ وہ قطاریں جن میں endpoint metadata موجود نہ ہو (جیسا کہ عموماً مقامی `/v1/models` فہرستوں میں ہوتا ہے)
-> نوڈ کا `apiType` وراثت میں لیتی ہیں، لہٰذا `embeddings` نوڈ کے ماڈلز `type: "embedding"` اور
-> `rerank` نوڈ کے ماڈلز `type: "rerank"` ہوتے ہیں، بجائے اس کے کہ وہ بطور ڈیفالٹ chat ہوں؛ مطابقت پذیر بنائی گئی یا دستی طور پر شامل کردہ قطار پر واضح
-> `supportedEndpoints` کو بدستور ترجیح حاصل ہوتی ہے۔
+> **پرووائیڈر نوڈ کی دریافت:** OpenAI سے ہم آہنگ پرووائیڈر نوڈ پر موجود ماڈلز `GET /v1/models`
+> میں نوڈ کے سابقے کے تحت ظاہر ہوتے ہیں۔ وہ قطاریں جن میں اینڈ پوائنٹ کا میٹا ڈیٹا موجود نہیں ہوتا (جیسا کہ مقامی `/v1/models` فہرستوں میں عام ہے)
+> نوڈ کے `apiType` کو وراثت میں حاصل کرتی ہیں، لہٰذا `embeddings` نوڈ کے ماڈلز `type: "embedding"` اور
+> `rerank` نوڈ کے ماڈلز `type: "rerank"` ہوتے ہیں، بجائے اس کے کہ وہ بطور ڈیفالٹ چیٹ قرار پائیں؛ مطابقت پذیر یا دستی طور پر شامل کی گئی قطار میں واضح
+> `supportedEndpoints` کو اب بھی ترجیح حاصل ہوتی ہے۔
 
 ### مخصوص پرووائیڈر روٹس
 
@@ -542,7 +545,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-اگر پرووائیڈر کا سابقہ موجود نہ ہو تو وہ خودکار طور پر شامل کر دیا جاتا ہے۔ غیر مماثل ماڈلز `400` واپس کرتے ہیں۔
+اگر پرووائیڈر کا سابقہ موجود نہ ہو تو اسے خودکار طور پر شامل کر دیا جاتا ہے۔ غیر مطابقت رکھنے والے ماڈلز `400` واپس کرتے ہیں۔
 
 ---
 

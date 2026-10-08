@@ -452,7 +452,7 @@ Tento koncový bod použite, keď sidecar beží mimo procesu a nemôže priamo 
 
 ---
 
-## Koncové body kompatibility
+## Kompatibilné koncové body
 
 | Metóda | Cesta                                     | Formát                                |
 | ------ | ----------------------------------------- | ------------------------------------- |
@@ -482,12 +482,12 @@ Tento koncový bod použite, keď sidecar beží mimo procesu a nemôže priamo 
 | POST   | `/api/v1/vscode/{token}/api/chat`         | Tokenizovaný alias Ollama             |
 | GET    | `/api/v1/vscode/{token}/api/tags`         | Tokenizovaný alias značiek Ollama     |
 
-Všetky trasy POST majú rovnakú štruktúru: `Bearer your-api-key` + telo JSON overené pomocou Zod (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` atď.; pozrite si `src/shared/validation/schemas.ts`). Pri zlyhaní overenia schémy sa vráti stavový kód 4xx.
+Všetky trasy POST majú rovnakú štruktúru: `Bearer your-api-key` + telo JSON overené pomocou Zod (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` atď.; pozrite si `src/shared/validation/schemas.ts`). Pri zlyhaní overenia schémy sa vráti stav 4xx.
 
-Pre klientov, ktorí nemôžu pripojiť hlavičku `Authorization: Bearer ...`, OmniRoute prijíma kľúče API aj v adrese URL, a to buď prostredníctvom kompatibility s parametrami reťazca dopytu (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`), alebo cez vyhradené koncové body `/api/v1/vscode/{token}/...` zdokumentované nižšie.
+Pre klientov, ktorí nemôžu pripojiť hlavičku `Authorization: Bearer ...`, OmniRoute prijíma kľúče API aj v adrese URL, a to buď prostredníctvom kompatibilných parametrov reťazca dopytu (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`), alebo cez vyhradené koncové body `/api/v1/vscode/{token}/...` zdokumentované nižšie.
 
 ```bash
-# Preusporiadanie (poskytovateľ cloudového registra alebo uzol poskytovateľa kompatibilný s OpenAI vo formáte "<prefix>/<model>")
+# Preusporiadanie (poskytovateľ z cloudového registra alebo uzol poskytovateľa kompatibilný s OpenAI ako "<prefix>/<model>")
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
 # Klasifikácia Jina (prihlasovacie údaje Foundation API)
@@ -512,32 +512,38 @@ POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voic
 # Úprava obrázka (multipart)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# Generovanie videa/hudby (ID modelu s predponou poskytovateľa)
+# Generovanie videa/hudby (identifikátor modelu s predponou poskytovateľa)
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **Uzly poskytovateľov preusporiadania:** `POST /v1/rerank` smeruje požiadavky aj na uzly poskytovateľov kompatibilné s OpenAI
-> (oMLX, vLLM, Infinity, TEI za bránou, …), adresované ako `<node-prefix>/<model>`. Uzly spätnej slučky
-> (`localhost`, `127.0.0.1`, `172.16.0.0/12`) sú povolené vždy. Uzly na akomkoľvek inom
-> hostiteľovi — zariadení v sieti LAN alebo partnerskom uzle Tailscale — sú povolené iba vtedy, keď operátor aktivuje
-> príznak funkcie `RERANK_REMOTE_PROVIDER_NODES` **a zároveň** základná adresa URL uzla vyhovuje pravidlám
-> odchádzajúcich adries URL poskytovateľa (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
+> **Uzly poskytovateľov preusporiadania:** `POST /v1/rerank` smeruje požiadavky aj na uzly poskytovateľov
+> kompatibilných s OpenAI (oMLX, vLLM, Infinity, TEI za bránou, …), ktoré sú adresované ako
+> `<node-prefix>/<model>`. Uzly spätnej slučky (`localhost`, `127.0.0.1`, `172.16.0.0/12`) sú vždy
+> oprávnené, rovnako ako názvy hostiteľov, ktoré prevádzkovateľ uvedie v
+> `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` (napr. názov služby Docker/Compose, ako je
+> `http://reranker:8080/v1`; tieto uzly sa volajú priamo, nikdy nie cez `HTTP(S)_PROXY` ani cez
+> proxy pripnuté ku konkrétnemu pripojeniu). Uzly na akomkoľvek inom
+> hostiteľovi — zariadenie v sieti LAN alebo partnerský uzol Tailscale — sú oprávnené len vtedy, keď
+> prevádzkovateľ povolí príznak funkcie `RERANK_REMOTE_PROVIDER_NODES` **a zároveň** základná adresa
+> URL uzla spĺňa pravidlá pre odchádzajúce adresy URL poskytovateľov
+> (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
 > Krok preusporiadania pamäťového mechanizmu volá túto trasu cez
-> spätnú slučku, takže rovnaké pravidlo sa vzťahuje na `rerankProviderModel` v nastaveniach pamäte.
+> spätnú slučku, takže rovnaké pravidlo sa vzťahuje aj na `rerankProviderModel` v nastaveniach pamäte.
 >
-> **Formáty lokálnych serverov:** uzol sa volá na adrese `<base>/v1/rerank` a pri odpovedi 404 na adrese `<base>/rerank`
-> (Infinity, TEI). Telo odosielané nadradenému serveru obsahuje názvy podľa Cohere/OpenAI (`documents`,
-> `return_documents`) aj názvy podľa TEI (`texts`, `return_text`) a odpoveď nadradeného servera sa
-> normalizuje do obálky Cohere: holé pole TEI `[{index, score, text}]`, `{results: [{index, score}]}`
-> z jednoduchých brán aj formát Voyage `{data: [...]}` sa klientovi vrátia ako
-> `{results: [{index, relevance_score, document?}]}`, zoradené podľa skóre a obmedzené hodnotou `top_n`.
+> **Štruktúry lokálnych serverov:** uzol sa volá na adrese `<base>/v1/rerank` a pri odpovedi 404 na
+> adrese `<base>/rerank` (Infinity, TEI). Telo odoslané nadradenému serveru obsahuje názvy vo formáte
+> Cohere/OpenAI (`documents`, `return_documents`) aj vo formáte TEI (`texts`, `return_text`) a odpoveď
+> nadradeného servera sa normalizuje do obálky Cohere: holé pole TEI `[{index, score, text}]`,
+> `{results: [{index, score}]}` z jednoduchých brán aj formát Voyage `{data: [...]}` sa klientovi
+> vrátia ako `{results: [{index, relevance_score, document?}]}`, zoradené podľa skóre a obmedzené
+> hodnotou `top_n`.
 
-> **Vyhľadávanie modelov v uzloch poskytovateľov:** modely v uzle poskytovateľa kompatibilného s OpenAI sa zobrazujú v `GET /v1/models`
+> **Zisťovanie uzlov poskytovateľa:** modely v uzle poskytovateľa kompatibilnom s OpenAI sa zobrazujú v `GET /v1/models`
 > pod prefixom uzla. Riadky, ktoré neobsahujú metadáta koncového bodu (typické pre lokálne výpisy `/v1/models`),
-> zdedia `apiType` uzla, takže modely uzla `embeddings` majú `type: "embedding"` a modely
-> uzla `rerank` majú `type: "rerank"` namiesto predvoleného typu chatu; explicitné
-> `supportedEndpoints` v synchronizovanom alebo manuálne pridanom riadku má naďalej prednosť.
+> dedia `apiType` uzla, takže modely uzla `embeddings` majú `type: "embedding"` a modely
+> uzla `rerank` majú `type: "rerank"` namiesto predvoleného chatu; explicitné
+> `supportedEndpoints` v synchronizovanom alebo manuálne pridanom riadku má stále prednosť.
 
 ### Vyhradené trasy poskytovateľa
 
@@ -547,7 +553,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-Ak prefix poskytovateľa chýba, pridá sa automaticky. Nezhodujúce sa modely vrátia `400`.
+Ak prefix poskytovateľa chýba, pridá sa automaticky. Nezhodné modely vrátia `400`.
 
 ---
 

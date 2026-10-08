@@ -452,14 +452,14 @@ Bifrost, CLIProxyAPI மற்றும் எதிர்கால sidecar rout
 | POST | `/v1/responses`                           | OpenAI Responses                                    |
 | POST | `/v1/embeddings`                          | OpenAI                                              |
 | POST | `/v1/images/generations`                  | OpenAI Images                                       |
-| POST | `/v1/images/edits`                        | OpenAI Images (திருத்தம்/inpaint)                   |
+| POST | `/v1/images/edits`                        | OpenAI Images (திருத்தம்/உள்நிரப்பல்)               |
 | POST | `/v1/videos/generations`                  | OpenAI-பாணி காணொளி உருவாக்கம்                       |
 | POST | `/v1/music/generations`                   | OpenAI-பாணி இசை உருவாக்கம்                          |
 | POST | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                                  |
-| POST | `/v1/audio/speech`                        | OpenAI TTS (ஆடியோ உடற்பகுதியைத் திருப்பியளிக்கும்)  |
+| POST | `/v1/audio/speech`                        | OpenAI TTS (ஒலி உள்ளடக்கத்தை வழங்கும்)              |
 | POST | `/v1/rerank`                              | Cohere/Voyage-பாணி மறுதரவரிசைப்படுத்தல்             |
 | POST | `/v1/classify`                            | Jina வகைப்படுத்தல் (`api.jina.ai`)                  |
-| POST | `/v1/segment`                             | Jina பிரிப்பான் (`segment.jina.ai`)                 |
+| POST | `/v1/segment`                             | Jina பகுப்பி (`segment.jina.ai`)                    |
 | POST | `/v1/moderations`                         | OpenAI Moderations                                  |
 | GET  | `/v1/models`                              | OpenAI                                              |
 | POST | `/v1/messages/count_tokens`               | Anthropic                                           |
@@ -473,63 +473,65 @@ Bifrost, CLIProxyAPI மற்றும் எதிர்கால sidecar rout
 | POST | `/api/v1/vscode/{token}/api/chat`         | Ollama டோக்கனாக்கப்பட்ட மாற்றுப்பெயர்               |
 | GET  | `/api/v1/vscode/{token}/api/tags`         | Ollama குறிச்சொற்கள் டோக்கனாக்கப்பட்ட மாற்றுப்பெயர் |
 
-அனைத்து POST வழித்தடங்களும் ஒரே வடிவமைப்பைப் பின்பற்றுகின்றன: `Bearer your-api-key` + Zod-ஆல் சரிபார்க்கப்பட்ட JSON உடற்பகுதி (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` போன்றவை; `src/shared/validation/schemas.ts`-ஐப் பார்க்கவும்). திட்டவடிவச் சரிபார்ப்பு தோல்வியடைந்தால் 4xx திருப்பியளிக்கப்படும்.
+அனைத்து POST வழித்தடங்களும் ஒரே அமைப்பைப் பின்பற்றுகின்றன: `Bearer your-api-key` + Zod மூலம் சரிபார்க்கப்பட்ட JSON உள்ளடக்கம் (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` போன்றவை; `src/shared/validation/schemas.ts`-ஐப் பார்க்கவும்). திட்டவடிவச் சரிபார்ப்பு தோல்வியடைந்தால் 4xx வழங்கப்படும்.
 
-`Authorization: Bearer ...`-ஐ இணைக்க முடியாத கிளையன்ட்களுக்காக, வினவல்-சர இணக்கத்தன்மை (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) அல்லது கீழே ஆவணப்படுத்தப்பட்டுள்ள பிரத்யேக `/api/v1/vscode/{token}/...` முனைப்புள்ளிகள் வழியாக URL-இல் API விசைகளையும் OmniRoute ஏற்கிறது.
+`Authorization: Bearer ...`-ஐ இணைக்க இயலாத கிளையன்ட்களுக்காக, வினவல்-சர இணக்கத்தன்மை (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) அல்லது கீழே ஆவணப்படுத்தப்பட்டுள்ள பிரத்யேக `/api/v1/vscode/{token}/...` முனைப்புள்ளிகள் வழியாக URL-இல் API விசைகளை OmniRoute ஏற்கிறது.
 
 ```bash
-# மறுதரவரிசைப்படுத்தல் (கிளவுட் பதிவக வழங்குநர், அல்லது "<prefix>/<model>" எனக் குறிப்பிடப்படும் OpenAI-இணக்க வழங்குநர் முனை)
+# மறுதரவரிசைப்படுத்தல் (கிளவுட் பதிவேடு வழங்குநர், அல்லது "<prefix>/<model>" வடிவிலான OpenAI-இணக்கமான வழங்குநர் முனை)
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
-# Jina வகைப்படுத்தல் (Foundation API நற்சான்றுகள்)
+# Jina வகைப்படுத்தல் (Foundation API சான்றுகள்)
 POST /v1/classify    { "model": "jina-embeddings-v5-text-small", "input": ["..."], "labels": ["a", "b"] }
 
-# Jina பிரிப்பான்
+# Jina பகுப்பி
 POST /v1/segment     { "content": "...", "return_chunks": true }
 
 # Jina தேடல் (s.jina.ai; வழங்குநர் மாற்றுப்பெயர்கள்: jina-search, jina-ai, jina)
 POST /v1/search      { "query": "...", "provider": "jina-search" }
 
-# உள்ளடக்கக் கண்காணிப்புகள்
+# உள்ளடக்க மதிப்பாய்வுகள்
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
-# TTS — audio/mpeg (அல்லது கோரப்பட்ட வடிவம்) உடற்பகுதியைத் திருப்பியளிக்கும்
+# TTS — audio/mpeg (அல்லது கோரப்பட்ட வடிவம்) உள்ளடக்கத்தை வழங்கும்
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS-க்கு ஒரு மொழியும் குரலும் தேவை: `language` இயல்பாக "en" ஆகும்; விடுபட்ட
-# குரல் அல்லது OpenAI-இன் இயல்புநிலை குரல் பெயர் (alloy, nova, …) "Adrian" ஆக மாறும்
+# Soniox TTS-க்கு ஒரு மொழியும் குரலும் தேவை: `language`-இன் இயல்புநிலை "en"; குரல்
+# விடுபட்டிருந்தாலோ அல்லது OpenAI-இன் இயல்பிருப்பு குரல் பெயராக (alloy, nova, …) இருந்தாலோ அது "Adrian" ஆகும்
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # படத் திருத்தம் (multipart)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# காணொளி / இசை உருவாக்கம் (வழங்குநர்-முன்னொட்டு கொண்ட மாதிரி ID)
+# காணொளி / இசை உருவாக்கம் (வழங்குநர்-முன்னொட்டு கொண்ட மாதிரி அடையாளம்)
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **மறுதரவரிசைப்படுத்தல் வழங்குநர் முனைகள்:** `POST /v1/rerank`, `<node-prefix>/<model>` எனக் குறிப்பிடப்படும்
-> OpenAI-இணக்க வழங்குநர் முனைகளுக்கும் (oMLX, vLLM, Infinity, நுழைவாயிலுக்குப் பின்னால் உள்ள TEI, …)
-> வழியமைக்கிறது. Loopback முனைகள் (`localhost`, `127.0.0.1`, `172.16.0.0/12`) எப்போதும் தகுதியுடையவை.
-> வேறு எந்த ஹோஸ்ட்டிலும் உள்ள முனைகள் — LAN சாதனம் அல்லது Tailscale பீர் — இயக்குநர்
-> `RERANK_REMOTE_PROVIDER_NODES` அம்சக் கொடியைச் செயல்படுத்தியிருந்தால் **மற்றும்** முனையின் அடிப்படை URL,
-> வழங்குநரின் வெளிச்செல்லும் URL கொள்கையை (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`)
-> பூர்த்திசெய்தால் மட்டுமே தகுதியுடையவை. நினைவக இயந்திரத்தின் மறுதரவரிசைப்படுத்தல் படிநிலை இந்த வழித்தடத்தை
-> loopback வழியாக அழைக்கிறது; எனவே நினைவக அமைப்புகளிலுள்ள `rerankProviderModel`-ஐயும் இதே விதி கட்டுப்படுத்துகிறது.
+> **மறுதரவரிசைப்படுத்தல் வழங்குநர் முனைகள்:** `POST /v1/rerank`, `<node-prefix>/<model>` எனக் குறிப்பிடப்படும் OpenAI-இணக்கமான வழங்குநர் முனைகளுக்கும்
+> (oMLX, vLLM, Infinity, நுழைவாயிலுக்குப் பின்னால் உள்ள TEI, …) வழிநடத்துகிறது. பின்னூட்டு
+> முனைகள் (`localhost`, `127.0.0.1`, `172.16.0.0/12`) எப்போதும் தகுதியுடையவை; மேலும் இயக்குநர்
+> `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS`-இல் பட்டியலிடும் புரவலன்பெயர்களும் தகுதியுடையவை (எ.கா., `http://reranker:8080/v1` போன்ற
+> Docker/Compose சேவைப் பெயர்; இவை `HTTP(S)_PROXY` அல்லது ஓர் இணைப்பின் நிலைநிறுத்தப்பட்ட பதிலாள் வழியாகச் செல்லாமல்,
+> எப்போதும் நேரடியாக அழைக்கப்படுகின்றன). வேறு எந்தப் புரவலனிலுள்ள
+> முனைகளும் — LAN கணினி அல்லது Tailscale இணை முனை — இயக்குநர்
+> `RERANK_REMOTE_PROVIDER_NODES` அம்சக் கொடியைச் செயல்படுத்தி **மேலும்** முனையின் அடிப்படை URL வழங்குநரின்
+> வெளிச்செல்லும் URL கொள்கையை (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`) பூர்த்தி செய்தால் மட்டுமே தகுதியுடையவை.
+> நினைவக எஞ்சினின் மறுதரவரிசைப்படுத்தல் படிநிலை, பின்னூட்டு வழியாக இந்த வழித்தடத்தை
+> அழைப்பதால், நினைவக அமைப்புகளிலுள்ள `rerankProviderModel`-ஐயும் இதே விதி நிர்வகிக்கிறது.
 >
-> **உள்ளூர் சேவையக வடிவங்கள்:** முனை `<base>/v1/rerank`-இல் அழைக்கப்படும்; 404 ஏற்பட்டால்,
-> `<base>/rerank`-இல் (Infinity, TEI) அழைக்கப்படும். மேல்நிலை உடற்பகுதி Cohere/OpenAI எழுத்துமுறையையும்
-> (`documents`, `return_documents`), TEI எழுத்துமுறையையும் (`texts`, `return_text`) கொண்டிருக்கும்;
-> மேல்நிலைப் பதில் Cohere உறைக்கு இயல்பாக்கப்படும்: TEI-இன் வெற்று `[{index, score, text}]`,
-> இலகுரக நுழைவாயில்களிலிருந்து வரும் `{results: [{index, score}]}`, மற்றும் Voyage-பாணி `{data: [...]}`
-> ஆகிய அனைத்தும் மதிப்பெண்ணின் அடிப்படையில் வரிசைப்படுத்தப்பட்டு `top_n` அளவில் வரம்பிடப்பட்ட
-> `{results: [{index, relevance_score, document?}]}` ஆக கிளையன்ட்டுக்குத் திரும்பும்.
+> **உள்ளூர் சேவையக அமைப்புகள்:** முனை முதலில் `<base>/v1/rerank`-இலும், 404 ஏற்பட்டால் `<base>/rerank`-இலும்
+> (Infinity, TEI) அழைக்கப்படும். மேல்நிலை உள்ளடக்கம் Cohere/OpenAI எழுத்துமுறையையும் (`documents`,
+> `return_documents`) TEI எழுத்துமுறையையும் (`texts`, `return_text`) கொண்டிருக்கும்; மேல்நிலைப் பதில்
+> Cohere உறைக்குத் தரப்படுத்தப்படும்: TEI-இன் வெற்று `[{index, score, text}]`, மெல்லிய நுழைவாயில்களிலிருந்து வரும் `{results: [{index, score}]}`
+> மற்றும் Voyage-பாணி `{data: [...]}` ஆகிய அனைத்தும் கிளையன்டுக்கு
+> `{results: [{index, relevance_score, document?}]}` என்ற வடிவில் திருப்பி அனுப்பப்படும்; மதிப்பெண் அடிப்படையில் வரிசைப்படுத்தப்பட்டு `top_n` அளவிற்குக் கட்டுப்படுத்தப்படும்.
 
-> **வழங்குநர்-கணு கண்டறிதல்:** OpenAI-இணக்கமான வழங்குநர் கணுவிலுள்ள மாதிரிகள், கணு முன்னொட்டின் கீழ் `GET /v1/models`-இல் தோன்றும்.
-> இறுதிப்புள்ளி மெட்டாடேட்டா இல்லாத வரிசைகள் (பொதுவாக உள்ளக `/v1/models` பட்டியல்களில் காணப்படுபவை)
-> கணுவின் `apiType`-ஐப் பெறுகின்றன; எனவே இயல்பாக அரட்டையாகக் கருதப்படுவதற்குப் பதிலாக, `embeddings` கணுவின் மாதிரிகள் `type: "embedding"` ஆகவும்,
-> `rerank` கணுவின் மாதிரிகள் `type: "rerank"` ஆகவும் இருக்கும்; ஒத்திசைக்கப்பட்ட அல்லது கைமுறையாகச் சேர்க்கப்பட்ட வரிசையில் வெளிப்படையாகக் குறிப்பிடப்பட்ட
-> `supportedEndpoints` தொடர்ந்து முன்னுரிமை பெறும்.
+> **வழங்குநர்-முனை கண்டறிதல்:** OpenAI-இணக்கமான வழங்குநர் முனையில் உள்ள மாதிரிகள் `GET /v1/models`
+> என்பதில் முனையின் முன்னொட்டின் கீழ் தோன்றும். இறுதிப்புள்ளி மெட்டாடேட்டா இல்லாத வரிசைகள் (உள்ளக `/v1/models` பட்டியல்களுக்கு இது வழக்கமானது)
+> முனையின் `apiType`-ஐப் பெறுகின்றன; எனவே இயல்பாக அரட்டைக்கு அமைவதற்குப் பதிலாக, `embeddings` முனையின் மாதிரிகள் `type: "embedding"` ஆகவும்,
+> `rerank` முனையின் மாதிரிகள் `type: "rerank"` ஆகவும் இருக்கும்; ஒத்திசைக்கப்பட்ட அல்லது கைமுறையாகச் சேர்க்கப்பட்ட வரிசையில் வெளிப்படையாகக் குறிப்பிடப்பட்ட
+> `supportedEndpoints` இன்னும் முன்னுரிமை பெறும்.
 
 ### பிரத்யேக வழங்குநர் வழித்தடங்கள்
 
@@ -539,7 +541,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-வழங்குநர் முன்னொட்டு இல்லையெனில், அது தானாகச் சேர்க்கப்படும். பொருந்தாத மாதிரிகள் `400`-ஐ வழங்கும்.
+வழங்குநர் முன்னொட்டு இல்லாவிட்டால் அது தானாகச் சேர்க்கப்படும். பொருந்தாத மாதிரிகள் `400`-ஐத் திருப்பியளிக்கும்.
 
 ---
 

@@ -446,90 +446,93 @@ Bifrost, CLIProxyAPI, ഭാവിയിലെ sidecar റൗട്ടറുക�
 
 ## അനുയോജ്യതാ എൻഡ്പോയിന്റുകൾ
 
-| രീതി | പാത                                       | ഫോർമാറ്റ്                            |
-| ---- | ----------------------------------------- | ------------------------------------ |
-| POST | `/v1/chat/completions`                    | OpenAI                               |
-| POST | `/v1/messages`                            | Anthropic                            |
-| POST | `/v1/responses`                           | OpenAI Responses                     |
-| POST | `/v1/embeddings`                          | OpenAI                               |
-| POST | `/v1/images/generations`                  | OpenAI Images                        |
-| POST | `/v1/images/edits`                        | OpenAI Images (എഡിറ്റ്/ഇൻപെയിന്റ്)   |
-| POST | `/v1/videos/generations`                  | OpenAI-ശൈലിയിലുള്ള വീഡിയോ ജനറേഷൻ     |
-| POST | `/v1/music/generations`                   | OpenAI-ശൈലിയിലുള്ള സംഗീത ജനറേഷൻ      |
-| POST | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                   |
-| POST | `/v1/audio/speech`                        | OpenAI TTS (ഓഡിയോ ബോഡി നൽകുന്നു)     |
-| POST | `/v1/rerank`                              | Cohere/Voyage-ശൈലിയിലുള്ള റീറാങ്ക്   |
-| POST | `/v1/classify`                            | Jina ക്ലാസിഫൈ (`api.jina.ai`)        |
-| POST | `/v1/segment`                             | Jina സെഗ്മെന്റർ (`segment.jina.ai`)  |
-| POST | `/v1/moderations`                         | OpenAI Moderations                   |
-| GET  | `/v1/models`                              | OpenAI                               |
-| POST | `/v1/messages/count_tokens`               | Anthropic                            |
-| GET  | `/v1beta/models`                          | Gemini                               |
-| POST | `/v1beta/models/{...path}`                | Gemini generateContent               |
-| POST | `/v1/api/chat`                            | Ollama                               |
-| GET  | `/api/v1/vscode/{token}/`                 | OpenAI കാറ്റലോഗ് അപരനാമം             |
-| GET  | `/api/v1/vscode/{token}/models`           | OpenAI മോഡൽ അപരനാമം                  |
-| POST | `/api/v1/vscode/{token}/chat/completions` | OpenAI ടോക്കണൈസ്ഡ് അപരനാമം           |
-| POST | `/api/v1/vscode/{token}/responses`        | OpenAI Responses ടോക്കണൈസ്ഡ് അപരനാമം |
-| POST | `/api/v1/vscode/{token}/api/chat`         | Ollama ടോക്കണൈസ്ഡ് അപരനാമം           |
-| GET  | `/api/v1/vscode/{token}/api/tags`         | Ollama ടാഗുകളുടെ ടോക്കണൈസ്ഡ് അപരനാമം |
+| രീതി | പാത                                       | ഫോർമാറ്റ്                              |
+| ---- | ----------------------------------------- | -------------------------------------- |
+| POST | `/v1/chat/completions`                    | OpenAI                                 |
+| POST | `/v1/messages`                            | Anthropic                              |
+| POST | `/v1/responses`                           | OpenAI Responses                       |
+| POST | `/v1/embeddings`                          | OpenAI                                 |
+| POST | `/v1/images/generations`                  | OpenAI Images                          |
+| POST | `/v1/images/edits`                        | OpenAI Images (തിരുത്തൽ/inpaint)       |
+| POST | `/v1/videos/generations`                  | OpenAI-ശൈലിയിലുള്ള വീഡിയോ സൃഷ്ടിക്കൽ   |
+| POST | `/v1/music/generations`                   | OpenAI-ശൈലിയിലുള്ള സംഗീത സൃഷ്ടിക്കൽ    |
+| POST | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                     |
+| POST | `/v1/audio/speech`                        | OpenAI TTS (ഓഡിയോ ബോഡി മടക്കിനൽകുന്നു) |
+| POST | `/v1/rerank`                              | Cohere/Voyage-ശൈലിയിലുള്ള rerank       |
+| POST | `/v1/classify`                            | Jina classify (`api.jina.ai`)          |
+| POST | `/v1/segment`                             | Jina segmenter (`segment.jina.ai`)     |
+| POST | `/v1/moderations`                         | OpenAI Moderations                     |
+| GET  | `/v1/models`                              | OpenAI                                 |
+| POST | `/v1/messages/count_tokens`               | Anthropic                              |
+| GET  | `/v1beta/models`                          | Gemini                                 |
+| POST | `/v1beta/models/{...path}`                | Gemini generateContent                 |
+| POST | `/v1/api/chat`                            | Ollama                                 |
+| GET  | `/api/v1/vscode/{token}/`                 | OpenAI കാറ്റലോഗ് അപരനാമം               |
+| GET  | `/api/v1/vscode/{token}/models`           | OpenAI മോഡലുകളുടെ അപരനാമം              |
+| POST | `/api/v1/vscode/{token}/chat/completions` | OpenAI ടോക്കണൈസ്ഡ് അപരനാമം             |
+| POST | `/api/v1/vscode/{token}/responses`        | OpenAI Responses ടോക്കണൈസ്ഡ് അപരനാമം   |
+| POST | `/api/v1/vscode/{token}/api/chat`         | Ollama ടോക്കണൈസ്ഡ് അപരനാമം             |
+| GET  | `/api/v1/vscode/{token}/api/tags`         | Ollama tags ടോക്കണൈസ്ഡ് അപരനാമം        |
 
-എല്ലാ POST റൂട്ടുകളും ഒരേ ഘടന പിന്തുടരുന്നു: `Bearer your-api-key` + Zod സാധൂകരിച്ച JSON ബോഡി (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` മുതലായവ; `src/shared/validation/schemas.ts` കാണുക). സ്കീമ സാധൂകരണം പരാജയപ്പെട്ടാൽ 4xx നൽകപ്പെടും.
+എല്ലാ POST റൂട്ടുകളും ഒരേ ഘടന പിന്തുടരുന്നു: `Bearer your-api-key` + Zod സാധൂകരിച്ച JSON ബോഡി (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` മുതലായവ; `src/shared/validation/schemas.ts` കാണുക). സ്കീമ സാധൂകരണം പരാജയപ്പെട്ടാൽ 4xx മടക്കിനൽകും.
 
-`Authorization: Bearer ...` ചേർക്കാൻ കഴിയാത്ത ക്ലയന്റുകൾക്കായി, ക്വറി-സ്ട്രിംഗ് അനുയോജ്യത (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) വഴിയോ താഴെ രേഖപ്പെടുത്തിയിട്ടുള്ള സമർപ്പിത `/api/v1/vscode/{token}/...` എൻഡ്പോയിന്റുകൾ വഴിയോ URL-ൽ API കീകൾ OmniRoute സ്വീകരിക്കുന്നു.
+`Authorization: Bearer ...` ചേർക്കാൻ കഴിയാത്ത ക്ലയന്റുകൾക്കായി, query-string അനുയോജ്യത (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) വഴിയോ താഴെ രേഖപ്പെടുത്തിയിരിക്കുന്ന പ്രത്യേക `/api/v1/vscode/{token}/...` എൻഡ്പോയിന്റുകൾ വഴിയോ URL-ൽ API കീകൾ OmniRoute സ്വീകരിക്കുന്നു.
 
 ```bash
-# റീറാങ്ക് (ക്ലൗഡ് രജിസ്ട്രി പ്രൊവൈഡർ, അല്ലെങ്കിൽ "<prefix>/<model>" എന്ന രൂപത്തിലുള്ള OpenAI-അനുയോജ്യ പ്രൊവൈഡർ നോഡ്)
+# Rerank (ക്ലൗഡ് രജിസ്ട്രി പ്രൊവൈഡർ, അല്ലെങ്കിൽ "<prefix>/<model>" എന്ന രീതിയിലുള്ള OpenAI-അനുയോജ്യ പ്രൊവൈഡർ നോഡ്)
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
-# Jina ക്ലാസിഫൈ (Foundation API ക്രെഡൻഷ്യലുകൾ)
+# Jina classify (Foundation API ക്രെഡൻഷ്യലുകൾ)
 POST /v1/classify    { "model": "jina-embeddings-v5-text-small", "input": ["..."], "labels": ["a", "b"] }
 
-# Jina സെഗ്മെന്റർ
+# Jina segmenter
 POST /v1/segment     { "content": "...", "return_chunks": true }
 
-# Jina തിരയൽ (s.jina.ai; പ്രൊവൈഡർ അപരനാമങ്ങൾ: jina-search, jina-ai, jina)
+# Jina search (s.jina.ai; പ്രൊവൈഡർ അപരനാമങ്ങൾ: jina-search, jina-ai, jina)
 POST /v1/search      { "query": "...", "provider": "jina-search" }
 
-# മോഡറേഷനുകൾ
+# Moderations
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
-# TTS — audio/mpeg (അല്ലെങ്കിൽ അഭ്യർത്ഥിച്ച ഫോർമാറ്റ്) ബോഡി നൽകുന്നു
+# TTS — audio/mpeg (അല്ലെങ്കിൽ അഭ്യർത്ഥിച്ച ഫോർമാറ്റ്) ബോഡി മടക്കിനൽകുന്നു
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS-ന് ഒരു ഭാഷയും ശബ്ദവും ആവശ്യമാണ്: `language`-ന്റെ ഡിഫോൾട്ട് "en" ആണ്; നൽകിയിട്ടില്ലാത്ത
-# ശബ്ദമോ OpenAI സ്റ്റോക്ക് ശബ്ദനാമമോ (alloy, nova, …) "Adrian" ആയി മാറും
+# Soniox TTS-ന് ഒരു ഭാഷയും ഒരു ശബ്ദവും ആവശ്യമാണ്: `language`-ന്റെ സ്ഥിരസ്ഥിതി "en" ആണ്; ശബ്ദം നൽകിയിട്ടില്ലെങ്കിലോ
+# OpenAI-യുടെ സ്റ്റോക്ക് ശബ്ദനാമം (alloy, nova, …) നൽകിയാലോ അത് "Adrian" ആകുന്നു
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
-# ചിത്രം എഡിറ്റ് ചെയ്യൽ (multipart)
+# ചിത്രം തിരുത്തൽ (multipart)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# വീഡിയോ / സംഗീത ജനറേഷൻ (പ്രൊവൈഡർ-പ്രിഫിക്സ് ചെയ്ത മോഡൽ ID)
+# വീഡിയോ / സംഗീത സൃഷ്ടിക്കൽ (പ്രൊവൈഡർ-പ്രിഫിക്സുള്ള മോഡൽ ഐഡി)
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **റീറാങ്ക് പ്രൊവൈഡർ നോഡുകൾ:** `<node-prefix>/<model>` എന്ന രീതിയിൽ അഭിസംബോധന ചെയ്യുന്ന OpenAI-അനുയോജ്യ പ്രൊവൈഡർ നോഡുകളിലേക്കും
-> (oMLX, vLLM, Infinity, ഒരു ഗേറ്റ്വേയ്ക്കു പിന്നിലുള്ള TEI, …) `POST /v1/rerank` റൂട്ട് ചെയ്യുന്നു. ലൂപ്പ്ബാക്ക്
-> നോഡുകൾ (`localhost`, `127.0.0.1`, `172.16.0.0/12`) എല്ലായ്പ്പോഴും യോഗ്യമാണ്. മറ്റേതെങ്കിലും
-> ഹോസ്റ്റിലുള്ള നോഡുകൾ — ഒരു LAN ബോക്സോ Tailscale പിയറോ — ഓപ്പറേറ്റർ
-> `RERANK_REMOTE_PROVIDER_NODES` ഫീച്ചർ ഫ്ലാഗ് പ്രവർത്തനക്ഷമമാക്കുകയും നോഡിന്റെ ബേസ് URL പ്രൊവൈഡർ
-> ഔട്ട്ബൗണ്ട് URL നയം (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`) പാസാകുകയും ചെയ്യുമ്പോൾ മാത്രമേ യോഗ്യമാകൂ.
-> മെമ്മറി എൻജിന്റെ റീറാങ്ക് ഘട്ടം ലൂപ്പ്ബാക്ക് വഴി ഈ റൂട്ട് വിളിക്കുന്നു,
-> അതിനാൽ Memory ക്രമീകരണങ്ങളിലെ `rerankProviderModel`-നും ഇതേ നിയമം ബാധകമാണ്.
+> **Rerank പ്രൊവൈഡർ നോഡുകൾ:** `POST /v1/rerank`, `<node-prefix>/<model>` എന്ന രീതിയിൽ അഭിസംബോധന ചെയ്യുന്ന OpenAI-അനുയോജ്യ പ്രൊവൈഡർ നോഡുകളിലേക്കും
+> (oMLX, vLLM, Infinity, ഒരു ഗേറ്റ്വേയ്ക്ക് പിന്നിലുള്ള TEI, …) റൂട്ട് ചെയ്യുന്നു. Loopback
+> നോഡുകൾ (`localhost`, `127.0.0.1`, `172.16.0.0/12`) എല്ലായ്പ്പോഴും യോഗ്യമാണ്; കൂടാതെ
+> ഓപ്പറേറ്റർ `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS`-ൽ പട്ടികപ്പെടുത്തുന്ന ഹോസ്റ്റ്നാമങ്ങളും യോഗ്യമാണ് (ഉദാ. `http://reranker:8080/v1` പോലുള്ള
+> Docker/Compose സേവനനാമം; ഇവ നേരിട്ടാണ് വിളിക്കപ്പെടുന്നത്, ഒരിക്കലും `HTTP(S)_PROXY` വഴിയോ
+> ഒരു കണക്ഷന്റെ പിൻ ചെയ്ത പ്രോക്സി വഴിയോ അല്ല). മറ്റേതെങ്കിലും
+> ഹോസ്റ്റിലുള്ള നോഡുകൾ — ഒരു LAN ബോക്സ് അല്ലെങ്കിൽ Tailscale പിയർ — ഓപ്പറേറ്റർ
+> `RERANK_REMOTE_PROVIDER_NODES` ഫീച്ചർ ഫ്ലാഗ് പ്രവർത്തനക്ഷമമാക്കുകയും നോഡിന്റെ അടിസ്ഥാന URL പ്രൊവൈഡർ
+> ഔട്ട്ബൗണ്ട് URL നയം (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`) പാലിക്കുകയും ചെയ്യുമ്പോൾ മാത്രമേ യോഗ്യമാകൂ.
+> മെമ്മറി എൻജിന്റെ rerank ഘട്ടം loopback വഴി ഈ റൂട്ട് വിളിക്കുന്നതിനാൽ,
+> Memory ക്രമീകരണങ്ങളിലെ `rerankProviderModel`-നും ഇതേ നിയമം ബാധകമാണ്.
 >
-> **ലോക്കൽ സെർവർ ഘടനകൾ:** നോഡ് `<base>/v1/rerank`-ലും, 404 ലഭിക്കുമ്പോൾ `<base>/rerank`-ലും
-> (Infinity, TEI) വിളിക്കപ്പെടുന്നു. അപ്സ്ട്രീം ബോഡിയിൽ Cohere/OpenAI സ്പെല്ലിങ്ങും (`documents`,
-> `return_documents`) TEI സ്പെല്ലിങ്ങും (`texts`, `return_text`) ഉൾപ്പെടുന്നു; അപ്സ്ട്രീം പ്രതികരണം
-> Cohere എൻവലപ്പിലേക്ക് നോർമലൈസ് ചെയ്യപ്പെടുന്നു: TEI-യുടെ നേരിട്ടുള്ള `[{index, score, text}]`, ലളിതമായ
-> ഗേറ്റ്വേകളിൽ നിന്നുള്ള `{results: [{index, score}]}`, Voyage-ശൈലിയിലുള്ള `{data: [...]}` എന്നിവയെല്ലാം
-> `{results: [{index, relevance_score, document?}]}` എന്ന രൂപത്തിൽ ക്ലയന്റിലേക്ക് മടങ്ങിയെത്തുന്നു; സ്കോർ അനുസരിച്ച് ക്രമീകരിക്കുകയും `top_n`-ൽ പരിമിതപ്പെടുത്തുകയും ചെയ്യുന്നു.
+> **ലോക്കൽ സെർവർ ഘടനകൾ:** നോഡ് `<base>/v1/rerank`-ലും, 404 ലഭിച്ചാൽ `<base>/rerank`-ലും
+> (Infinity, TEI) വിളിക്കപ്പെടുന്നു. അപ്സ്ട്രീം ബോഡിയിൽ Cohere/OpenAI സ്പെല്ലിംഗും (`documents`,
+> `return_documents`) TEI സ്പെല്ലിംഗും (`texts`, `return_text`) ഉൾപ്പെടുന്നു; അപ്സ്ട്രീം പ്രതികരണം
+> Cohere എൻവലപ്പിലേക്ക് നോർമലൈസ് ചെയ്യപ്പെടുന്നു: TEI-യുടെ ലളിതമായ `[{index, score, text}]`, ലളിതമായ ഗേറ്റ്വേകളിൽ നിന്നുള്ള
+> `{results: [{index, score}]}`, Voyage-ശൈലിയിലുള്ള `{data: [...]}` എന്നിവയെല്ലാം ക്ലയന്റിലേക്ക്
+> `{results: [{index, relevance_score, document?}]}` എന്ന രൂപത്തിൽ, സ്കോർ അനുസരിച്ച് ക്രമീകരിച്ച് `top_n` പരിധിയിൽ മടക്കിനൽകുന്നു.
 
 > **പ്രൊവൈഡർ-നോഡ് കണ്ടെത്തൽ:** OpenAI-അനുയോജ്യമായ ഒരു പ്രൊവൈഡർ നോഡിലെ മോഡലുകൾ `GET /v1/models`-ൽ
-> നോഡ് പ്രിഫിക്സിന് കീഴിൽ ദൃശ്യമാകും. എൻഡ്പോയിന്റ് മെറ്റാഡാറ്റയില്ലാത്ത വരികൾ (ലോക്കൽ `/v1/models` ലിസ്റ്റിങ്ങുകളിൽ സാധാരണമായത്)
-> നോഡിന്റെ `apiType` പാരമ്പര്യമായി സ്വീകരിക്കുന്നു; അതിനാൽ ഒരു `embeddings` നോഡിലെ മോഡലുകൾക്ക് ഡിഫോൾട്ടായി ചാറ്റ് നൽകുന്നതിനുപകരം `type: "embedding"` ആയിരിക്കും, കൂടാതെ
-> ഒരു `rerank` നോഡിലെ മോഡലുകൾക്ക് `type: "rerank"` ആയിരിക്കും; സിങ്ക് ചെയ്തതോ നേരിട്ട് ചേർത്തതോ ആയ ഒരു വരിയിലെ വ്യക്തമായി നൽകിയ
-> `supportedEndpoints`-ന് തുടർന്നും മുൻഗണനയുണ്ടാകും.
+> നോഡ് പ്രിഫിക്സിന് കീഴിൽ ദൃശ്യമാകും. എൻഡ്പോയിന്റ് മെറ്റാഡാറ്റ ഇല്ലാത്ത വരികൾ (പ്രാദേശിക `/v1/models` ലിസ്റ്റിങ്ങുകളിൽ സാധാരണം)
+> നോഡിന്റെ `apiType` അവകാശമാക്കുന്നു; അതിനാൽ, ഡിഫോൾട്ടായി ചാറ്റ് ആയി കണക്കാക്കുന്നതിനുപകരം ഒരു `embeddings` നോഡിന്റെ മോഡലുകൾക്ക് `type: "embedding"` എന്നും
+> ഒരു `rerank` നോഡിന്റെ മോഡലുകൾക്ക് `type: "rerank"` എന്നും ആയിരിക്കും; സമന്വയിപ്പിച്ചതോ മാനുവലായി ചേർത്തതോ ആയ ഒരു വരിയിലെ വ്യക്തമായ
+> `supportedEndpoints`-ന് ഇപ്പോഴും മുൻഗണന ലഭിക്കും.
 
 ### സമർപ്പിത പ്രൊവൈഡർ റൂട്ടുകൾ
 
@@ -539,7 +542,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-പ്രൊവൈഡർ പ്രിഫിക്സ് ഇല്ലെങ്കിൽ അത് സ്വയമേവ ചേർക്കപ്പെടും. പൊരുത്തമില്ലാത്ത മോഡലുകൾ `400` തിരികെ നൽകും.
+പ്രൊവൈഡർ പ്രിഫിക്സ് ഇല്ലെങ്കിൽ അത് സ്വയമേവ ചേർക്കപ്പെടും. പൊരുത്തപ്പെടാത്ത മോഡലുകൾ `400` മടക്കിനൽകും.
 
 ---
 

@@ -453,7 +453,7 @@ Utilizați acest endpoint atunci când un sidecar rulează în afara procesului 
 | POST   | `/v1/images/generations`                  | OpenAI Images                           |
 | POST   | `/v1/images/edits`                        | OpenAI Images (editare/inpainting)      |
 | POST   | `/v1/videos/generations`                  | Generare video în stil OpenAI           |
-| POST   | `/v1/music/generations`                   | Generare muzicală în stil OpenAI        |
+| POST   | `/v1/music/generations`                   | Generare muzică în stil OpenAI          |
 | POST   | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                      |
 | POST   | `/v1/audio/speech`                        | OpenAI TTS (returnează corpul audio)    |
 | POST   | `/v1/rerank`                              | Rerank în stil Cohere/Voyage            |
@@ -472,15 +472,15 @@ Utilizați acest endpoint atunci când un sidecar rulează în afara procesului 
 | POST   | `/api/v1/vscode/{token}/api/chat`         | Alias Ollama cu token                   |
 | GET    | `/api/v1/vscode/{token}/api/tags`         | Alias pentru etichetele Ollama cu token |
 
-Toate rutele POST urmează aceeași structură: `Bearer your-api-key` + corp JSON validat cu Zod (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` etc.; consultați `src/shared/validation/schemas.ts`). La eșecul validării schemei este returnat un răspuns 4xx.
+Toate rutele POST urmează aceeași structură: `Bearer your-api-key` + corp JSON validat cu Zod (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` etc.; consultați `src/shared/validation/schemas.ts`). În cazul eșecului validării schemei este returnat un cod 4xx.
 
-Pentru clienții care nu pot atașa `Authorization: Bearer ...`, OmniRoute acceptă și chei API în URL, fie prin compatibilitate cu șirul de interogare (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`), fie prin endpointurile dedicate `/api/v1/vscode/{token}/...` documentate mai jos.
+Pentru clienții care nu pot atașa `Authorization: Bearer ...`, OmniRoute acceptă, de asemenea, chei API în URL, fie prin compatibilitatea cu șirul de interogare (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`), fie prin endpointurile dedicate `/api/v1/vscode/{token}/...`, documentate mai jos.
 
 ```bash
-# Rerank (furnizor din registrul cloud sau nod de furnizor compatibil OpenAI sub forma „<prefix>/<model>”)
+# Rerank (furnizor din registrul cloud sau un nod de furnizor compatibil OpenAI sub forma "<prefix>/<model>")
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
-# Clasificare Jina (date de autentificare pentru Foundation API)
+# Clasificare Jina (date de autentificare Foundation API)
 POST /v1/classify    { "model": "jina-embeddings-v5-text-small", "input": ["..."], "labels": ["a", "b"] }
 
 # Segmentator Jina
@@ -492,42 +492,48 @@ POST /v1/search      { "query": "...", "provider": "jina-search" }
 # Moderări
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
-# TTS — returnează corpul audio/mpeg (sau formatul solicitat)
+# TTS — returnează un corp audio/mpeg (sau în formatul solicitat)
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS necesită o limbă și o voce: valoarea implicită pentru `language` este „en”; o voce
-# lipsă sau un nume de voce standard OpenAI (alloy, nova, …) devine „Adrian”
+# Soniox TTS necesită o limbă și o voce: `language` are valoarea implicită "en"; o voce lipsă
+# sau un nume de voce standard OpenAI (alloy, nova, …) devine "Adrian"
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
-# Editare de imagine (multipart)
+# Editare imagine (multipart)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# Generare video/muzicală (ID de model prefixat cu furnizorul)
+# Generare video/muzică (ID de model prefixat cu furnizorul)
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **Noduri de furnizor pentru rerank:** `POST /v1/rerank` direcționează și către noduri de furnizor compatibile OpenAI
-> (oMLX, vLLM, Infinity, TEI în spatele unui gateway, …), adresate sub forma `<node-prefix>/<model>`. Nodurile
-> loopback (`localhost`, `127.0.0.1`, `172.16.0.0/12`) sunt întotdeauna eligibile. Nodurile de pe orice altă
-> gazdă — un dispozitiv din LAN sau un peer Tailscale — sunt eligibile numai atunci când operatorul activează
-> indicatorul de funcționalitate `RERANK_REMOTE_PROVIDER_NODES` **și** URL-ul de bază al nodului respectă politica
-> privind URL-urile de ieșire ale furnizorului (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
+> **Noduri de furnizor pentru rerank:** `POST /v1/rerank` direcționează, de asemenea, solicitările către noduri
+> de furnizor compatibile OpenAI (oMLX, vLLM, Infinity, TEI în spatele unui gateway, …), adresate
+> sub forma `<node-prefix>/<model>`. Nodurile loopback (`localhost`, `127.0.0.1`, `172.16.0.0/12`)
+> sunt întotdeauna eligibile, la fel ca numele de gazdă enumerate de operator în
+> `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` (de exemplu, numele unui serviciu Docker/Compose precum
+> `http://reranker:8080/v1`; acestea sunt apelate direct, niciodată prin `HTTP(S)_PROXY` sau prin
+> proxy-ul fixat al unei conexiuni). Nodurile de pe orice altă
+> gazdă — un dispozitiv din LAN sau un peer Tailscale — sunt eligibile numai atunci când operatorul
+> activează indicatorul de funcționalitate `RERANK_REMOTE_PROVIDER_NODES` **și** URL-ul de bază al
+> nodului respectă politica pentru URL-urile de ieșire ale furnizorului
+> (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
 > Etapa de rerank a motorului de memorie apelează această rută prin
-> loopback, astfel încât aceeași regulă guvernează `rerankProviderModel` în setările Memory.
+> loopback, astfel încât aceeași regulă se aplică pentru `rerankProviderModel` în setările Memory.
 >
-> **Structuri ale serverelor locale:** nodul este apelat la `<base>/v1/rerank` și, în cazul unui răspuns 404, la `<base>/rerank`
-> (Infinity, TEI). Corpul trimis în amonte include atât denumirile Cohere/OpenAI (`documents`,
-> `return_documents`), cât și denumirile TEI (`texts`, `return_text`), iar răspunsul din amonte este
-> normalizat la anvelopa Cohere: lista TEI simplă `[{index, score, text}]`, structura `{results: [{index, score}]}`
-> de la gateway-uri minimale și structura în stil Voyage `{data: [...]}` sunt toate returnate clientului sub forma
+> **Structurile serverelor locale:** nodul este apelat la `<base>/v1/rerank` și, în caz de 404, la
+> `<base>/rerank` (Infinity, TEI). Corpul trimis în amonte conține atât denumirile Cohere/OpenAI
+> (`documents`, `return_documents`), cât și denumirile TEI (`texts`, `return_text`), iar răspunsul
+> din amonte este normalizat la anvelopa Cohere: lista simplă TEI `[{index, score, text}]`,
+> `{results: [{index, score}]}` de la gateway-uri minimale și structura în stil Voyage
+> `{data: [...]}` sunt toate returnate clientului sub forma
 > `{results: [{index, relevance_score, document?}]}`, sortate după scor și limitate la `top_n`.
 
 > **Descoperirea nodurilor furnizorului:** modelele de pe un nod de furnizor compatibil cu OpenAI apar în `GET /v1/models`
 > sub prefixul nodului. Rândurile care nu conțin metadate despre endpoint (situație tipică pentru listările locale `/v1/models`)
 > moștenesc valoarea `apiType` a nodului, astfel încât modelele unui nod `embeddings` au `type: "embedding"`, iar
-> modelele unui nod `rerank` au `type: "rerank"`, în loc să folosească implicit tipul chat; o valoare explicită
-> `supportedEndpoints` dintr-un rând sincronizat sau adăugat manual are în continuare prioritate.
+> modelele unui nod `rerank` au `type: "rerank"`, în loc să folosească implicit tipul chat; o valoare `supportedEndpoints` explicită
+> într-un rând sincronizat sau adăugat manual are în continuare prioritate.
 
 ### Rute dedicate furnizorilor
 
@@ -537,7 +543,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-Prefixul furnizorului este adăugat automat dacă lipsește. Modelele care nu corespund returnează `400`.
+Prefixul furnizorului este adăugat automat dacă lipsește. Modelele necorespunzătoare returnează `400`.
 
 ---
 

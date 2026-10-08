@@ -470,18 +470,18 @@ Bifrost, CLIProxyAPI અને ભવિષ્યના sidecar routers દ્�
 | POST   | `/v1beta/models/{...path}`                | Gemini generateContent             |
 | POST   | `/v1/api/chat`                            | Ollama                             |
 | GET    | `/api/v1/vscode/{token}/`                 | OpenAI કૅટલૉગ ઉપનામ                |
-| GET    | `/api/v1/vscode/{token}/models`           | OpenAI મૉડલ્સનું ઉપનામ             |
-| POST   | `/api/v1/vscode/{token}/chat/completions` | OpenAI ટોકનયુક્ત ઉપનામ             |
-| POST   | `/api/v1/vscode/{token}/responses`        | OpenAI Responses ટોકનયુક્ત ઉપનામ   |
-| POST   | `/api/v1/vscode/{token}/api/chat`         | Ollama ટોકનયુક્ત ઉપનામ             |
-| GET    | `/api/v1/vscode/{token}/api/tags`         | Ollama ટૅગ્સનું ટોકનયુક્ત ઉપનામ    |
+| GET    | `/api/v1/vscode/{token}/models`           | OpenAI મૉડલ્સ ઉપનામ                |
+| POST   | `/api/v1/vscode/{token}/chat/completions` | OpenAI ટોકનાઇઝ્ડ ઉપનામ             |
+| POST   | `/api/v1/vscode/{token}/responses`        | OpenAI Responses ટોકનાઇઝ્ડ ઉપનામ   |
+| POST   | `/api/v1/vscode/{token}/api/chat`         | Ollama ટોકનાઇઝ્ડ ઉપનામ             |
+| GET    | `/api/v1/vscode/{token}/api/tags`         | Ollama ટૅગ્સ ટોકનાઇઝ્ડ ઉપનામ       |
 
-બધા POST રૂટ્સ સમાન માળખાને અનુસરે છે: `Bearer your-api-key` + Zod-પ્રમાણિત JSON બૉડી (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, વગેરે, `src/shared/validation/schemas.ts` જુઓ). સ્કીમા નિષ્ફળ જાય ત્યારે 4xx પરત કરવામાં આવે છે.
+બધા POST રૂટ્સ સમાન માળખાનું અનુસરણ કરે છે: `Bearer your-api-key` + Zod-માન્ય JSON બૉડી (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, વગેરે, `src/shared/validation/schemas.ts` જુઓ). સ્કીમાની ચકાસણી નિષ્ફળ જાય તો 4xx પરત કરવામાં આવે છે.
 
-જે ક્લાયન્ટ્સ `Authorization: Bearer ...` જોડી શકતા નથી તેમના માટે, OmniRoute ક્વેરી-સ્ટ્રિંગ સુસંગતતા (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) અથવા નીચે દસ્તાવેજીકૃત સમર્પિત `/api/v1/vscode/{token}/...` એન્ડપોઇન્ટ્સ દ્વારા URLમાં API કીઝ પણ સ્વીકારે છે.
+જે ક્લાયન્ટ્સ `Authorization: Bearer ...` જોડી શકતા નથી, તેમના માટે OmniRoute ક્વેરી-સ્ટ્રિંગ સુસંગતતા (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) અથવા નીચે દસ્તાવેજીકૃત વિશિષ્ટ `/api/v1/vscode/{token}/...` એન્ડપોઇન્ટ્સ દ્વારા URLમાં API કીઝ પણ સ્વીકારે છે.
 
 ```bash
-# રીરૅન્ક (ક્લાઉડ રજિસ્ટ્રી પ્રદાતા, અથવા "<prefix>/<model>" તરીકે OpenAI-સુસંગત પ્રદાતા નોડ)
+# રીરૅન્ક (ક્લાઉડ રજિસ્ટ્રી પ્રદાતા અથવા "<prefix>/<model>" તરીકે OpenAI-સુસંગત પ્રદાતા નોડ)
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
 # Jina વર્ગીકરણ (Foundation API ઓળખપત્રો)
@@ -496,44 +496,47 @@ POST /v1/search      { "query": "...", "provider": "jina-search" }
 # મોડરેશન્સ
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
-# TTS — audio/mpeg (અથવા વિનંતી કરેલું ફોર્મેટ) બૉડી પરત કરે છે
+# TTS — audio/mpeg (અથવા વિનંતી કરાયેલ ફોર્મેટ) બૉડી પરત કરે છે
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS માટે ભાષા અને વૉઇસ જરૂરી છે: `language`નું ડિફૉલ્ટ "en" છે; ગેરહાજર
-# વૉઇસ અથવા OpenAIનું સ્ટૉક વૉઇસ નામ (alloy, nova, …) "Adrian" બની જાય છે
+# Soniox TTS માટે ભાષા અને અવાજ જરૂરી છે: `language`નું ડિફૉલ્ટ મૂલ્ય "en" છે; ગેરહાજર
+# અવાજ અથવા OpenAIનો સ્ટૉક અવાજ-નામ (alloy, nova, …) "Adrian" બની જાય છે
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
-# ઇમેજ સંપાદન (multipart)
+# છબી સંપાદન (multipart)
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# વિડિયો / સંગીત જનરેશન (પ્રદાતા-ઉપસર્ગયુક્ત મૉડલ ID)
+# વિડિયો / સંગીત જનરેશન (પ્રદાતા-ઉપસર્ગવાળું મૉડલ ID)
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **રીરૅન્ક પ્રદાતા નોડ્સ:** `POST /v1/rerank` `<node-prefix>/<model>` તરીકે સંબોધિત OpenAI-સુસંગત પ્રદાતા નોડ્સ
-> (ગેટવે પાછળ oMLX, vLLM, Infinity, TEI, …) તરફ પણ રૂટ કરે છે. લૂપબૅક
-> નોડ્સ (`localhost`, `127.0.0.1`, `172.16.0.0/12`) હંમેશાં પાત્ર હોય છે. અન્ય કોઈપણ
-> હોસ્ટ પરના નોડ્સ — LAN બૉક્સ અથવા Tailscale પીઅર — માત્ર ત્યારે જ પાત્ર હોય છે જ્યારે ઑપરેટર
-> `RERANK_REMOTE_PROVIDER_NODES` ફીચર ફ્લૅગ સક્ષમ કરે **અને** નોડનું બેઝ URL પ્રદાતાની
-> આઉટબાઉન્ડ URL નીતિ (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`) પસાર કરે.
+> **રીરૅન્ક પ્રદાતા નોડ્સ:** `POST /v1/rerank` OpenAI-સુસંગત પ્રદાતા નોડ્સ તરફ પણ રૂટ કરે છે
+> (oMLX, vLLM, Infinity, ગેટવે પાછળનું TEI, …), જેમને `<node-prefix>/<model>` તરીકે સંબોધવામાં આવે છે. લૂપબૅક
+> નોડ્સ (`localhost`, `127.0.0.1`, `172.16.0.0/12`) હંમેશાં પાત્ર હોય છે અને ઑપરેટર દ્વારા
+> `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS`માં સૂચિબદ્ધ હોસ્ટનેમ્સ પણ પાત્ર હોય છે (દા.ત. Docker/Compose સેવા નામ
+> જેમ કે `http://reranker:8080/v1`; તેમને હંમેશાં સીધા કૉલ કરવામાં આવે છે, ક્યારેય `HTTP(S)_PROXY` અથવા
+> કનેક્શનના પિન કરેલા પ્રૉક્સી મારફતે નહીં). અન્ય કોઈપણ
+> હોસ્ટ પરના નોડ્સ — LAN બૉક્સ અથવા Tailscale પીઅર — ફક્ત ત્યારે જ પાત્ર હોય છે જ્યારે ઑપરેટર
+> `RERANK_REMOTE_PROVIDER_NODES` ફીચર ફ્લૅગ સક્ષમ કરે **અને** નોડનો બેઝ URL પ્રદાતાની
+> આઉટબાઉન્ડ URL નીતિ (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`)માંથી પસાર થાય.
 > મેમરી એન્જિનનું રીરૅન્ક પગલું આ રૂટને
-> લૂપબૅક મારફતે કૉલ કરે છે, તેથી મેમરી સેટિંગ્સમાં `rerankProviderModel`ને પણ સમાન નિયમ લાગુ પડે છે.
+> લૂપબૅક મારફતે કૉલ કરે છે, તેથી આ જ નિયમ Memory સેટિંગ્સમાં `rerankProviderModel`ને નિયંત્રિત કરે છે.
 >
 > **સ્થાનિક સર્વરનાં માળખાં:** નોડને `<base>/v1/rerank` પર અને 404 મળ્યે `<base>/rerank`
 > (Infinity, TEI) પર કૉલ કરવામાં આવે છે. અપસ્ટ્રીમ બૉડી Cohere/OpenAI સ્પેલિંગ (`documents`,
-> `return_documents`) અને TEI સ્પેલિંગ (`texts`, `return_text`) બંને ધરાવે છે, અને અપસ્ટ્રીમ પ્રતિસાદને
+> `return_documents`) અને TEI સ્પેલિંગ (`texts`, `return_text`) બંને વહન કરે છે, અને અપસ્ટ્રીમ પ્રતિસાદને
 > Cohere એન્વલપમાં સામાન્યકૃત કરવામાં આવે છે: TEIનું બેર `[{index, score, text}]`, પાતળા ગેટવેમાંથી
-> `{results: [{index, score}]}`, અને Voyage-શૈલીનું `{data: [...]}`—બધું ક્લાયન્ટને
-> `{results: [{index, relevance_score, document?}]}` તરીકે પરત મળે છે, સ્કોર અનુસાર ગોઠવાયેલું અને `top_n` સુધી મર્યાદિત હોય છે.
+> `{results: [{index, score}]}` અને Voyage-શૈલીનું `{data: [...]}` — આ બધું ક્લાયન્ટને
+> `{results: [{index, relevance_score, document?}]}` તરીકે પરત મળે છે, સ્કોર પ્રમાણે ગોઠવાયેલું અને `top_n` સુધી મર્યાદિત.
 
-> **પ્રોવાઇડર-નોડ શોધ:** OpenAI-સુસંગત પ્રોવાઇડર નોડ પરના મોડલ્સ `GET /v1/models`માં
-> નોડ પ્રિફિક્સ હેઠળ દેખાય છે. કોઈ એન્ડપોઇન્ટ મેટાડેટા વિનાની પંક્તિઓ (સ્થાનિક `/v1/models` સૂચિઓ માટે સામાન્ય)
-> નોડનું `apiType` વારસામાં મેળવે છે, તેથી `embeddings` નોડના મોડલ્સ ચેટને ડિફૉલ્ટ થવાને બદલે `type: "embedding"` અને
-> `rerank` નોડના મોડલ્સ `type: "rerank"` હોય છે; સિંક કરેલી અથવા મેન્યુઅલી ઉમેરેલી પંક્તિ પર સ્પષ્ટ
-> `supportedEndpoints`ને હજી પણ પ્રાધાન્ય મળે છે.
+> **પ્રદાતા-નોડ શોધ:** OpenAI-સુસંગત પ્રદાતા નોડ પરનાં મોડેલો `GET /v1/models`માં
+> નોડ પ્રીફિક્સ હેઠળ દેખાય છે. જે પંક્તિઓમાં કોઈ એન્ડપોઇન્ટ મેટાડેટા નથી (સ્થાનિક `/v1/models` સૂચિઓ માટે સામાન્ય)
+> તે નોડનું `apiType` વારસામાં મેળવે છે, તેથી `embeddings` નોડના મોડેલો ડિફૉલ્ટ રૂપે ચેટ પ્રકારના થવાને બદલે `type: "embedding"` હોય છે અને
+> `rerank` નોડના મોડેલો `type: "rerank"` હોય છે; સિંક કરેલી અથવા મેન્યુઅલી ઉમેરેલી પંક્તિ પર સ્પષ્ટ રીતે આપેલું
+> `supportedEndpoints` હજી પણ પ્રાધાન્ય ધરાવે છે.
 
-### સમર્પિત પ્રોવાઇડર રૂટ્સ
+### સમર્પિત પ્રદાતા રૂટ્સ
 
 ```bash
 POST /v1/providers/{provider}/chat/completions
@@ -541,7 +544,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-જો પ્રોવાઇડર પ્રિફિક્સ ન હોય, તો તે આપમેળે ઉમેરાય છે. મેળ ન ખાતા મોડલ્સ `400` પરત કરે છે.
+પ્રદાતા પ્રીફિક્સ ન હોય તો તે આપમેળે ઉમેરવામાં આવે છે. મેળ ન ખાતા મોડેલો `400` પરત કરે છે.
 
 ---
 

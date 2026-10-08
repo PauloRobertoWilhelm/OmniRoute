@@ -426,39 +426,39 @@ Bifrost、CLIProxyAPI、および将来のサイドカールーターで使用�
 
 ---
 
-## 互換エンドポイント
+## 互換性エンドポイント
 
-| メソッド | パス                                      | 形式                                   |
-| -------- | ----------------------------------------- | -------------------------------------- |
-| POST     | `/v1/chat/completions`                    | OpenAI                                 |
-| POST     | `/v1/messages`                            | Anthropic                              |
-| POST     | `/v1/responses`                           | OpenAI Responses                       |
-| POST     | `/v1/embeddings`                          | OpenAI                                 |
-| POST     | `/v1/images/generations`                  | OpenAI Images                          |
-| POST     | `/v1/images/edits`                        | OpenAI Images（編集／インペイント）    |
-| POST     | `/v1/videos/generations`                  | OpenAI形式の動画生成                   |
-| POST     | `/v1/music/generations`                   | OpenAI形式の音楽生成                   |
-| POST     | `/v1/audio/transcriptions`                | OpenAI Audio（STT）                    |
-| POST     | `/v1/audio/speech`                        | OpenAI TTS（音声ボディを返す）         |
-| POST     | `/v1/rerank`                              | Cohere/Voyage形式のリランキング        |
-| POST     | `/v1/classify`                            | Jina分類（`api.jina.ai`）              |
-| POST     | `/v1/segment`                             | Jinaセグメンター（`segment.jina.ai`）  |
-| POST     | `/v1/moderations`                         | OpenAI Moderations                     |
-| GET      | `/v1/models`                              | OpenAI                                 |
-| POST     | `/v1/messages/count_tokens`               | Anthropic                              |
-| GET      | `/v1beta/models`                          | Gemini                                 |
-| POST     | `/v1beta/models/{...path}`                | Gemini generateContent                 |
-| POST     | `/v1/api/chat`                            | Ollama                                 |
-| GET      | `/api/v1/vscode/{token}/`                 | OpenAIカタログエイリアス               |
-| GET      | `/api/v1/vscode/{token}/models`           | OpenAIモデルエイリアス                 |
-| POST     | `/api/v1/vscode/{token}/chat/completions` | OpenAIトークン付きエイリアス           |
-| POST     | `/api/v1/vscode/{token}/responses`        | OpenAI Responsesトークン付きエイリアス |
-| POST     | `/api/v1/vscode/{token}/api/chat`         | Ollamaトークン付きエイリアス           |
-| GET      | `/api/v1/vscode/{token}/api/tags`         | Ollamaタグのトークン付きエイリアス     |
+| メソッド | パス                                      | 形式                                     |
+| -------- | ----------------------------------------- | ---------------------------------------- |
+| POST     | `/v1/chat/completions`                    | OpenAI                                   |
+| POST     | `/v1/messages`                            | Anthropic                                |
+| POST     | `/v1/responses`                           | OpenAI Responses                         |
+| POST     | `/v1/embeddings`                          | OpenAI                                   |
+| POST     | `/v1/images/generations`                  | OpenAI Images                            |
+| POST     | `/v1/images/edits`                        | OpenAI Images（編集/インペイント）       |
+| POST     | `/v1/videos/generations`                  | OpenAI形式の動画生成                     |
+| POST     | `/v1/music/generations`                   | OpenAI形式の音楽生成                     |
+| POST     | `/v1/audio/transcriptions`                | OpenAI Audio（STT）                      |
+| POST     | `/v1/audio/speech`                        | OpenAI TTS（音声本体を返す）             |
+| POST     | `/v1/rerank`                              | Cohere/Voyage形式のリランキング          |
+| POST     | `/v1/classify`                            | Jina分類（`api.jina.ai`）                |
+| POST     | `/v1/segment`                             | Jinaセグメンター（`segment.jina.ai`）    |
+| POST     | `/v1/moderations`                         | OpenAI Moderations                       |
+| GET      | `/v1/models`                              | OpenAI                                   |
+| POST     | `/v1/messages/count_tokens`               | Anthropic                                |
+| GET      | `/v1beta/models`                          | Gemini                                   |
+| POST     | `/v1beta/models/{...path}`                | Gemini generateContent                   |
+| POST     | `/v1/api/chat`                            | Ollama                                   |
+| GET      | `/api/v1/vscode/{token}/`                 | OpenAIカタログのエイリアス               |
+| GET      | `/api/v1/vscode/{token}/models`           | OpenAIモデルのエイリアス                 |
+| POST     | `/api/v1/vscode/{token}/chat/completions` | OpenAIのトークン付きエイリアス           |
+| POST     | `/api/v1/vscode/{token}/responses`        | OpenAI Responsesのトークン付きエイリアス |
+| POST     | `/api/v1/vscode/{token}/api/chat`         | Ollamaのトークン付きエイリアス           |
+| GET      | `/api/v1/vscode/{token}/api/tags`         | Ollamaタグのトークン付きエイリアス       |
 
 すべてのPOSTルートは同じ形式に従います：`Bearer your-api-key` + Zodで検証されたJSONボディ（`v1RerankSchema`、`v1ModerationSchema`、`v1AudioSpeechSchema`など。`src/shared/validation/schemas.ts`を参照）。スキーマ検証に失敗した場合は4xxが返されます。
 
-`Authorization: Bearer ...`を付加できないクライアント向けに、OmniRouteでは、クエリ文字列による互換方式（`?token=...`、`?apiKey=...`、`?api_key=...`、`?key=...`）または以下で説明する専用の`/api/v1/vscode/{token}/...`エンドポイントを介して、URL内でAPIキーを指定することもできます。
+`Authorization: Bearer ...`を付加できないクライアント向けに、OmniRouteはクエリ文字列による互換方式（`?token=...`、`?apiKey=...`、`?api_key=...`、`?key=...`）または以下に記載する専用の`/api/v1/vscode/{token}/...`エンドポイントを介して、URL内のAPIキーも受け付けます。
 
 ```bash
 # リランキング（クラウドレジストリプロバイダー、または"<prefix>/<model>"形式のOpenAI互換プロバイダーノード）
@@ -470,7 +470,7 @@ POST /v1/classify    { "model": "jina-embeddings-v5-text-small", "input": ["..."
 # Jinaセグメンター
 POST /v1/segment     { "content": "...", "return_chunks": true }
 
-# Jina検索（s.jina.ai、プロバイダーエイリアス：jina-search、jina-ai、jina）
+# Jina検索（s.jina.ai；プロバイダーエイリアス：jina-search、jina-ai、jina）
 POST /v1/search      { "query": "...", "provider": "jina-search" }
 
 # モデレーション
@@ -479,41 +479,45 @@ POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 # TTS — audio/mpeg（または指定された形式）のボディを返す
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTSには言語と音声が必要：`language`のデフォルトは"en"。音声が指定されていない場合、または
-# OpenAIの標準音声名（alloy、nova、…）が指定された場合は"Adrian"になる
+# Soniox TTSには言語と音声が必要：`language`のデフォルトは"en"；音声が指定されていない場合、または
+# OpenAIの標準音声名（alloy、nova、…）の場合は"Adrian"になる
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # 画像編集（multipart）
 POST /v1/images/edits  -F image=@input.png -F prompt="..." -F mask=@mask.png
 
-# 動画／音楽生成（プロバイダーのプレフィックス付きモデルID）
+# 動画/音楽生成（プロバイダープレフィックス付きモデルID）
 POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
 > **リランキングプロバイダーノード：** `POST /v1/rerank`は、`<node-prefix>/<model>`として指定されたOpenAI互換プロバイダーノード
-> （oMLX、vLLM、Infinity、ゲートウェイの背後にあるTEIなど）にもルーティングされます。ループバック
-> ノード（`localhost`、`127.0.0.1`、`172.16.0.0/12`）は常に使用可能です。それ以外の
+> （oMLX、vLLM、ゲートウェイ背後のInfinityやTEIなど）にもルーティングします。ループバック
+> ノード（`localhost`、`127.0.0.1`、`172.16.0.0/12`）は常に利用可能です。また、運用者が
+> `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS`に列挙したホスト名（たとえば
+> `http://reranker:8080/v1`のようなDocker/Composeサービス名）も利用可能です。これらは直接呼び出され、
+> `HTTP(S)_PROXY`や接続に固定されたプロキシを経由することはありません。それ以外の
 > ホスト上のノード（LAN内のマシンやTailscaleピア）は、運用者が
-> `RERANK_REMOTE_PROVIDER_NODES`機能フラグを有効にし、**かつ**ノードのベースURLがプロバイダーの
-> 送信先URLポリシー（`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`）を満たす場合にのみ使用できます。
-> メモリエンジンのリランキングステップは、ループバック経由でこのルートを呼び出すため、
-> Memory設定の`rerankProviderModel`にも同じルールが適用されます。
+> `RERANK_REMOTE_PROVIDER_NODES`機能フラグを有効にし、かつノードのベースURLがプロバイダーの
+> アウトバウンドURLポリシー（`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`）
+> を通過した場合にのみ利用できます。メモリエンジンのリランキングステップは、このルートを
+> ループバック経由で呼び出すため、Memory設定の`rerankProviderModel`にも同じルールが適用されます。
 >
 > **ローカルサーバーの形式：** ノードは`<base>/v1/rerank`で呼び出され、404の場合は`<base>/rerank`
-> （Infinity、TEI）で呼び出されます。アップストリームのボディには、Cohere/OpenAI形式（`documents`、
-> `return_documents`）とTEI形式（`texts`、`return_text`）の両方が含まれ、アップストリームのレスポンスは
-> Cohereエンベロープに正規化されます。TEIの単純な`[{index, score, text}]`、軽量ゲートウェイからの
-> `{results: [{index, score}]}`、Voyage形式の`{data: [...]}`は、いずれも
-> `{results: [{index, relevance_score, document?}]}`としてクライアントに返され、スコア順に並べ替えられ、`top_n`件に制限されます。
+> （Infinity、TEI）で呼び出されます。アップストリームのボディには、Cohere/OpenAI形式
+> （`documents`、`return_documents`）とTEI形式（`texts`、`return_text`）の両方が含まれます。
+> また、アップストリームのレスポンスはCohereエンベロープに正規化されます。TEIの素の
+> `[{index, score, text}]`、薄いゲートウェイからの`{results: [{index, score}]}`、
+> およびVoyage形式の`{data: [...]}`は、いずれも`{results: [{index, relevance_score, document?}]}`
+> としてクライアントに返され、スコア順に並べ替えられたうえで`top_n`件に制限されます。
 
-> **プロバイダーノードの検出:** OpenAI 互換プロバイダーノード上のモデルは、ノードのプレフィックス配下で `GET /v1/models`
-> に表示されます。エンドポイントのメタデータを持たない行（ローカルの `/v1/models` リストで一般的）は、
-> ノードの `apiType` を継承します。そのため、`embeddings` ノードのモデルは `type: "embedding"`、
-> `rerank` ノードのモデルは `type: "rerank"` となり、デフォルトでチャットにはなりません。一方、同期された行または手動で追加された行に明示的な
+> **プロバイダーノードの検出:** OpenAI 互換プロバイダーノード上のモデルは、ノードプレフィックス配下の `GET /v1/models`
+> に表示されます。エンドポイントのメタデータを持たない行（ローカルの `/v1/models` リストでは一般的）は、
+> ノードの `apiType` を継承します。そのため、デフォルトでチャットになるのではなく、`embeddings` ノードのモデルは `type: "embedding"`、
+> `rerank` ノードのモデルは `type: "rerank"` になります。同期された行または手動で追加された行に明示的な
 > `supportedEndpoints` がある場合は、引き続きそちらが優先されます。
 
-### 専用プロバイダールート
+### プロバイダー専用ルート
 
 ```bash
 POST /v1/providers/{provider}/chat/completions
@@ -521,7 +525,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-プロバイダーのプレフィックスがない場合は、自動的に追加されます。モデルが一致しない場合は `400` が返されます。
+プロバイダープレフィックスがない場合は自動的に追加されます。モデルが一致しない場合は `400` が返されます。
 
 ---
 
@@ -1184,7 +1188,7 @@ GET /api/telemetry/summary
 ## 予算
 
 ```bash
-# すべての API キーの予算状況を取得
+# すべてのAPIキーの予算状況を取得
 GET /api/usage/budget
 
 # 予算を設定または更新

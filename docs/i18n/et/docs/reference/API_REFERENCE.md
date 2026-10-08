@@ -447,7 +447,7 @@ Kasuta seda endpointi, kui sidecar töötab väliselt (out-of-process) ja ei saa
 
 ---
 
-## Ühilduvus-lõpp-punktid
+## Ühilduvuslõpp-punktid
 
 | Meetod | Tee                                       | Vorming                                 |
 | ------ | ----------------------------------------- | --------------------------------------- |
@@ -459,11 +459,11 @@ Kasuta seda endpointi, kui sidecar töötab väliselt (out-of-process) ja ei saa
 | POST   | `/v1/images/edits`                        | OpenAI Images (muutmine/täitmine)       |
 | POST   | `/v1/videos/generations`                  | OpenAI-laadne video genereerimine       |
 | POST   | `/v1/music/generations`                   | OpenAI-laadne muusika genereerimine     |
-| POST   | `/v1/audio/transcriptions`                | OpenAI Audio (STT)                      |
-| POST   | `/v1/audio/speech`                        | OpenAI TTS (tagastab heli sisu)         |
+| POST   | `/v1/audio/transcriptions`                | OpenAI Audio (kõnetuvastus)             |
+| POST   | `/v1/audio/speech`                        | OpenAI TTS (tagastab heli keha)         |
 | POST   | `/v1/rerank`                              | Cohere/Voyage-laadne ümberjärjestamine  |
 | POST   | `/v1/classify`                            | Jina klassifitseerimine (`api.jina.ai`) |
-| POST   | `/v1/segment`                             | Jina segmenteerija (`segment.jina.ai`)  |
+| POST   | `/v1/segment`                             | Jina segmentija (`segment.jina.ai`)     |
 | POST   | `/v1/moderations`                         | OpenAI Moderations                      |
 | GET    | `/v1/models`                              | OpenAI                                  |
 | POST   | `/v1/messages/count_tokens`               | Anthropic                               |
@@ -479,16 +479,16 @@ Kasuta seda endpointi, kui sidecar töötab väliselt (out-of-process) ja ei saa
 
 Kõik POST-marsruudid järgivad sama kuju: `Bearer your-api-key` + Zodiga valideeritud JSON-keha (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema` jne; vt `src/shared/validation/schemas.ts`). Skeemi valideerimise nurjumisel tagastatakse 4xx.
 
-Klientide jaoks, mis ei saa lisada päist `Authorization: Bearer ...`, aktsepteerib OmniRoute API-võtmeid URL-is ka kas päringustringi ühilduvuse kaudu (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) või allpool dokumenteeritud spetsiaalsete `/api/v1/vscode/{token}/...` lõpp-punktide kaudu.
+Klientide jaoks, mis ei saa lisada päist `Authorization: Bearer ...`, aktsepteerib OmniRoute API-võtmeid ka URL-is kas päringustringi ühilduvuse kaudu (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) või allpool dokumenteeritud spetsiaalsete `/api/v1/vscode/{token}/...` lõpp-punktide kaudu.
 
 ```bash
 # Ümberjärjestamine (pilveregistri pakkuja või OpenAI-ga ühilduv pakkujasõlm kujul "<prefix>/<model>")
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
-# Jina klassifitseerimine (Foundation API mandaadid)
+# Jina klassifitseerimine (Foundation API identimisteave)
 POST /v1/classify    { "model": "jina-embeddings-v5-text-small", "input": ["..."], "labels": ["a", "b"] }
 
-# Jina segmenteerija
+# Jina segmentija
 POST /v1/segment     { "content": "...", "return_chunks": true }
 
 # Jina otsing (s.jina.ai; pakkuja aliased: jina-search, jina-ai, jina)
@@ -497,11 +497,11 @@ POST /v1/search      { "query": "...", "provider": "jina-search" }
 # Modereerimine
 POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 
-# TTS — tagastab audio/mpeg-keha (või taotletud vormingu)
+# TTS — tagastab audio/mpeg-keha (või soovitud vormingus keha)
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
 # Soniox TTS nõuab keelt ja häält: `language` vaikeväärtus on "en"; puuduv
-# hääl või OpenAI standardne häälenimi (alloy, nova, …) asendatakse nimega "Adrian"
+# hääl või OpenAI standardse hääle nimi (alloy, nova, …) asendatakse nimega "Adrian"
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # Pildi muutmine (multipart)
@@ -514,27 +514,30 @@ POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 
 > **Ümberjärjestamise pakkujasõlmed:** `POST /v1/rerank` suunab päringuid ka OpenAI-ga ühilduvatesse pakkujasõlmedesse
 > (oMLX, vLLM, Infinity, TEI lüüsi taga, …), mille aadress on kujul `<node-prefix>/<model>`. Tagasisideahela
-> sõlmed (`localhost`, `127.0.0.1`, `172.16.0.0/12`) on alati sobilikud. Kõigil teistel
-> hostidel asuvad sõlmed — kohtvõrgu masin või Tailscale'i partner — on sobilikud ainult siis, kui operaator lubab
+> sõlmed (`localhost`, `127.0.0.1`, `172.16.0.0/12`) on alati lubatud, nagu ka hostinimed, mille
+> operaator loetleb muutujas `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` (nt Docker/Compose'i teenuse nimi,
+> nagu `http://reranker:8080/v1`; nendega luuakse ühendus otse, mitte kunagi `HTTP(S)_PROXY` ega
+> ühendusele kinnistatud puhverserveri kaudu). Mis tahes muul
+> hostil asuvad sõlmed — LAN-i masin või Tailscale'i partner — on lubatud ainult siis, kui operaator lubab
 > funktsioonilipu `RERANK_REMOTE_PROVIDER_NODES` **ja** sõlme baas-URL läbib pakkuja
-> väljaminevate URL-ide poliitika (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
-> Mälu mootori ümberjärjestamise samm kutsub seda marsruuti
-> tagasisideahela kaudu, seega kehtib sama reegel mälu seadetes olevale väärtusele `rerankProviderModel`.
+> väljamineva URL-i poliitika (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
+> Mälu mootori ümberjärjestamise etapp kutsub seda marsruuti
+> tagasisideahela kaudu, seega reguleerib sama reegel mälu seadetes olevat väärtust `rerankProviderModel`.
 >
-> **Kohaliku serveri kujud:** sõlme kutsutakse aadressil `<base>/v1/rerank` ja 404 korral aadressil `<base>/rerank`
-> (Infinity, TEI). Ülesvoolu päringu keha sisaldab nii Cohere'i/OpenAI kirjapilti (`documents`,
+> **Kohalike serverite kujud:** sõlme kutsutakse aadressil `<base>/v1/rerank` ja 404 korral aadressil `<base>/rerank`
+> (Infinity, TEI). Ülesvoolu keha sisaldab nii Cohere/OpenAI kirjapilti (`documents`,
 > `return_documents`) kui ka TEI kirjapilti (`texts`, `return_text`) ning ülesvoolu vastus
-> normaliseeritakse Cohere'i ümbrikuks: TEI töötlemata `[{index, score, text}]`, õhukeste lüüside
+> normaliseeritakse Cohere'i ümbrikuks: TEI tühi `[{index, score, text}]`, õhukeste lüüside
 > `{results: [{index, score}]}` ja Voyage'i-laadne `{data: [...]}` tagastatakse kõik kliendile kujul
 > `{results: [{index, relevance_score, document?}]}`, sordituna skoori järgi ja piiratud väärtusega `top_n`.
 
 > **Pakkujasõlme tuvastamine:** OpenAI-ga ühilduva pakkujasõlme mudelid kuvatakse päringus `GET /v1/models`
-> sõlme prefiksi all. Read, millel puuduvad lõpp-punkti metaandmed (tüüpiline kohalike `/v1/models` loendite puhul),
-> pärivad sõlme `apiType`-i, mistõttu on `embeddings`-sõlme mudelite `type: "embedding"` ja
-> `rerank`-sõlme mudelite `type: "rerank"`, selle asemel et vaikimisi kasutada vestlust; sünkroonitud või käsitsi lisatud rea
-> selgesõnaliselt määratud `supportedEndpoints` jääb endiselt ülimuslikuks.
+> sõlme prefiksi all. Ilma lõpp-punkti metaandmeteta read (tüüpiline kohalike `/v1/models` loendite puhul)
+> pärivad sõlme `apiType` väärtuse, mistõttu on `embeddings` sõlme mudelitel `type: "embedding"` ja
+> `rerank` sõlme mudelitel `type: "rerank"`, selle asemel et kasutada vaikimisi vestluse tüüpi; sünkroonitud või käsitsi lisatud rea
+> selgesõnaline `supportedEndpoints` on endiselt ülimuslik.
 
-### Pakkujapõhised marsruudid
+### Pakkuja spetsiaalsed marsruudid
 
 ```bash
 POST /v1/providers/{provider}/chat/completions
@@ -542,7 +545,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-Puuduv pakkuja prefiks lisatakse automaatselt. Sobimatud mudelid tagastavad vastuse `400`.
+Pakkuja prefiks lisatakse automaatselt, kui see puudub. Sobimatud mudelid tagastavad veakoodi `400`.
 
 ---
 

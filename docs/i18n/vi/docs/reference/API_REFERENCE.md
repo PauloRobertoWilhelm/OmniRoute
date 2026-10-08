@@ -446,7 +446,7 @@ Sử dụng endpoint này khi một sidecar chạy ngoài tiến trình và khô
 
 ---
 
-## Các endpoint tương thích
+## Điểm cuối tương thích
 
 | Phương thức | Đường dẫn                                 | Định dạng                                       |
 | ----------- | ----------------------------------------- | ----------------------------------------------- |
@@ -462,7 +462,7 @@ Sử dụng endpoint này khi một sidecar chạy ngoài tiến trình và khô
 | POST        | `/v1/audio/speech`                        | OpenAI TTS (trả về nội dung âm thanh)           |
 | POST        | `/v1/rerank`                              | Xếp hạng lại theo kiểu Cohere/Voyage            |
 | POST        | `/v1/classify`                            | Phân loại Jina (`api.jina.ai`)                  |
-| POST        | `/v1/segment`                             | Bộ phân đoạn Jina (`segment.jina.ai`)           |
+| POST        | `/v1/segment`                             | Trình phân đoạn Jina (`segment.jina.ai`)        |
 | POST        | `/v1/moderations`                         | OpenAI Moderations                              |
 | GET         | `/v1/models`                              | OpenAI                                          |
 | POST        | `/v1/messages/count_tokens`               | Anthropic                                       |
@@ -476,18 +476,18 @@ Sử dụng endpoint này khi một sidecar chạy ngoài tiến trình và khô
 | POST        | `/api/v1/vscode/{token}/api/chat`         | Bí danh Ollama được mã hóa bằng token           |
 | GET         | `/api/v1/vscode/{token}/api/tags`         | Bí danh thẻ Ollama được mã hóa bằng token       |
 
-Tất cả các tuyến POST đều tuân theo cùng một cấu trúc: `Bearer your-api-key` + nội dung JSON được Zod xác thực (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, v.v., xem `src/shared/validation/schemas.ts`). Mã 4xx được trả về khi xác thực lược đồ thất bại.
+Tất cả các tuyến POST đều tuân theo cùng một cấu trúc: `Bearer your-api-key` + phần thân JSON được Zod xác thực (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, v.v., xem `src/shared/validation/schemas.ts`). Mã 4xx được trả về khi xác thực lược đồ thất bại.
 
-Đối với các ứng dụng khách không thể đính kèm `Authorization: Bearer ...`, OmniRoute cũng chấp nhận khóa API trong URL thông qua khả năng tương thích chuỗi truy vấn (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) hoặc các endpoint chuyên dụng `/api/v1/vscode/{token}/...` được ghi lại bên dưới.
+Đối với các máy khách không thể đính kèm `Authorization: Bearer ...`, OmniRoute cũng chấp nhận khóa API trong URL thông qua khả năng tương thích chuỗi truy vấn (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) hoặc các điểm cuối chuyên dụng `/api/v1/vscode/{token}/...` được ghi lại bên dưới.
 
 ```bash
-# Xếp hạng lại (nhà cung cấp trong sổ đăng ký đám mây hoặc một nút nhà cung cấp tương thích với OpenAI dưới dạng "<prefix>/<model>")
+# Xếp hạng lại (nhà cung cấp trong sổ đăng ký đám mây hoặc một nút nhà cung cấp tương thích OpenAI dưới dạng "<prefix>/<model>")
 POST /v1/rerank      { "model": "jina-ai/jina-reranker-v3.5", "query": "...", "documents": ["..."] }
 
 # Phân loại Jina (thông tin xác thực Foundation API)
 POST /v1/classify    { "model": "jina-embeddings-v5-text-small", "input": ["..."], "labels": ["a", "b"] }
 
-# Bộ phân đoạn Jina
+# Trình phân đoạn Jina
 POST /v1/segment     { "content": "...", "return_chunks": true }
 
 # Tìm kiếm Jina (s.jina.ai; bí danh nhà cung cấp: jina-search, jina-ai, jina)
@@ -499,7 +499,7 @@ POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 # TTS — trả về nội dung audio/mpeg (hoặc định dạng được yêu cầu)
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS yêu cầu ngôn ngữ và giọng nói: `language` mặc định là "en"; khi thiếu
+# Soniox TTS yêu cầu ngôn ngữ và giọng nói: `language` mặc định là "en"; nếu thiếu
 # giọng nói hoặc dùng tên giọng nói có sẵn của OpenAI (alloy, nova, …), giá trị sẽ trở thành "Adrian"
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
@@ -511,29 +511,32 @@ POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **Các nút nhà cung cấp xếp hạng lại:** `POST /v1/rerank` cũng định tuyến đến các nút nhà cung cấp tương thích với OpenAI
-> (oMLX, vLLM, Infinity, TEI phía sau một gateway, …) được định địa chỉ dưới dạng `<node-prefix>/<model>`. Các nút loopback
-> (`localhost`, `127.0.0.1`, `172.16.0.0/12`) luôn đủ điều kiện. Các nút trên bất kỳ
-> máy chủ nào khác — một máy trong LAN hoặc máy ngang hàng Tailscale — chỉ đủ điều kiện khi người vận hành bật
-> cờ tính năng `RERANK_REMOTE_PROVIDER_NODES` **và** URL cơ sở của nút đáp ứng chính sách URL gửi đi của nhà cung cấp
-> (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
+> **Các nút nhà cung cấp xếp hạng lại:** `POST /v1/rerank` cũng định tuyến đến các nút nhà cung cấp tương thích OpenAI
+> (oMLX, vLLM, Infinity, TEI phía sau một cổng, …) được định địa chỉ dưới dạng `<node-prefix>/<model>`. Các nút
+> loopback (`localhost`, `127.0.0.1`, `172.16.0.0/12`) luôn đủ điều kiện, cũng như các tên máy chủ mà
+> người vận hành liệt kê trong `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` (ví dụ: tên dịch vụ Docker/Compose như
+> `http://reranker:8080/v1`; chúng được gọi trực tiếp, không bao giờ thông qua `HTTP(S)_PROXY` hoặc proxy
+> được ghim của một kết nối). Các nút trên bất kỳ
+> máy chủ nào khác — một máy trong mạng LAN hoặc một máy ngang hàng Tailscale — chỉ đủ điều kiện khi người vận hành bật
+> cờ tính năng `RERANK_REMOTE_PROVIDER_NODES` **và** URL cơ sở của nút vượt qua chính sách URL gửi đi của
+> nhà cung cấp (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
 > Bước xếp hạng lại của công cụ bộ nhớ gọi tuyến này qua
-> loopback, vì vậy cùng một quy tắc sẽ chi phối `rerankProviderModel` trong phần cài đặt Bộ nhớ.
+> loopback, vì vậy quy tắc tương tự chi phối `rerankProviderModel` trong phần cài đặt Bộ nhớ.
 >
-> **Cấu trúc máy chủ cục bộ:** nút được gọi tại `<base>/v1/rerank` và, khi gặp lỗi 404, tại `<base>/rerank`
-> (Infinity, TEI). Nội dung gửi lên thượng nguồn chứa cả cách viết của Cohere/OpenAI (`documents`,
-> `return_documents`) và cách viết của TEI (`texts`, `return_text`), đồng thời phản hồi từ thượng nguồn được
-> chuẩn hóa theo lớp bao Cohere: mảng thuần của TEI `[{index, score, text}]`, `{results: [{index, score}]}`
-> từ các gateway mỏng và `{data: [...]}` theo kiểu Voyage đều được trả về cho ứng dụng khách dưới dạng
-> `{results: [{index, relevance_score, document?}]}`, được sắp xếp theo điểm số và giới hạn ở `top_n`.
+> **Cấu trúc máy chủ cục bộ:** nút được gọi tại `<base>/v1/rerank` và, khi nhận mã 404, tại `<base>/rerank`
+> (Infinity, TEI). Phần thân gửi lên thượng nguồn chứa cả cách viết của Cohere/OpenAI (`documents`,
+> `return_documents`) và cách viết của TEI (`texts`, `return_text`), còn phản hồi thượng nguồn được
+> chuẩn hóa về lớp bao Cohere: mảng thuần của TEI `[{index, score, text}]`, `{results: [{index, score}]}`
+> từ các cổng mỏng và `{data: [...]}` theo kiểu Voyage đều được trả về cho máy khách dưới dạng
+> `{results: [{index, relevance_score, document?}]}`, được sắp xếp theo điểm và giới hạn ở `top_n`.
 
 > **Khám phá nút nhà cung cấp:** các mô hình trên một nút nhà cung cấp tương thích với OpenAI xuất hiện trong `GET /v1/models`
-> dưới tiền tố của nút. Các hàng không chứa siêu dữ liệu endpoint (thường gặp trong danh sách `/v1/models` cục bộ)
+> bên dưới tiền tố của nút. Các hàng không có siêu dữ liệu điểm cuối (thường gặp trong danh sách `/v1/models` cục bộ)
 > sẽ kế thừa `apiType` của nút, vì vậy các mô hình của nút `embeddings` có `type: "embedding"` và các
-> mô hình của nút `rerank` có `type: "rerank"` thay vì mặc định là chat; `supportedEndpoints` được chỉ định rõ ràng
+> mô hình của nút `rerank` có `type: "rerank"` thay vì mặc định là trò chuyện; `supportedEndpoints` được chỉ định rõ ràng
 > trên một hàng đã đồng bộ hoặc được thêm thủ công vẫn được ưu tiên.
 
-### Các route dành riêng cho nhà cung cấp
+### Các tuyến nhà cung cấp chuyên dụng
 
 ```bash
 POST /v1/providers/{provider}/chat/completions
@@ -541,7 +544,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-Tiền tố nhà cung cấp sẽ được tự động thêm nếu còn thiếu. Các mô hình không khớp sẽ trả về `400`.
+Tiền tố nhà cung cấp sẽ tự động được thêm nếu còn thiếu. Các mô hình không khớp sẽ trả về `400`.
 
 ---
 

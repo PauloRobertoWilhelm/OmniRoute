@@ -453,14 +453,14 @@ Gunakan endpoint ini ketika sidecar berjalan di luar proses dan tidak dapat meng
 | POST   | `/v1/api/chat`                            | Ollama                                    |
 | GET    | `/api/v1/vscode/{token}/`                 | Alias katalog OpenAI                      |
 | GET    | `/api/v1/vscode/{token}/models`           | Alias model OpenAI                        |
-| POST   | `/api/v1/vscode/{token}/chat/completions` | Alias OpenAI dengan token                 |
-| POST   | `/api/v1/vscode/{token}/responses`        | Alias OpenAI Responses dengan token       |
-| POST   | `/api/v1/vscode/{token}/api/chat`         | Alias Ollama dengan token                 |
-| GET    | `/api/v1/vscode/{token}/api/tags`         | Alias tag Ollama dengan token             |
+| POST   | `/api/v1/vscode/{token}/chat/completions` | Alias OpenAI bertoken                     |
+| POST   | `/api/v1/vscode/{token}/responses`        | Alias OpenAI Responses bertoken           |
+| POST   | `/api/v1/vscode/{token}/api/chat`         | Alias Ollama bertoken                     |
+| GET    | `/api/v1/vscode/{token}/api/tags`         | Alias tag Ollama bertoken                 |
 
-Semua rute POST mengikuti bentuk yang sama: `Bearer your-api-key` + isi JSON yang divalidasi Zod (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, dll., lihat `src/shared/validation/schemas.ts`). 4xx dikembalikan jika validasi skema gagal.
+Semua rute POST mengikuti bentuk yang sama: `Bearer your-api-key` + isi JSON yang divalidasi Zod (`v1RerankSchema`, `v1ModerationSchema`, `v1AudioSpeechSchema`, dan sebagainya, lihat `src/shared/validation/schemas.ts`). 4xx dikembalikan jika validasi skema gagal.
 
-Untuk klien yang tidak dapat menyertakan `Authorization: Bearer ...`, OmniRoute juga menerima kunci API di URL melalui kompatibilitas string kueri (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) atau endpoint khusus `/api/v1/vscode/{token}/...` yang didokumentasikan di bawah ini.
+Untuk klien yang tidak dapat menyertakan `Authorization: Bearer ...`, OmniRoute juga menerima kunci API dalam URL melalui kompatibilitas string kueri (`?token=...`, `?apiKey=...`, `?api_key=...`, `?key=...`) atau endpoint khusus `/api/v1/vscode/{token}/...` yang didokumentasikan di bawah ini.
 
 ```bash
 # Pemeringkatan ulang (penyedia registri cloud, atau node penyedia yang kompatibel dengan OpenAI sebagai "<prefix>/<model>")
@@ -481,8 +481,8 @@ POST /v1/moderations { "model": "omni-moderation-latest", "input": "..." }
 # TTS — mengembalikan isi audio/mpeg (atau format yang diminta)
 POST /v1/audio/speech { "model": "openai/tts-1", "input": "Hello", "voice": "alloy" }
 
-# Soniox TTS memerlukan bahasa dan suara: `language` secara default adalah "en"; jika
-# suara tidak ditentukan atau menggunakan nama suara bawaan OpenAI (alloy, nova, …), nilainya menjadi "Adrian"
+# Soniox TTS memerlukan bahasa dan suara: nilai default `language` adalah "en"; jika
+# suara tidak diberikan atau menggunakan nama suara bawaan OpenAI (alloy, nova, …), nilainya menjadi "Adrian"
 POST /v1/audio/speech { "model": "soniox/tts-rt-v1", "input": "Xin chào", "voice": "Adrian", "language": "vi" }
 
 # Pengeditan gambar (multipart)
@@ -493,27 +493,30 @@ POST /v1/videos/generations { "model": "runway/gen-3", "prompt": "..." }
 POST /v1/music/generations  { "model": "kie/suno-v4.0",   "prompt": "..." }
 ```
 
-> **Node penyedia pemeringkatan ulang:** `POST /v1/rerank` juga merutekan permintaan ke node penyedia yang kompatibel dengan OpenAI
-> (oMLX, vLLM, Infinity, TEI di belakang gateway, …) yang dialamatkan sebagai `<node-prefix>/<model>`. Node loopback
-> (`localhost`, `127.0.0.1`, `172.16.0.0/12`) selalu memenuhi syarat. Node pada host lainnya
-> — komputer LAN atau peer Tailscale — hanya memenuhi syarat ketika operator mengaktifkan
-> feature flag `RERANK_REMOTE_PROVIDER_NODES` **dan** URL dasar node tersebut lolos kebijakan URL keluar penyedia
+> **Node penyedia pemeringkatan ulang:** `POST /v1/rerank` juga merutekan ke node penyedia yang kompatibel dengan OpenAI
+> (oMLX, vLLM, Infinity, TEI di belakang gateway, …) yang dialamatkan sebagai `<node-prefix>/<model>`. Node
+> loopback (`localhost`, `127.0.0.1`, `172.16.0.0/12`) selalu memenuhi syarat, demikian pula nama host yang
+> dicantumkan operator dalam `OMNIROUTE_LOCAL_PROVIDER_NODE_HOSTS` (misalnya nama layanan Docker/Compose
+> seperti `http://reranker:8080/v1`; node ini dipanggil secara langsung, tidak pernah melalui `HTTP(S)_PROXY` atau
+> proksi tersemat milik koneksi). Node pada host lain mana pun
+> — perangkat LAN atau peer Tailscale — hanya memenuhi syarat jika operator mengaktifkan
+> flag fitur `RERANK_REMOTE_PROVIDER_NODES` **dan** URL dasar node tersebut lolos kebijakan URL keluar penyedia
 > (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` / `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`).
-> Langkah pemeringkatan ulang pada mesin memori memanggil rute ini melalui
+> Langkah pemeringkatan ulang mesin memori memanggil rute ini melalui
 > loopback, sehingga aturan yang sama berlaku untuk `rerankProviderModel` dalam pengaturan Memori.
 >
-> **Bentuk server lokal:** node dipanggil pada `<base>/v1/rerank` dan, jika menerima 404, pada `<base>/rerank`
-> (Infinity, TEI). Isi upstream memuat ejaan Cohere/OpenAI (`documents`,
-> `return_documents`) dan ejaan TEI (`texts`, `return_text`), dan respons upstream
-> dinormalisasi ke envelope Cohere: array polos TEI `[{index, score, text}]`, `{results: [{index, score}]}`
-> dari gateway ringan, dan `{data: [...]}` bergaya Voyage semuanya dikembalikan kepada klien sebagai
+> **Bentuk server lokal:** node dipanggil di `<base>/v1/rerank` dan, jika menerima 404, di `<base>/rerank`
+> (Infinity, TEI). Isi upstream membawa ejaan Cohere/OpenAI (`documents`,
+> `return_documents`) dan ejaan TEI (`texts`, `return_text`), sedangkan respons upstream
+> dinormalisasi ke dalam envelope Cohere: format mentah TEI `[{index, score, text}]`, `{results: [{index, score}]}`
+> dari gateway tipis, dan `{data: [...]}` bergaya Voyage semuanya dikembalikan kepada klien sebagai
 > `{results: [{index, relevance_score, document?}]}`, diurutkan berdasarkan skor dan dibatasi hingga `top_n`.
 
 > **Penemuan node penyedia:** model pada node penyedia yang kompatibel dengan OpenAI muncul di `GET /v1/models`
-> di bawah prefiks node. Baris tanpa metadata endpoint (umumnya pada daftar `/v1/models` lokal)
+> di bawah prefiks node. Baris yang tidak memiliki metadata endpoint (umumnya pada daftar `/v1/models` lokal)
 > mewarisi `apiType` node, sehingga model milik node `embeddings` memiliki `type: "embedding"` dan model milik
-> node `rerank` memiliki `type: "rerank"`, alih-alih secara default dianggap sebagai chat; `supportedEndpoints` eksplisit
-> pada baris yang disinkronkan atau ditambahkan secara manual tetap memiliki prioritas.
+> node `rerank` memiliki `type: "rerank"`, alih-alih menggunakan chat sebagai nilai default; `supportedEndpoints`
+> eksplisit pada baris yang disinkronkan atau ditambahkan secara manual tetap memiliki prioritas.
 
 ### Rute Khusus Penyedia
 
@@ -523,7 +526,7 @@ POST /v1/providers/{provider}/embeddings
 POST /v1/providers/{provider}/images/generations
 ```
 
-Prefiks penyedia ditambahkan secara otomatis jika belum ada. Model yang tidak cocok mengembalikan `400`.
+Prefiks penyedia ditambahkan secara otomatis jika belum ada. Model yang tidak cocok akan mengembalikan `400`.
 
 ---
 
